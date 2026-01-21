@@ -33,14 +33,15 @@ def defining_path(obj: Any) -> Path | None:
 
 def resolve_repo_root(model: BaseModel) -> Path:
     if hasattr(model, "repo_root"):
-        if repo_root := model.repo_root:
-            return Path(repo_root)
-    elif (
-        hasattr(model, "paths")
-        and (model.paths and hasattr(model.paths, "repo_root"))
-        and (repo_root := model.paths.repo_root)
-    ):
-        return Path(repo_root)
+        repo_root = getattr(model, "repo_root")
+        if repo_root:
+            return Path(str(repo_root))
+    if hasattr(model, "paths"):
+        paths = getattr(model, "paths")
+        if paths and hasattr(paths, "repo_root"):
+            repo_root = getattr(paths, "repo_root")
+            if repo_root:
+                return Path(str(repo_root))
     return Path(__file__).resolve().parent.parent.parent
 
 
@@ -70,7 +71,7 @@ def render_model(
 
 
 def add_marimo_display() -> Callable[[type[TModel]], type[TModel]]:
-    """Decorator that adds a `_display_` method to Pydantic models for marimo rendering."""
+    """Add a `_display_` method to Pydantic models for marimo rendering."""
 
     def decorator(cls: type[TModel]) -> type[TModel]:
         class_path = defining_path(cls)
@@ -78,7 +79,7 @@ def add_marimo_display() -> Callable[[type[TModel]], type[TModel]]:
         def _display_(self: BaseModel) -> UIElement | mo.Html:
             return render_model(self, class_path)
 
-        cls._display_ = _display_  # pyright: ignore[reportAttributeAccessIssue]
+        setattr(cls, "_display_", _display_)
         return cls
 
     return decorator
