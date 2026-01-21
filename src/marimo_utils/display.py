@@ -23,7 +23,13 @@ __all__ = [
 
 def defining_path(obj: Any) -> Path | None:
     """Best-effort path to the file that defined `obj`."""
-    if src := inspect.getsourcefile(obj) or inspect.getfile(obj):
+    src = inspect.getsourcefile(obj)
+    if not src:
+        try:
+            src = inspect.getfile(obj)
+        except TypeError:
+            src = None
+    if src:
         return Path(src).resolve()
     mod_name = getattr(obj, "__module__", None)
     mod = sys.modules.get(mod_name) if mod_name else None
