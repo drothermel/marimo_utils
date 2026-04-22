@@ -197,7 +197,7 @@ class LabeledList(BaseModel):
     typography: Typography
     spacing: SpacingScale
     section_label: str
-    items: list[object]
+    items: list[HtmlRenderable | str]
     display_styles: list[LayoutToken] = Field(
         default_factory=lambda: [
             LayoutToken.FLEX,

@@ -16,7 +16,12 @@ def css(*fragments: str, **decls: str | None) -> str:
     parts: list[str] = [
         f"{k.replace('_', '-')}: {v}" for k, v in decls.items() if v is not None
     ]
-    parts.extend(f.rstrip(";").strip() for f in fragments if f and f.strip())
+    for fragment in fragments:
+        if not fragment:
+            continue
+        stripped = fragment.strip().rstrip(";").rstrip()
+        if stripped:
+            parts.append(stripped)
     if not parts:
         return ""
     return "; ".join(parts) + ";"
