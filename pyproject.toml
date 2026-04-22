@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "marimo>=0.19.4",
+    "marimo[recommended]>=0.19.4",
     "pydantic>=2.12.5",
 ]
 
