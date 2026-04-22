@@ -8,6 +8,7 @@ from marimo_utils.style.components import (
     ProjectStamp,
     Title,
 )
+from marimo_utils.style.protocols import HtmlRenderable
 from marimo_utils.style.settings import (
     ColorPalette,
     IconStyle,
@@ -25,6 +26,7 @@ __all__ = [
     "ColorPalette",
     "DataItem",
     "DateStamp",
+    "HtmlRenderable",
     "IconStyle",
     "LabeledList",
     "LayoutToken",

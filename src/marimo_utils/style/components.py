@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from mohtml import div, p, path, rect, span, svg  # type: ignore
 from pydantic import BaseModel, ConfigDict, Field
 
+from marimo_utils.style._mohtml import div, p, path, rect, span, svg
+from marimo_utils.style.protocols import HtmlRenderable
 from marimo_utils.style.settings import (
     ColorPalette,
     IconStyle,
@@ -29,13 +30,13 @@ class MetaStamp(BaseModel):
         ]
     )
 
-    def icon(self) -> span:
+    def icon(self) -> HtmlRenderable:
         raise NotImplementedError("MetaStamp subclasses must implement icon().")
 
     def text(self) -> str:
         raise NotImplementedError("MetaStamp subclasses must implement text().")
 
-    def render(self) -> div:
+    def render(self) -> HtmlRenderable:
         return div(
             self.icon(),
             span(
@@ -53,7 +54,7 @@ class MetaStamp(BaseModel):
 class DateStamp(MetaStamp):
     value: datetime | None
 
-    def icon(self) -> svg:
+    def icon(self) -> HtmlRenderable:
         return svg(
             path(d="M8 2v4"),
             path(d="M16 2v4"),
@@ -72,7 +73,7 @@ class DateStamp(MetaStamp):
 class ProjectStamp(MetaStamp):
     project_name: str
 
-    def icon(self) -> svg:
+    def icon(self) -> HtmlRenderable:
         return svg(
             path(
                 d=(
@@ -102,7 +103,7 @@ class Badge(BaseModel):
         default_factory=lambda: [LayoutToken.INLINE_BLOCK, LayoutToken.NOWRAP]
     )
 
-    def render(self) -> span:
+    def render(self) -> HtmlRenderable:
         tone = self.palette.tone(self.tone)
         return span(
             self.label,
@@ -136,7 +137,7 @@ class DataItem(BaseModel):
             return self.palette.text_primary
         return self.palette.tone(self.value_tone).text
 
-    def render(self) -> div:
+    def render(self) -> HtmlRenderable:
         return div(
             span(
                 self.label,
@@ -166,7 +167,7 @@ class Title(BaseModel):
     text_margin_inline: str = "0"
     text_margin_bottom: str = "0"
 
-    def render(self) -> div:
+    def render(self) -> HtmlRenderable:
         return div(
             p(
                 self.drop_text,
@@ -202,7 +203,7 @@ class LabeledList(BaseModel):
         ]
     )
 
-    def render(self) -> div:
+    def render(self) -> HtmlRenderable:
         return div(
             span(
                 f"{self.section_label}:",
