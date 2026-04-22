@@ -5,6 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 
 from marimo_utils.style._mohtml import div, p, path, rect, span, svg
+from marimo_utils.style.css import css
 from marimo_utils.style.protocols import HtmlRenderable
 from marimo_utils.style.settings import (
     ColorPalette,
@@ -43,10 +44,10 @@ class MetaStamp(BaseModel):
                 self.text(),
                 style=self.typography.meta.css(color=self.palette.text_subtle),
             ),
-            style=(
-                f"margin-top: {self.spacing.sm}; "
-                f"gap: {self.spacing.sm}; "
-                f"{LayoutToken.css(self.display_styles)}"
+            style=css(
+                LayoutToken.css(self.display_styles),
+                margin_top=self.spacing.sm,
+                gap=self.spacing.sm,
             ),
         )
 
@@ -107,13 +108,13 @@ class Badge(BaseModel):
         tone = self.palette.tone(self.tone)
         return span(
             self.label,
-            style=(
-                f"{LayoutToken.css(self.display_styles)}"
-                f"padding: {self.spacing.xs} {self.spacing.md}; "
-                f"border-radius: {self.border_radius}; "
-                f"background: {tone.bg}; "
-                f"{self.border_type} {tone.border}; "
-                f"{self.typography.badge.css(color=tone.text)}"
+            style=css(
+                LayoutToken.css(self.display_styles),
+                f"{self.border_type} {tone.border}",
+                self.typography.badge.css(color=tone.text),
+                padding=f"{self.spacing.xs} {self.spacing.md}",
+                border_radius=self.border_radius,
+                background=tone.bg,
             ),
         )
 
@@ -141,17 +142,17 @@ class DataItem(BaseModel):
         return div(
             span(
                 self.label,
-                style=(
-                    f"{LayoutToken.css(self.label_display_styles)}"
-                    f"min-width: {self.label_min_width}; "
-                    f"{self.typography.label.css(color=self.palette.text_muted)}"
+                style=css(
+                    LayoutToken.css(self.label_display_styles),
+                    self.typography.label.css(color=self.palette.text_muted),
+                    min_width=self.label_min_width,
                 ),
             ),
             span(
                 self.value,
                 style=self.typography.body.css(color=self.value_color()),
             ),
-            style=(f"margin-top: {self.spacing.md}; "),
+            style=css(margin_top=self.spacing.md),
         )
 
 
@@ -171,17 +172,19 @@ class Title(BaseModel):
         return div(
             p(
                 self.drop_text,
-                style=(
-                    f"margin: {self.drop_text_margin}; "
-                    f"{self.typography.drop_title.css(color=self.palette.text_subtle)}"
+                style=css(
+                    self.typography.drop_title.css(color=self.palette.text_subtle),
+                    margin=self.drop_text_margin,
                 ),
             ),
             p(
                 self.text,
-                style=(
-                    f"margin: {self.spacing.xxs} "
-                    f"{self.text_margin_inline} {self.text_margin_bottom}; "
-                    f"{self.typography.title.css(color=self.palette.text_primary)}"
+                style=css(
+                    self.typography.title.css(color=self.palette.text_primary),
+                    margin=(
+                        f"{self.spacing.xxs} "
+                        f"{self.text_margin_inline} {self.text_margin_bottom}"
+                    ),
                 ),
             ),
         )
@@ -210,11 +213,11 @@ class LabeledList(BaseModel):
                 style=self.typography.label.css(color=self.palette.text_muted),
             ),
             *self.items,
-            style=(
-                f"margin-top: {self.spacing.lg}; "
-                f"gap: {self.spacing.sm}; "
-                f"line-height: {self.spacing.line_height_loose}; "
-                f"{LayoutToken.css(self.display_styles)}"
+            style=css(
+                LayoutToken.css(self.display_styles),
+                margin_top=self.spacing.lg,
+                gap=self.spacing.sm,
+                line_height=self.spacing.line_height_loose,
             ),
         )
 

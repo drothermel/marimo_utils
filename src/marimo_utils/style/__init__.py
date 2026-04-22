@@ -8,6 +8,7 @@ from marimo_utils.style.components import (
     ProjectStamp,
     Title,
 )
+from marimo_utils.style.css import css
 from marimo_utils.style.protocols import HtmlRenderable
 from marimo_utils.style.settings import (
     ColorPalette,
@@ -38,4 +39,5 @@ __all__ = [
     "Title",
     "TonePalette",
     "Typography",
+    "css",
 ]

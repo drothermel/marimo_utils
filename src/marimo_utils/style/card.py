@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.style._mohtml import div
 from marimo_utils.style.components import Title
+from marimo_utils.style.css import css
 from marimo_utils.style.protocols import HtmlRenderable
 from marimo_utils.style.settings import ColorPalette, SpacingScale, Typography
 
@@ -24,10 +25,10 @@ class Card(BaseModel):
 
     def divider(self) -> HtmlRenderable:
         return div(
-            style=(
-                f"margin-top: {self.spacing.lg}; "
-                f"padding-top: {self.spacing.sm}; "
-                f"border-top: {self.divider_border_type} {self.palette.surface_border};"
+            style=css(
+                margin_top=self.spacing.lg,
+                padding_top=self.spacing.sm,
+                border_top=f"{self.divider_border_type} {self.palette.surface_border}",
             ),
         )
 
@@ -46,15 +47,15 @@ class Card(BaseModel):
 
         return div(
             *sections,
-            style=(
-                f"font-family: {self.typography.font_family}; "
-                f"color: {self.palette.text_primary}; "
-                f"width: {self.width}; "
-                f"padding: {self.spacing.xl} {self.spacing.xxl}; "
-                f"border-radius: {self.border_radius}; "
-                f"border: {self.border_type} {self.palette.surface_border}; "
-                f"background: {self.palette.surface_background}; "
-                f"box-shadow: {self.palette.surface_shadow};"
+            style=css(
+                font_family=self.typography.font_family,
+                color=self.palette.text_primary,
+                width=self.width,
+                padding=f"{self.spacing.xl} {self.spacing.xxl}",
+                border_radius=self.border_radius,
+                border=f"{self.border_type} {self.palette.surface_border}",
+                background=self.palette.surface_background,
+                box_shadow=self.palette.surface_shadow,
             ),
         )
 
