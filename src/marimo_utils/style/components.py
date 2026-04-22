@@ -42,7 +42,7 @@ class MetaStamp(BaseModel):
             self.icon(),
             span(
                 self.text(),
-                style=self.typography.meta.css(color=self.palette.text_subtle),
+                style=css(self.typography.meta.css(color=self.palette.text_subtle)),
             ),
             style=css(
                 LayoutToken.css(self.display_styles),
@@ -62,7 +62,7 @@ class DateStamp(MetaStamp):
             rect(width="18", height="18", x="3", y="4", rx="2"),
             path(d="M3 10h18"),
             **self.icon_style.svg_kwargs(),
-            style=self.icon_style.css(color=self.palette.text_subtle),
+            style=css(self.icon_style.css(color=self.palette.text_subtle)),
         )
 
     def text(self) -> str:
@@ -83,7 +83,7 @@ class ProjectStamp(MetaStamp):
                 )
             ),
             **self.icon_style.svg_kwargs(),
-            style=self.icon_style.css(color=self.palette.text_subtle),
+            style=css(self.icon_style.css(color=self.palette.text_subtle)),
         )
 
     def text(self) -> str:
@@ -150,7 +150,7 @@ class DataItem(BaseModel):
             ),
             span(
                 self.value,
-                style=self.typography.body.css(color=self.value_color()),
+                style=css(self.typography.body.css(color=self.value_color())),
             ),
             style=css(margin_top=self.spacing.md),
         )
@@ -210,7 +210,7 @@ class LabeledList(BaseModel):
         return div(
             span(
                 f"{self.section_label}:",
-                style=self.typography.label.css(color=self.palette.text_muted),
+                style=css(self.typography.label.css(color=self.palette.text_muted)),
             ),
             *self.items,
             style=css(

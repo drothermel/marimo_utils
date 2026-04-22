@@ -98,7 +98,7 @@ class TextStyle(BaseModel):
             parts.append(f"text-transform: {self.text_transform}")
         if color is not None:
             parts.append(f"color: {color}")
-        return "; ".join(parts) + ";"
+        return "; ".join(parts)
 
 
 class IconStyle(BaseModel):
@@ -131,7 +131,7 @@ class IconStyle(BaseModel):
         parts = [f"flex: {self.flex}"]
         if color is not None:
             parts.insert(0, f"color: {color}")
-        return "; ".join(parts) + ";"
+        return "; ".join(parts)
 
     @classmethod
     def default(cls) -> IconStyle:
@@ -157,9 +157,7 @@ class LayoutToken(StrEnum):
 
     @classmethod
     def css(cls, tokens: list[LayoutToken]) -> str:
-        if not tokens:
-            return ""
-        return "; ".join(token.value for token in tokens) + ";"
+        return "; ".join(token.value for token in tokens)
 
 
 class Typography(BaseModel):
