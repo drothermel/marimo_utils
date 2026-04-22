@@ -1,14 +1,14 @@
 [project]
 name = "marimo-utils"
-version = "0.1.0"
-description = "Utilities for working with marimo notebooks, including Pydantic model display"
+version = "0.2.0"
+description = "Utilities for working with marimo notebooks, including Pydantic model display and a mohtml-based design system"
 readme = "README.md"
 license = "MIT"
 authors = [
     { name = "Danielle Rothermel", email = "danielle.rothermel@gmail.com" }
 ]
 requires-python = ">=3.12"
-keywords = ["marimo", "notebooks", "pydantic", "display"]
+keywords = ["marimo", "notebooks", "pydantic", "display", "mohtml", "html", "style"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -18,7 +18,8 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "marimo>=0.19.4",
+    "marimo[recommended]>=0.19.4",
+    "mohtml>=0.1.11",
     "pydantic>=2.12.5",
 ]
 
