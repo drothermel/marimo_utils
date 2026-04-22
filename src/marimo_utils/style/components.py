@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import abc
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -17,7 +18,7 @@ from marimo_utils.style.settings import (
 )
 
 
-class MetaStamp(BaseModel):
+class MetaStamp(BaseModel, abc.ABC):
     model_config = ConfigDict(frozen=True)
 
     palette: ColorPalette
@@ -31,11 +32,11 @@ class MetaStamp(BaseModel):
         ]
     )
 
-    def icon(self) -> HtmlRenderable:
-        raise NotImplementedError("MetaStamp subclasses must implement icon().")
+    @abc.abstractmethod
+    def icon(self) -> HtmlRenderable: ...
 
-    def text(self) -> str:
-        raise NotImplementedError("MetaStamp subclasses must implement text().")
+    @abc.abstractmethod
+    def text(self) -> str: ...
 
     def render(self) -> HtmlRenderable:
         return div(
@@ -99,7 +100,7 @@ class Badge(BaseModel):
     label: str
     tone: PaletteToneName = PaletteToneName.INFO
     border_radius: str = "999px"
-    border_type: str = "border: 1px solid"
+    border_type: str = "1px solid"
     display_styles: list[LayoutToken] = Field(
         default_factory=lambda: [LayoutToken.INLINE_BLOCK, LayoutToken.NOWRAP]
     )
@@ -110,11 +111,11 @@ class Badge(BaseModel):
             self.label,
             style=css(
                 LayoutToken.css(self.display_styles),
-                f"{self.border_type} {tone.border}",
                 self.typography.badge.css(color=tone.text),
                 padding=f"{self.spacing.xs} {self.spacing.md}",
                 border_radius=self.border_radius,
                 background=tone.bg,
+                border=f"{self.border_type} {tone.border}",
             ),
         )
 
