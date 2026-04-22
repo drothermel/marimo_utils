@@ -19,6 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "marimo[recommended]>=0.19.4",
+    "mohtml>=0.1.11",
     "pydantic>=2.12.5",
 ]
 
