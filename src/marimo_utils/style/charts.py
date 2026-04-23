@@ -71,8 +71,11 @@ class PieChart(BaseModel):
                 )
             ]
         )
-        fig.update_layout(**self.style.plotly_layout())
-        fig.update_layout(width=self.width, height=self.height)
+        fig.update_layout(
+            **self.style.plotly_layout(),
+            width=self.width,
+            height=self.height,
+        )
         return fig
 
     def empty_state_html(self) -> str:

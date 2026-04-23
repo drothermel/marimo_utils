@@ -76,6 +76,12 @@ See [`IMPORT_STYLE.md`](./IMPORT_STYLE.md) for design notes on the mohtml levera
 
 ## Changes
 
+### 0.4.0
+
+- Routes `<script>`-bearing HTML fragments (notably Plotly) through `dr_widget.inline.ActiveHtml` so Plotly charts render inside a `Card` even though marimo's React tree strips inline scripts.
+- Drops the local `_active_html.py` copy; `ActiveHtml` now lives in the `dr-widget` package.
+- Adds `dr-widget` as a dependency.
+
 ### 0.3.0
 
 - Hard-cuts `marimo_utils.style` to a notebook-native render contract for marimo notebooks.
