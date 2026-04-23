@@ -464,16 +464,35 @@ def _():
             bars with `color=ChartColor.X`.
             """),
             mo.md("---"),
-            BarChart(
-                items=[
-                    BarItem(label="Class A", value=5),
-                    BarItem(label="Class B", value=10),
-                    BarItem(label="Class C", value=5),
-                    BarItem(label="Class D", value=1),
+            mo.hstack(
+                [
+                    BarChart(
+                        items=[
+                            BarItem(label="Class A", value=5),
+                            BarItem(label="Class B", value=10),
+                            BarItem(label="Class C", value=5),
+                            BarItem(label="Class D", value=1),
+                        ],
+                        title="Class Distribution",
+                        x_label="Class",
+                        y_label="Count",
+                    ),
+                    Card(
+                        title="Class Distribution",
+                        description="Counts across the training split",
+                        content=BarChart(
+                            items=[
+                                BarItem(label="Class A", value=5),
+                                BarItem(label="Class B", value=10),
+                                BarItem(label="Class C", value=5),
+                                BarItem(label="Class D", value=1),
+                            ],
+                            height=220,
+                        ),
+                        width="w-80",
+                    ).render(),
                 ],
-                title="Class Distribution",
-                x_label="Class",
-                y_label="Count",
+                justify="space-around",
             ),
         ]
     )
@@ -497,13 +516,29 @@ def _(LOSS_VALUES):
             `color=ChartColor.X` to pick one of the five palette colors.
             """),
             mo.md("---"),
-            HistogramChart(
-                values=LOSS_VALUES,
-                color=ChartColor.TWO,
-                nbins=28,
-                title="Loss Distribution",
-                x_label="Loss",
-                y_label="Count",
+            mo.hstack(
+                [
+                    HistogramChart(
+                        values=LOSS_VALUES,
+                        color=ChartColor.TWO,
+                        nbins=28,
+                        title="Loss Distribution",
+                        x_label="Loss",
+                        y_label="Count",
+                    ),
+                    Card(
+                        title="Loss Distribution",
+                        description="Per-sample training loss",
+                        content=HistogramChart(
+                            values=LOSS_VALUES,
+                            color=ChartColor.TWO,
+                            nbins=28,
+                            height=220,
+                        ),
+                        width="w-80",
+                    ).render(),
+                ],
+                justify="space-around",
             ),
         ]
     )
@@ -528,15 +563,32 @@ def _(CONFUSION_LABELS, CONFUSION_Z):
             via `value_format`. Typical use: confusion matrix.
             """),
             mo.md("---"),
-            HeatmapChart(
-                z=CONFUSION_Z,
-                x_labels=CONFUSION_LABELS,
-                y_labels=CONFUSION_LABELS,
-                color=ChartColor.THREE,
-                show_legend=True,
-                title="Confusion Matrix",
-                x_label="Predicted",
-                y_label="Actual",
+            mo.hstack(
+                [
+                    HeatmapChart(
+                        z=CONFUSION_Z,
+                        x_labels=CONFUSION_LABELS,
+                        y_labels=CONFUSION_LABELS,
+                        color=ChartColor.THREE,
+                        show_legend=True,
+                        title="Confusion Matrix",
+                        x_label="Predicted",
+                        y_label="Actual",
+                    ),
+                    Card(
+                        title="Confusion Matrix",
+                        description="Predicted vs actual class",
+                        content=HeatmapChart(
+                            z=CONFUSION_Z,
+                            x_labels=CONFUSION_LABELS,
+                            y_labels=CONFUSION_LABELS,
+                            color=ChartColor.THREE,
+                            height=220,
+                        ),
+                        width="w-80",
+                    ).render(),
+                ],
+                justify="space-around",
             ),
         ]
     )
@@ -561,16 +613,35 @@ def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
             The legend appears automatically when multiple groups render.
             """),
             mo.md("---"),
-            ViolinChart(
-                groups=[
-                    ViolinGroup(label="train", values=GROUP_TRAIN),
-                    ViolinGroup(label="val", values=GROUP_VAL),
-                    ViolinGroup(label="test", values=GROUP_TEST),
+            mo.hstack(
+                [
+                    ViolinChart(
+                        groups=[
+                            ViolinGroup(label="train", values=GROUP_TRAIN),
+                            ViolinGroup(label="val", values=GROUP_VAL),
+                            ViolinGroup(label="test", values=GROUP_TEST),
+                        ],
+                        show_legend=True,
+                        title="Loss Distribution by Split",
+                        x_label="Split",
+                        y_label="Loss",
+                    ),
+                    Card(
+                        title="Loss by Split",
+                        description="Train / val / test distributions",
+                        content=ViolinChart(
+                            groups=[
+                                ViolinGroup(label="train", values=GROUP_TRAIN),
+                                ViolinGroup(label="val", values=GROUP_VAL),
+                                ViolinGroup(label="test", values=GROUP_TEST),
+                            ],
+                            show_legend=True,
+                            height=220,
+                        ),
+                        width="w-80",
+                    ).render(),
                 ],
-                show_legend=True,
-                title="Loss Distribution by Split",
-                x_label="Split",
-                y_label="Loss",
+                justify="space-around",
             ),
         ]
     )
