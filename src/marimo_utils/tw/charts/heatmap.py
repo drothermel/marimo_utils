@@ -61,10 +61,14 @@ class HeatmapChart(PlotlyChart):
         return bool(self.z) and bool(self.z[0])
 
     def _build_figure(self) -> go.Figure:
+        # Heatmaps don't have a meaningful traditional legend — the color
+        # information lives in the colorscale bar. So we remap the base
+        # `show_legend` toggle to `showscale` for this chart type, and
+        # suppress the empty traditional legend unconditionally.
         heatmap_kwargs: dict[str, object] = {
             "z": self.z,
             "colorscale": chart_colorscale(self.color),
-            "showscale": False,
+            "showscale": self.show_legend,
             "xgap": self.cell_gap,
             "ygap": self.cell_gap,
             "hoverongaps": False,
@@ -87,6 +91,9 @@ class HeatmapChart(PlotlyChart):
 
         fig = go.Figure(data=[go.Heatmap(**heatmap_kwargs)])
         fig.update_layout(**self._layout())
+        # Heatmap never shows plotly's traditional legend; the colorbar is
+        # the legend equivalent and is controlled via `showscale` above.
+        fig.update_layout(showlegend=False)
         fig.update_xaxes(showgrid=False, zeroline=False)
         fig.update_yaxes(showgrid=False, zeroline=False, autorange="reversed")
         self._apply_dimensions(fig)

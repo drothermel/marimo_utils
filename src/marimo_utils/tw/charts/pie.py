@@ -63,26 +63,29 @@ class PieChart(PlotlyChart):
         values = [s.value for s in visible]
         colors = [self._color_for_slice(s, i) for i, s in enumerate(visible)]
 
-        fig = go.Figure(
-            data=[
-                go.Pie(
-                    labels=labels,
-                    values=values,
-                    hole=self.hole,
-                    textposition=self.textposition,
-                    textinfo=self.textinfo,
-                    marker={
-                        "colors": colors,
-                        "line": {
-                            "color": self.stroke_color,
-                            "width": self.stroke_width,
-                        },
-                    },
-                    sort=False,
-                    direction="clockwise",
-                )
-            ]
-        )
+        pie_kwargs: dict[str, object] = {
+            "labels": labels,
+            "values": values,
+            "hole": self.hole,
+            "textposition": self.textposition,
+            "textinfo": self.textinfo,
+            "marker": {
+                "colors": colors,
+                "line": {
+                    "color": self.stroke_color,
+                    "width": self.stroke_width,
+                },
+            },
+            "sort": False,
+            "direction": "clockwise",
+        }
+        # When a legend is shown, shrink the pie's horizontal domain so its
+        # outside labels don't collide with the legend column. The reserved
+        # right strip fits plotly's default right-anchored legend.
+        if self.show_legend:
+            pie_kwargs["domain"] = {"x": [0.0, 0.72]}
+
+        fig = go.Figure(data=[go.Pie(**pie_kwargs)])
         fig.update_layout(**self._layout())
         self._apply_dimensions(fig)
         return fig

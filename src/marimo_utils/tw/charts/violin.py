@@ -79,7 +79,7 @@ class ViolinChart(PlotlyChart):
         # values above so each violin anchors to its own x-tick. With
         # `violinmode="group"`, plotly adds a trace-index offset inside each
         # category and the outer violins drift outward from their labels.
-        fig.update_layout(violinmode="overlay", showlegend=len(traces) > 1)
+        fig.update_layout(violinmode="overlay")
         self._apply_dimensions(fig)
         return fig
 

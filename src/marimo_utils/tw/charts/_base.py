@@ -26,15 +26,18 @@ def shadcn_plotly_layout(
     font_size: int = DEFAULT_FONT_SIZE,
     tick_font_size: int | None = None,
     tick_label_standoff: int = DEFAULT_TICK_LABEL_STANDOFF,
+    show_legend: bool = False,
 ) -> dict[str, object]:
-    """Build a shadcn-themed plotly layout dict parameterized by font sizes.
+    """Build a shadcn-themed plotly layout dict parameterized by typography.
 
     `font_size` governs the base font — legend, hover, titles — and also
     the default for tick labels when `tick_font_size` is `None`. Pass an
     explicit `tick_font_size` to decouple tick labels from the base font.
     `tick_label_standoff` is the pixel gap between tick labels and the
     axis line; plotly's default is 0, and a few pixels of breathing room
-    reads more cleanly.
+    reads more cleanly. `show_legend` opts in to plotly's legend; default
+    is off because most dashboard-style charts label their series inline
+    (slice outside-labels, categorical x-axis ticks, etc.).
     """
     effective_tick_size = font_size if tick_font_size is None else tick_font_size
     axis_style = {
@@ -53,7 +56,7 @@ def shadcn_plotly_layout(
         "plot_bgcolor": "rgba(0,0,0,0)",
         "margin": {"l": 8, "r": 8, "t": 8, "b": 8},
         "colorway": CHART_COLORWAY,
-        "showlegend": False,
+        "showlegend": show_legend,
         "xaxis": axis_style,
         "yaxis": axis_style,
     }
@@ -88,6 +91,7 @@ class PlotlyChart(BaseModel):
     font_size: int = DEFAULT_FONT_SIZE
     tick_font_size: int | None = None
     tick_label_standoff: int = DEFAULT_TICK_LABEL_STANDOFF
+    show_legend: bool = False
 
     def _effective_tick_font_size(self) -> int:
         """Tick font size, inheriting from `font_size` when unset."""
@@ -98,6 +102,7 @@ class PlotlyChart(BaseModel):
             font_size=self.font_size,
             tick_font_size=self.tick_font_size,
             tick_label_standoff=self.tick_label_standoff,
+            show_legend=self.show_legend,
         )
 
     def _has_data(self) -> bool:

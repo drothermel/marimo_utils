@@ -397,6 +397,7 @@ def _():
                             PieSlice(label="Class C", value=5),
                             PieSlice(label="Class D", value=1),
                         ],
+                        show_legend=True,
                     ),
                     Card(
                         title="Class Distribution",
@@ -501,6 +502,7 @@ def _(CONFUSION_LABELS, CONFUSION_Z):
                 x_labels=CONFUSION_LABELS,
                 y_labels=CONFUSION_LABELS,
                 color=ChartColor.THREE,
+                show_legend=True,
             ),
         ]
     )
@@ -531,6 +533,7 @@ def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
                     ViolinGroup(label="val", values=GROUP_VAL),
                     ViolinGroup(label="test", values=GROUP_TEST),
                 ],
+                show_legend=True,
             ),
         ]
     )
