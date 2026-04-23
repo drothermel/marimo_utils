@@ -5,7 +5,7 @@ from typing import Protocol, runtime_checkable
 import marimo as mo
 from dr_widget.inline import ActiveHtml
 
-from marimo_utils.tw.theme import SHADCN_STYLE_BLOCK
+from marimo_utils.ui.theme import SHADCN_STYLE_BLOCK
 
 
 @runtime_checkable

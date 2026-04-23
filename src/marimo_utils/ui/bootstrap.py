@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dr_widget.inline import ActiveHtml
 
-from marimo_utils.tw.theme import SHADCN_THEME_CSS
+from marimo_utils.ui.theme import SHADCN_THEME_CSS
 
 _BOOTSTRAP_JS = f"""
 (function () {{

@@ -8,8 +8,8 @@ from lucide import lucide_icon  # type: ignore[import-untyped]
 from mohtml import div, h3, p, span  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.tw._rendering import auto_render, html_block
-from marimo_utils.tw.variants import BADGE_BASE, BADGE_VARIANT_CLASSES, BadgeVariant
+from marimo_utils.ui._rendering import auto_render, html_block
+from marimo_utils.ui.variants import BADGE_BASE, BADGE_VARIANT_CLASSES, BadgeVariant
 
 
 class Badge(BaseModel):

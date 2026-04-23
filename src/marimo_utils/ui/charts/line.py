@@ -1,37 +1,41 @@
 from __future__ import annotations
 
+from typing import Literal
+
 import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.tw.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
-from marimo_utils.tw.charts._base import PlotlyChart
+from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
+from marimo_utils.ui.charts._base import PlotlyChart
+
+LineDash = Literal["solid", "dot", "dash", "longdash", "dashdot"]
 
 
-class ScatterSeries(BaseModel):
+class LineSeries(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     label: str
     x: list[float]
     y: list[float]
     color: ChartColor | None = None
+    dash: LineDash = "solid"
 
 
-class ScatterChart(PlotlyChart):
-    """Multi-series scatter plot — one trace per `ScatterSeries`.
+class LineChart(PlotlyChart):
+    """Multi-series line chart — one trace per `LineSeries`.
 
     Series without an explicit `color` cycle through `CHART_COLORWAY` by
-    index. Both axes are genuinely numeric, so `x_range` is accepted here
-    (paralleling `HistogramChart`) and threaded into the layout.
+    index. `dash` on each series lets callers distinguish paired lines
+    (e.g., solid train vs dashed validation). Both axes are numeric, so
+    `x_range` is accepted here and threaded into the layout.
     """
 
-    series: list[ScatterSeries]
-    marker_size: int = 8
-    stroke_color: str = "#ffffff"
-    stroke_width: int = 1
+    series: list[LineSeries]
+    line_width: int = 2
     height: int | None = 260
     x_range: tuple[float, float] | None = None
 
-    def _color_for_series(self, series: ScatterSeries, index: int) -> str:
+    def _color_for_series(self, series: LineSeries, index: int) -> str:
         if series.color is not None:
             return CHART_HEX[series.color]
         return CHART_COLORWAY[index % len(CHART_COLORWAY)]
@@ -39,7 +43,7 @@ class ScatterChart(PlotlyChart):
     def empty_state_html(self) -> str:
         return (
             '<div class="text-sm italic text-muted-foreground">'
-            "No scatter series available."
+            "No line series available."
             "</div>"
         )
 
@@ -56,15 +60,12 @@ class ScatterChart(PlotlyChart):
                 go.Scatter(
                     x=series.x,
                     y=series.y,
-                    mode="markers",
+                    mode="lines",
                     name=series.label,
-                    marker={
+                    line={
                         "color": color,
-                        "size": self.marker_size,
-                        "line": {
-                            "color": self.stroke_color,
-                            "width": self.stroke_width,
-                        },
+                        "width": self.line_width,
+                        "dash": series.dash,
                     },
                 )
             )
@@ -75,4 +76,4 @@ class ScatterChart(PlotlyChart):
         return fig
 
 
-__all__ = ["ScatterChart", "ScatterSeries"]
+__all__ = ["LineChart", "LineDash", "LineSeries"]

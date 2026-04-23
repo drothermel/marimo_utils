@@ -5,8 +5,8 @@ from dr_widget.inline import ActiveHtml
 from mohtml import div  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.tw._rendering import auto_render, html_block
-from marimo_utils.tw.components import CardDescription, CardTitle
+from marimo_utils.ui._rendering import auto_render, html_block
+from marimo_utils.ui.components import CardDescription, CardTitle
 
 
 class Card(BaseModel):

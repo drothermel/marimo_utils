@@ -4,8 +4,8 @@ from typing import Literal
 
 import plotly.graph_objects as go
 
-from marimo_utils.tw.chart_colors import CHART_HEX, ChartColor
-from marimo_utils.tw.charts._base import PlotlyChart
+from marimo_utils.ui.chart_colors import CHART_HEX, ChartColor
+from marimo_utils.ui.charts._base import PlotlyChart
 
 HistNorm = Literal["", "percent", "probability", "density", "probability density"]
 

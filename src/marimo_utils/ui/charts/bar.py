@@ -5,8 +5,8 @@ from typing import Literal
 import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict, computed_field
 
-from marimo_utils.tw.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
-from marimo_utils.tw.charts._base import PlotlyChart
+from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
+from marimo_utils.ui.charts._base import PlotlyChart
 
 
 class BarItem(BaseModel):

@@ -1,12 +1,12 @@
-from marimo_utils.tw.bootstrap import bootstrap_tailwind
-from marimo_utils.tw.card import Card
-from marimo_utils.tw.chart_colors import (
+from marimo_utils.ui.bootstrap import bootstrap_tailwind
+from marimo_utils.ui.card import Card
+from marimo_utils.ui.chart_colors import (
     CHART_COLORWAY,
     CHART_HEX,
     ChartColor,
     chart_colorscale,
 )
-from marimo_utils.tw.charts import (
+from marimo_utils.ui.charts import (
     BarChart,
     BarItem,
     HeatmapChart,
@@ -23,7 +23,7 @@ from marimo_utils.tw.charts import (
     ViolinGroup,
     ViolinPoints,
 )
-from marimo_utils.tw.components import (
+from marimo_utils.ui.components import (
     Badge,
     CardDescription,
     CardTitle,
@@ -33,7 +33,7 @@ from marimo_utils.tw.components import (
     LucideIcon,
     ProjectStamp,
 )
-from marimo_utils.tw.variants import (
+from marimo_utils.ui.variants import (
     BADGE_BASE,
     BADGE_VARIANT_CLASSES,
     BadgeVariant,

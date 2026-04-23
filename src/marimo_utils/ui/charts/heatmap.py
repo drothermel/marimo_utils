@@ -3,22 +3,28 @@ from __future__ import annotations
 import plotly.graph_objects as go
 from pydantic import Field, model_validator
 
-from marimo_utils.style.charts._base import PlotlyChart
-from marimo_utils.style.settings import PaletteToneName
+from marimo_utils.ui.chart_colors import ChartColor, chart_colorscale
+from marimo_utils.ui.charts._base import (
+    SHADCN_FONT_FAMILY,
+    SHADCN_FOREGROUND_HEX,
+    PlotlyChart,
+)
 
 
 class HeatmapChart(PlotlyChart):
-    """2-D heatmap with a palette-tone-driven sequential colorscale.
+    """2-D heatmap with a single-color sequential gradient.
 
-    ``z`` is a row-major matrix. Rows align with ``y_labels`` top-to-bottom
-    (matching plotly's default ``yaxis.autorange='reversed'`` on heatmaps
-    when ``y_labels`` are supplied), columns with ``x_labels``.
+    `z` is a row-major matrix. Rows align with `y_labels` top-to-bottom
+    (plotly's default `yaxis.autorange='reversed'` is applied when
+    `y_labels` is supplied); columns align with `x_labels`. The
+    colorscale is a two-stop gradient from low-alpha to saturated chart
+    color — see `chart_colorscale` in `chart_colors`.
     """
 
     z: list[list[float]]
     x_labels: list[str] = Field(default_factory=list)
     y_labels: list[str] = Field(default_factory=list)
-    tone: PaletteToneName = PaletteToneName.INFO
+    color: ChartColor = ChartColor.ONE
     show_values: bool = True
     value_format: str = ".0f"
     cell_gap: int = 1
@@ -46,7 +52,7 @@ class HeatmapChart(PlotlyChart):
 
     def empty_state_html(self) -> str:
         return (
-            '<div style="opacity: 0.6; font-style: italic;">'
+            '<div class="text-sm italic text-muted-foreground">'
             "No heatmap data available."
             "</div>"
         )
@@ -55,10 +61,14 @@ class HeatmapChart(PlotlyChart):
         return bool(self.z) and bool(self.z[0])
 
     def _build_figure(self) -> go.Figure:
+        # Heatmaps don't have a meaningful traditional legend — the color
+        # information lives in the colorscale bar. So we remap the base
+        # `show_legend` toggle to `showscale` for this chart type, and
+        # suppress the empty traditional legend unconditionally.
         heatmap_kwargs: dict[str, object] = {
             "z": self.z,
-            "colorscale": self.style.tone_colorscale(self.tone),
-            "showscale": False,
+            "colorscale": chart_colorscale(self.color),
+            "showscale": self.show_legend,
             "xgap": self.cell_gap,
             "ygap": self.cell_gap,
             "hoverongaps": False,
@@ -74,13 +84,16 @@ class HeatmapChart(PlotlyChart):
             ]
             heatmap_kwargs["texttemplate"] = "%{text}"
             heatmap_kwargs["textfont"] = {
-                "family": self.style.typography.font_family,
-                "color": self.style.palette.text_primary,
-                "size": 11,
+                "family": SHADCN_FONT_FAMILY,
+                "color": SHADCN_FOREGROUND_HEX,
+                "size": self._effective_tick_font_size(),
             }
 
         fig = go.Figure(data=[go.Heatmap(**heatmap_kwargs)])
-        fig.update_layout(**self.style.plotly_layout())
+        fig.update_layout(**self._layout())
+        # Heatmap never shows plotly's traditional legend; the colorbar is
+        # the legend equivalent and is controlled via `showscale` above.
+        fig.update_layout(showlegend=False)
         fig.update_xaxes(showgrid=False, zeroline=False)
         fig.update_yaxes(showgrid=False, zeroline=False, autorange="reversed")
         self._apply_dimensions(fig)

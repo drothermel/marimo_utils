@@ -10,7 +10,7 @@ with app.setup:
 
     import marimo as mo
 
-    from marimo_utils.tw import (
+    from marimo_utils.ui import (
         Badge,
         BadgeVariant,
         BarChart,
@@ -91,7 +91,7 @@ def _():
 @app.cell(column=1, hide_code=True)
 def _():
     mo.md(r"""
-    # Tailwind + shadcn spike — `marimo_utils.tw`
+    # `marimo_utils.ui` — Tailwind + shadcn design primitives
     """)
     return
 
@@ -99,17 +99,17 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    Parallel implementation of the style package using Tailwind (Play CDN)
-    themed with shadcn/ui defaults. `bootstrap_tailwind()` injects shadcn's
-    CSS variables on `:root` (zinc light mode) plus the handful of
-    utility rules that depend on them (`bg-primary`, `text-*-foreground`,
-    `border-border`, `ring-ring`, hover variants), then loads the Tailwind
-    CDN for the built-in utilities.
+    Design system for rendering Pydantic-backed UI primitives inside
+    marimo notebooks. `bootstrap_tailwind()` injects shadcn's CSS
+    variables on `:root` (zinc light mode) plus the handful of utility
+    rules that depend on them (`bg-primary`, `text-*-foreground`,
+    `border-border`, `ring-ring`, hover variants), then loads the
+    Tailwind CDN for the built-in utilities.
 
     Component APIs use shadcn's stock variant names (`default`,
     `secondary`, `destructive`, `outline`) with no custom tone layer.
-    The existing inline-CSS version lives in `style_components.py` for
-    A/B comparison.
+    Every section below pairs a standalone component with a Card-wrapped
+    variant to exercise the shadow-DOM embedding path.
     """)
     return
 
