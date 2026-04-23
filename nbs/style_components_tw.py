@@ -82,9 +82,7 @@ def _():
             mo.hstack(
                 [
                     Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
-                    Badge(
-                        label="secondary", variant=BadgeVariant.SECONDARY
-                    ).render(),
+                    Badge(label="secondary", variant=BadgeVariant.SECONDARY).render(),
                     Badge(
                         label="destructive", variant=BadgeVariant.DESTRUCTIVE
                     ).render(),
@@ -116,16 +114,11 @@ def _():
             config extension, so the emphasis stays on-theme.
             """),
             mo.md("---"),
-            mo.hstack(
-                [
-                    Badge(
-                        label="emphasized",
-                        variant=BadgeVariant.DEFAULT,
-                        klass="ring-2 ring-ring ring-offset-2",
-                    ).render()
-                ],
-                justify="start",
-            ),
+            Badge(
+                label="emphasized",
+                variant=BadgeVariant.DEFAULT,
+                klass="ring-2 ring-ring ring-offset-2",
+            ).render(),
         ]
     )
     return
@@ -152,19 +145,14 @@ def _():
             wrapper that matches shadcn's `CardHeader`.
             """),
             mo.md("---"),
-            mo.hstack(
+            mo.vstack(
                 [
-                    mo.vstack(
-                        [
-                            CardTitle(text="Class Distribution").render(),
-                            CardDescription(
-                                text="Class counts across the training split"
-                            ).render(),
-                        ],
-                        gap=0.25,
-                    )
+                    CardTitle(text="Class Distribution").render(),
+                    CardDescription(
+                        text="Class counts across the training split"
+                    ).render(),
                 ],
-                justify="start",
+                gap=0.25,
             ),
         ]
     )
@@ -292,19 +280,14 @@ def _():
             (any `.render()`-bearing component) or pass through.
             """),
             mo.md("---"),
-            mo.hstack(
-                [
-                    LabeledList(
-                        label="Axes",
-                        items=[
-                            Badge(label="model", variant=BadgeVariant.SECONDARY),
-                            Badge(label="dataset", variant=BadgeVariant.SECONDARY),
-                            Badge(label="split", variant=BadgeVariant.SECONDARY),
-                        ],
-                    ).render()
+            LabeledList(
+                label="Axes",
+                items=[
+                    Badge(label="model", variant=BadgeVariant.SECONDARY),
+                    Badge(label="dataset", variant=BadgeVariant.SECONDARY),
+                    Badge(label="split", variant=BadgeVariant.SECONDARY),
                 ],
-                justify="start",
-            ),
+            ).render(),
         ]
     )
     return
@@ -331,33 +314,23 @@ def _():
             override with `width="w-96"` or any Tailwind width utility.
             """),
             mo.md("---"),
-            mo.hstack(
-                [
-                    Card(
-                        title="Class Distribution",
-                        description="Class counts across the training split",
-                        content=mo.vstack(
-                            [
-                                mo.hstack(
-                                    [
-                                        Badge(
-                                            label="dataset",
-                                            variant=BadgeVariant.SECONDARY,
-                                        ).render()
-                                    ],
-                                    justify="start",
-                                ),
-                                DataItem(label="Class A", value="5").render(),
-                                DataItem(label="Class B", value="10").render(),
-                                DataItem(label="Class C", value="5").render(),
-                                DataItem(label="Class D", value="1").render(),
-                            ],
-                            gap=0.25,
-                        ),
-                    ).render()
-                ],
-                justify="start",
-            ),
+            Card(
+                title="Class Distribution",
+                description="Class counts across the training split",
+                content=mo.vstack(
+                    [
+                        Badge(
+                            label="dataset",
+                            variant=BadgeVariant.SECONDARY,
+                        ).render(),
+                        DataItem(label="Class A", value="5").render(),
+                        DataItem(label="Class B", value="10").render(),
+                        DataItem(label="Class C", value="5").render(),
+                        DataItem(label="Class D", value="1").render(),
+                    ],
+                    gap=0.25,
+                ),
+            ).render(),
         ]
     )
     return

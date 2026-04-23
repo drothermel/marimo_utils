@@ -27,7 +27,10 @@ class Card(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        base = "rounded-lg border border-border bg-card text-card-foreground shadow-sm"
+        base = (
+            "self-start rounded-lg border border-border "
+            "bg-card text-card-foreground shadow-sm"
+        )
         container_cls = " ".join(filter(None, [base, self.width, self.klass]))
 
         sections: list[object] = []

@@ -132,7 +132,9 @@ class DateStamp(BaseModel):
         return self.value.strftime("%b %d")
 
     def render(self) -> mo.Html | ActiveHtml:
-        container = "inline-flex items-center gap-2 text-sm text-muted-foreground"
+        container = (
+            "self-start inline-flex items-center gap-2 text-sm text-muted-foreground"
+        )
         if self.klass:
             container = f"{container} {self.klass}"
         return html_block(
@@ -154,7 +156,9 @@ class ProjectStamp(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        container = "inline-flex items-center gap-2 text-sm text-muted-foreground"
+        container = (
+            "self-start inline-flex items-center gap-2 text-sm text-muted-foreground"
+        )
         if self.klass:
             container = f"{container} {self.klass}"
         return html_block(
@@ -182,7 +186,7 @@ class LabeledList(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        container = "inline-flex flex-wrap items-center gap-2"
+        container = "self-start inline-flex flex-wrap items-center gap-2"
         if self.klass:
             container = f"{container} {self.klass}"
         rendered_items = [auto_render(item) for item in self.items]
