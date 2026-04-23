@@ -397,6 +397,7 @@ def _():
                             PieSlice(label="Class C", value=5),
                             PieSlice(label="Class D", value=1),
                         ],
+                        title="Class Distribution",
                         show_legend=True,
                     ),
                     Card(
@@ -446,6 +447,9 @@ def _():
                     BarItem(label="Class C", value=5),
                     BarItem(label="Class D", value=1),
                 ],
+                title="Class Distribution",
+                x_label="Class",
+                y_label="Count",
             ),
         ]
     )
@@ -473,6 +477,9 @@ def _(LOSS_VALUES):
                 values=LOSS_VALUES,
                 color=ChartColor.TWO,
                 nbins=28,
+                title="Loss Distribution",
+                x_label="Loss",
+                y_label="Count",
             ),
         ]
     )
@@ -503,6 +510,9 @@ def _(CONFUSION_LABELS, CONFUSION_Z):
                 y_labels=CONFUSION_LABELS,
                 color=ChartColor.THREE,
                 show_legend=True,
+                title="Confusion Matrix",
+                x_label="Predicted",
+                y_label="Actual",
             ),
         ]
     )
@@ -534,6 +544,9 @@ def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
                     ViolinGroup(label="test", values=GROUP_TEST),
                 ],
                 show_legend=True,
+                title="Loss Distribution by Split",
+                x_label="Split",
+                y_label="Loss",
             ),
         ]
     )

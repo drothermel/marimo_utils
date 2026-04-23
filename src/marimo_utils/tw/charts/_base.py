@@ -27,26 +27,45 @@ def shadcn_plotly_layout(
     tick_font_size: int | None = None,
     tick_label_standoff: int = DEFAULT_TICK_LABEL_STANDOFF,
     show_legend: bool = False,
+    title: str | None = None,
+    title_font_size: int | None = None,
+    x_label: str | None = None,
+    y_label: str | None = None,
 ) -> dict[str, object]:
     """Build a shadcn-themed plotly layout dict parameterized by typography.
 
-    `font_size` governs the base font — legend, hover, titles — and also
+    `font_size` governs the base font — legend, hover, axis titles — and
     the default for tick labels when `tick_font_size` is `None`. Pass an
     explicit `tick_font_size` to decouple tick labels from the base font.
     `tick_label_standoff` is the pixel gap between tick labels and the
     axis line; plotly's default is 0, and a few pixels of breathing room
     reads more cleanly. `show_legend` opts in to plotly's legend; default
-    is off because most dashboard-style charts label their series inline
-    (slice outside-labels, categorical x-axis ticks, etc.).
+    is off because most dashboard-style charts label their series inline.
+    `title`, `x_label`, `y_label` are optional text — when set, plotly's
+    `automargin` expands the relevant margin to fit. `title_font_size`
+    sets the plot title size independently; when `None`, it defaults to
+    `font_size + 2`. The title is always rendered bold (shadcn-style
+    card-heading weight).
     """
     effective_tick_size = font_size if tick_font_size is None else tick_font_size
-    axis_style = {
-        "gridcolor": SHADCN_BORDER_HEX,
-        "zerolinecolor": SHADCN_BORDER_HEX,
-        "tickfont": {"size": effective_tick_size},
-        "ticklabelstandoff": tick_label_standoff,
-    }
-    return {
+
+    def _axis(label: str | None) -> dict[str, object]:
+        axis: dict[str, object] = {
+            "gridcolor": SHADCN_BORDER_HEX,
+            "zerolinecolor": SHADCN_BORDER_HEX,
+            "tickfont": {"size": effective_tick_size},
+            "ticklabelstandoff": tick_label_standoff,
+        }
+        if label is not None:
+            axis["title"] = {"text": label}
+            axis["automargin"] = True
+        return axis
+
+    margin = {"l": 8, "r": 8, "t": 8, "b": 8}
+    if title is not None:
+        margin["t"] = 40
+
+    layout: dict[str, object] = {
         "font": {
             "family": SHADCN_FONT_FAMILY,
             "color": SHADCN_FOREGROUND_HEX,
@@ -54,12 +73,24 @@ def shadcn_plotly_layout(
         },
         "paper_bgcolor": "rgba(0,0,0,0)",
         "plot_bgcolor": "rgba(0,0,0,0)",
-        "margin": {"l": 8, "r": 8, "t": 8, "b": 8},
+        "margin": margin,
         "colorway": CHART_COLORWAY,
         "showlegend": show_legend,
-        "xaxis": axis_style,
-        "yaxis": axis_style,
+        "xaxis": _axis(x_label),
+        "yaxis": _axis(y_label),
     }
+    if title is not None:
+        effective_title_size = (
+            title_font_size if title_font_size is not None else font_size + 2
+        )
+        layout["title"] = {
+            "text": title,
+            "font": {"size": effective_title_size, "weight": "bold"},
+            "x": 0.0,
+            "xanchor": "left",
+            "pad": {"l": 8},
+        }
+    return layout
 
 
 # Default layout instance — kept as a module-level constant so callers who
@@ -92,6 +123,10 @@ class PlotlyChart(BaseModel):
     tick_font_size: int | None = None
     tick_label_standoff: int = DEFAULT_TICK_LABEL_STANDOFF
     show_legend: bool = False
+    title: str | None = None
+    title_font_size: int | None = None
+    x_label: str | None = None
+    y_label: str | None = None
 
     def _effective_tick_font_size(self) -> int:
         """Tick font size, inheriting from `font_size` when unset."""
@@ -103,6 +138,10 @@ class PlotlyChart(BaseModel):
             tick_font_size=self.tick_font_size,
             tick_label_standoff=self.tick_label_standoff,
             show_legend=self.show_legend,
+            title=self.title,
+            title_font_size=self.title_font_size,
+            x_label=self.x_label,
+            y_label=self.y_label,
         )
 
     def _has_data(self) -> bool:
