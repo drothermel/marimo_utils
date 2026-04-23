@@ -3,6 +3,7 @@ from __future__ import annotations
 import marimo as mo
 from pydantic import BaseModel, ConfigDict
 
+from marimo_utils.style._active_html import ActiveHtml
 from marimo_utils.style._mohtml import div
 from marimo_utils.style._rendering import as_html, html_block
 from marimo_utils.style.components import Title
@@ -34,7 +35,7 @@ class Card(BaseModel):
             ),
         )
 
-    def render(self) -> mo.Html:
+    def render(self) -> mo.Html | ActiveHtml:
         sections: list[HtmlRenderable] = []
         if self.title is not None:
             sections.append(

@@ -7,6 +7,7 @@ import marimo as mo
 from lucide import lucide_icon
 from pydantic import BaseModel, ConfigDict, Field
 
+from marimo_utils.style._active_html import ActiveHtml
 from marimo_utils.style._mohtml import div, p, span
 from marimo_utils.style._rendering import html_block, rem_to_float
 from marimo_utils.style.css import css
@@ -44,7 +45,7 @@ class MetaStamp(BaseModel, abc.ABC):
         )
         return mo.Html(f'<span style="{wrapper_style}">{icon_svg}</span>')
 
-    def render(self) -> mo.Html:
+    def render(self) -> mo.Html | ActiveHtml:
         fragment = div(
             self.icon(),
             span(
@@ -92,7 +93,7 @@ class Badge(BaseModel):
         default_factory=lambda: [LayoutToken.INLINE_BLOCK, LayoutToken.NOWRAP]
     )
 
-    def render(self) -> mo.Html:
+    def render(self) -> mo.Html | ActiveHtml:
         tone = self.style.palette.tone(self.tone)
         fragment = span(
             self.label,
@@ -125,7 +126,7 @@ class DataItem(BaseModel):
             return self.style.palette.text_primary
         return self.style.palette.tone(self.value_tone).text
 
-    def render(self) -> mo.Html:
+    def render(self) -> mo.Html | ActiveHtml:
         fragment = div(
             span(
                 self.label,
@@ -156,7 +157,7 @@ class Title(BaseModel):
     text_margin_inline: str = "0"
     text_margin_bottom: str = "0"
 
-    def render(self) -> mo.Html:
+    def render(self) -> mo.Html | ActiveHtml:
         fragment = div(
             p(
                 self.drop_text,
@@ -197,7 +198,7 @@ class LabeledList(BaseModel):
         ]
     )
 
-    def section_label_item(self) -> mo.Html:
+    def section_label_item(self) -> mo.Html | ActiveHtml:
         return html_block(
             span(
                 f"{self.section_label}:",

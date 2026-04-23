@@ -4,11 +4,15 @@ import marimo as mo
 import plotly.graph_objects as go
 import plotly.io as pio
 
+from marimo_utils.style._active_html import ActiveHtml
 from marimo_utils.style.protocols import HtmlRenderable
 
 
-def html_block(fragment: HtmlRenderable) -> mo.Html:
-    return mo.Html(str(fragment))
+def html_block(fragment: HtmlRenderable) -> mo.Html | ActiveHtml:
+    html = str(fragment)
+    if "<script" in html.lower():
+        return ActiveHtml(html=html)
+    return mo.Html(html)
 
 
 def rem_to_float(value: str) -> float:
