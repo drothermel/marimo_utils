@@ -19,18 +19,13 @@ classifiers = [
 ]
 dependencies = [
     "anywidget>=0.9",
-    "dr-widget>=0.2.0",
+    "dr-widget==0.2.0",
     "marimo[recommended]>=0.19.4",
     "mohtml>=0.1.11",
     "plotly>=6.7.0",
     "pydantic>=2.12.5",
     "python-lucide>=0.2.24",
 ]
-
-# Local editable override for testing. Remove this block and re-run
-# `uv sync` to install dr-widget from PyPI after it is published.
-[tool.uv.sources]
-dr-widget = { path = "../dr_widget", editable = true }
 
 [project.urls]
 Homepage = "https://github.com/drothermel/marimo_utils"

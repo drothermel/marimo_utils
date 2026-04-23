@@ -284,27 +284,16 @@ wheels = [
 [[package]]
 name = "dr-widget"
 version = "0.2.0"
-source = { editable = "../dr_widget" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anywidget" },
     { name = "marimo" },
     { name = "pydantic" },
     { name = "traitlets" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "anywidget", specifier = ">=0.9.18" },
-    { name = "marimo", specifier = ">=0.23" },
-    { name = "pydantic", specifier = ">=2.12.4" },
-    { name = "traitlets", specifier = ">=5.14.3" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "python-lsp-server", specifier = ">=1.13.1" },
-    { name = "ruff", specifier = ">=0.14.4" },
-    { name = "watchdog", specifier = ">=6.0.0" },
+sdist = { url = "https://files.pythonhosted.org/packages/93/ba/68f6c5b7d87f3afbd952961fa4b3356a42409f6cda3143fe4b5a20abcd2d/dr_widget-0.2.0.tar.gz", hash = "sha256:d241274a8d26bc0ff8423e5fed14e935b2a04f95d8f83dd75c351408a031865e", size = 584750 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/54/95f47db416b83660529a4172c9c305a4e71944b5c328c918629e9f57df0f/dr_widget-0.2.0-py3-none-any.whl", hash = "sha256:abf6ef2a262dc3093ba2c0c6baf04f92e2d496849e9869762014cb66075d8142", size = 638384 },
 ]
 
 [[package]]
@@ -821,7 +810,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anywidget", specifier = ">=0.9" },
-    { name = "dr-widget", editable = "../dr_widget" },
+    { name = "dr-widget", specifier = "==0.2.0" },
     { name = "marimo", extras = ["recommended"], specifier = ">=0.19.4" },
     { name = "mohtml", specifier = ">=0.1.11" },
     { name = "plotly", specifier = ">=6.7.0" },
