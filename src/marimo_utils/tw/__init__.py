@@ -1,11 +1,15 @@
 from marimo_utils.tw.bootstrap import bootstrap_tailwind
 from marimo_utils.tw.components import Badge
-from marimo_utils.tw.tones import TONE_CLASSES, TONE_HEX, Tone
+from marimo_utils.tw.variants import (
+    BADGE_BASE,
+    BADGE_VARIANT_CLASSES,
+    BadgeVariant,
+)
 
 __all__ = [
-    "TONE_CLASSES",
-    "TONE_HEX",
+    "BADGE_BASE",
+    "BADGE_VARIANT_CLASSES",
     "Badge",
-    "Tone",
+    "BadgeVariant",
     "bootstrap_tailwind",
 ]

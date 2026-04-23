@@ -8,7 +8,7 @@ with app.setup:
 
     import marimo as mo
 
-    from marimo_utils.tw import Badge, Tone, bootstrap_tailwind
+    from marimo_utils.tw import Badge, BadgeVariant, bootstrap_tailwind
 
     NOTEBOOK_PATH = Path(__file__).resolve()
     REPO_ROOT = NOTEBOOK_PATH.parent.parent
@@ -25,7 +25,7 @@ def _():
 @app.cell(column=1, hide_code=True)
 def _():
     mo.md(r"""
-    # Tailwind spike — `marimo_utils.tw`
+    # Tailwind + shadcn spike — `marimo_utils.tw`
     """)
     return
 
@@ -33,12 +33,17 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    Parallel implementation of the style package using Tailwind via the
-    Play CDN (`mohtml.tailwind_css()`). No token layer — pure Tailwind
-    defaults. Foundation iteration renders `Badge` only, to validate that
-    the CDN plus `klass=` pipeline actually applies styles end-to-end in
-    marimo. The existing inline-CSS version lives in `style_components.py`
-    for A/B comparison against the same demo ideas.
+    Parallel implementation of the style package using Tailwind (Play CDN)
+    themed with shadcn/ui defaults. `bootstrap_tailwind()` injects three
+    things into the document in order: shadcn's CSS variables on `:root`
+    (zinc light mode), a Tailwind config extension that maps utilities
+    like `bg-primary` and `border-border` to those variables, and the
+    Tailwind CDN itself.
+
+    Component APIs use shadcn's stock variant names (`default`,
+    `secondary`, `destructive`, `outline`) with no custom tone layer.
+    The existing inline-CSS version lives in `style_components.py` for
+    A/B comparison.
     """)
     return
 
@@ -46,7 +51,7 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    ## Control: unstyled `<span>` with Tailwind classes
+    ## Badge — one per variant
     """)
     return
 
@@ -56,50 +61,18 @@ def _():
     mo.vstack(
         [
             mo.md(r"""
-            Sanity check that the CDN loaded at all — a raw `mo.Html` span
-            with a handful of Tailwind utilities. If this renders as a blue
-            pill, Tailwind is live in the document.
+            Four shadcn badge variants. If all four render as distinct
+            pills with different fills, the full stack is live: CDN
+            loaded, config extension applied, CSS variables resolved.
             """),
             mo.hstack(
                 [
-                    mo.Html(
-                        '<span class="inline-block rounded-full border '
-                        "border-blue-600 bg-blue-100 px-2 py-0.5 text-xs "
-                        'font-semibold text-blue-700">'
-                        "plain mo.Html span</span>"
-                    )
-                ],
-                justify="start",
-            ),
-        ]
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    ## Badge — one per tone
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Five pill-shaped labels, one per tone (neutral / info / success
-            / warning / danger). Tones map to Tailwind's stock color scales
-            via `TONE_CLASSES` in `tw/tones.py`.
-            """),
-            mo.hstack(
-                [
-                    Badge(label="neutral", tone=Tone.NEUTRAL).render(),
-                    Badge(label="info", tone=Tone.INFO).render(),
-                    Badge(label="success", tone=Tone.SUCCESS).render(),
-                    Badge(label="warning", tone=Tone.WARNING).render(),
-                    Badge(label="danger", tone=Tone.DANGER).render(),
+                    Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
+                    Badge(label="secondary", variant=BadgeVariant.SECONDARY).render(),
+                    Badge(
+                        label="destructive", variant=BadgeVariant.DESTRUCTIVE
+                    ).render(),
+                    Badge(label="outline", variant=BadgeVariant.OUTLINE).render(),
                 ],
                 justify="start",
                 gap=0.5,
@@ -122,16 +95,16 @@ def _():
     mo.vstack(
         [
             mo.md(r"""
-            `Badge(klass="ring-2 ring-offset-2 ring-indigo-500")` appends
-            extra Tailwind utilities to the base class string. Useful for
-            one-off emphasis without extending the tone system.
+            `Badge(klass="ring-2 ring-ring ring-offset-2")` appends extra
+            utilities. The ring color comes from `--ring` via the Tailwind
+            config extension, so the emphasis stays on-theme.
             """),
             mo.hstack(
                 [
                     Badge(
                         label="emphasized",
-                        tone=Tone.INFO,
-                        klass="ring-2 ring-offset-2 ring-indigo-500",
+                        variant=BadgeVariant.DEFAULT,
+                        klass="ring-2 ring-ring ring-offset-2",
                     ).render()
                 ],
                 justify="start",

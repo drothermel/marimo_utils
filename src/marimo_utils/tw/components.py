@@ -6,24 +6,21 @@ from mohtml import span  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.tw._rendering import html_block
-from marimo_utils.tw.tones import TONE_CLASSES, Tone
+from marimo_utils.tw.variants import BADGE_BASE, BADGE_VARIANT_CLASSES, BadgeVariant
 
 
 class Badge(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     label: str
-    tone: Tone = Tone.INFO
+    variant: BadgeVariant = BadgeVariant.DEFAULT
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        t = TONE_CLASSES[self.tone]
-        base = (
-            "inline-block whitespace-nowrap rounded-full border "
-            "px-2 py-0.5 text-xs font-semibold "
-            f"{t['bg']} {t['text']} {t['border']}"
-        )
-        classes = f"{base} {self.klass}" if self.klass else base
+        parts = [BADGE_BASE, BADGE_VARIANT_CLASSES[self.variant]]
+        if self.klass:
+            parts.append(self.klass)
+        classes = " ".join(parts)
         return html_block(span(self.label, klass=classes))
 
 
