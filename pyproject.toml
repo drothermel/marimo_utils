@@ -18,10 +18,11 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "altair>=5.5.0",
     "marimo[recommended]>=0.19.4",
     "mohtml>=0.1.11",
+    "plotly>=6.7.0",
     "pydantic>=2.12.5",
+    "python-lucide>=0.2.24",
 ]
 
 [project.urls]

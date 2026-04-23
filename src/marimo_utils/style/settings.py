@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class TonePalette(BaseModel):
@@ -106,44 +106,15 @@ class IconStyle(BaseModel):
 
     width: str
     height: str
-    view_box: str
-    fill: str
-    stroke: str
     stroke_width: str
-    stroke_linecap: str
-    stroke_linejoin: str
     flex: str = "0 0 auto"
-
-    def svg_kwargs(self) -> dict[str, str]:
-        return {
-            "xmlns": "http://www.w3.org/2000/svg",
-            "width": self.width,
-            "height": self.height,
-            "viewBox": self.view_box,
-            "fill": self.fill,
-            "stroke": self.stroke,
-            "stroke_width": self.stroke_width,
-            "stroke_linecap": self.stroke_linecap,
-            "stroke_linejoin": self.stroke_linejoin,
-        }
-
-    def css(self, *, color: str | None = None) -> str:
-        parts = [f"flex: {self.flex}"]
-        if color is not None:
-            parts.insert(0, f"color: {color}")
-        return "; ".join(parts)
 
     @classmethod
     def default(cls) -> IconStyle:
         return cls(
             width="14",
             height="14",
-            view_box="0 0 24 24",
-            fill="none",
-            stroke="currentColor",
             stroke_width="2",
-            stroke_linecap="round",
-            stroke_linejoin="round",
         )
 
 
@@ -240,12 +211,55 @@ class SpacingScale(BaseModel):
         )
 
 
+class Style(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    palette: ColorPalette
+    typography: Typography
+    spacing: SpacingScale
+    icon_style: IconStyle = Field(default_factory=IconStyle.default)
+
+    @classmethod
+    def default(cls) -> Style:
+        return cls(
+            palette=ColorPalette.default(),
+            typography=Typography.default(),
+            spacing=SpacingScale.default(),
+        )
+
+    def plotly_layout(self) -> dict[str, object]:
+        """Return a plain-dict plotly ``layout`` partial derived from tokens.
+
+        Safe to splat into ``fig.update_layout(**style.plotly_layout())``.
+        Does not import plotly — just returns strings/dicts/lists.
+        """
+        tones = (
+            PaletteToneName.NEUTRAL,
+            PaletteToneName.INFO,
+            PaletteToneName.SUCCESS,
+            PaletteToneName.WARNING,
+            PaletteToneName.DANGER,
+        )
+        return {
+            "font": {
+                "family": self.typography.font_family,
+                "color": self.palette.text_primary,
+            },
+            "paper_bgcolor": "rgba(0,0,0,0)",
+            "plot_bgcolor": "rgba(0,0,0,0)",
+            "margin": {"l": 8, "r": 8, "t": 8, "b": 8},
+            "showlegend": False,
+            "colorway": [self.palette.tone(tone).border for tone in tones],
+        }
+
+
 __all__ = [
     "ColorPalette",
     "IconStyle",
     "LayoutToken",
     "PaletteToneName",
     "SpacingScale",
+    "Style",
     "TextStyle",
     "TonePalette",
     "Typography",

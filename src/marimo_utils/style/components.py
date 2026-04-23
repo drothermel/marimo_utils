@@ -4,29 +4,21 @@ import abc
 from datetime import datetime
 
 import marimo as mo
+from lucide import lucide_icon
 from pydantic import BaseModel, ConfigDict, Field
 
-from marimo_utils.style._mohtml import div, p, path, rect, span, svg
+from marimo_utils.style._mohtml import div, p, span
 from marimo_utils.style._rendering import html_block, rem_to_float
 from marimo_utils.style.css import css
 from marimo_utils.style.protocols import HtmlRenderable
-from marimo_utils.style.settings import (
-    ColorPalette,
-    IconStyle,
-    LayoutToken,
-    PaletteToneName,
-    SpacingScale,
-    Typography,
-)
+from marimo_utils.style.settings import LayoutToken, PaletteToneName, Style
 
 
 class MetaStamp(BaseModel, abc.ABC):
     model_config = ConfigDict(frozen=True)
 
-    palette: ColorPalette
-    typography: Typography
-    spacing: SpacingScale
-    icon_style: IconStyle = Field(default_factory=IconStyle.default)
+    style: Style
+    icon_name: str
     display_styles: list[LayoutToken] = Field(
         default_factory=lambda: [
             LayoutToken.INLINE_FLEX,
@@ -35,39 +27,44 @@ class MetaStamp(BaseModel, abc.ABC):
     )
 
     @abc.abstractmethod
-    def icon(self) -> HtmlRenderable: ...
-
-    @abc.abstractmethod
     def text(self) -> str: ...
+
+    def icon(self) -> HtmlRenderable:
+        icon_svg = lucide_icon(
+            self.icon_name,
+            width=self.style.icon_style.width,
+            height=self.style.icon_style.height,
+            stroke_width=self.style.icon_style.stroke_width,
+            stroke="currentColor",
+        )
+        wrapper_style = css(
+            color=self.style.palette.text_subtle,
+            flex=self.style.icon_style.flex,
+            display="inline-flex",
+        )
+        return mo.Html(f'<span style="{wrapper_style}">{icon_svg}</span>')
 
     def render(self) -> mo.Html:
         fragment = div(
             self.icon(),
             span(
                 self.text(),
-                style=css(self.typography.meta.css(color=self.palette.text_subtle)),
+                style=css(
+                    self.style.typography.meta.css(color=self.style.palette.text_subtle)
+                ),
             ),
             style=css(
                 LayoutToken.css(self.display_styles),
-                margin_top=self.spacing.sm,
-                gap=self.spacing.sm,
+                margin_top=self.style.spacing.sm,
+                gap=self.style.spacing.sm,
             ),
         )
         return html_block(fragment)
 
 
 class DateStamp(MetaStamp):
+    icon_name: str = "calendar"
     value: datetime | None
-
-    def icon(self) -> HtmlRenderable:
-        return svg(
-            path(d="M8 2v4"),
-            path(d="M16 2v4"),
-            rect(width="18", height="18", x="3", y="4", rx="2"),
-            path(d="M3 10h18"),
-            **self.icon_style.svg_kwargs(),
-            style=css(self.icon_style.css(color=self.palette.text_subtle)),
-        )
 
     def text(self) -> str:
         if self.value is None:
@@ -76,19 +73,8 @@ class DateStamp(MetaStamp):
 
 
 class ProjectStamp(MetaStamp):
+    icon_name: str = "folder"
     project_name: str
-
-    def icon(self) -> HtmlRenderable:
-        return svg(
-            path(
-                d=(
-                    "M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9"
-                    "L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
-                )
-            ),
-            **self.icon_style.svg_kwargs(),
-            style=css(self.icon_style.css(color=self.palette.text_subtle)),
-        )
 
     def text(self) -> str:
         return self.project_name
@@ -97,9 +83,7 @@ class ProjectStamp(MetaStamp):
 class Badge(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    palette: ColorPalette
-    typography: Typography
-    spacing: SpacingScale
+    style: Style
     label: str
     tone: PaletteToneName = PaletteToneName.INFO
     border_radius: str = "999px"
@@ -109,13 +93,13 @@ class Badge(BaseModel):
     )
 
     def render(self) -> mo.Html:
-        tone = self.palette.tone(self.tone)
+        tone = self.style.palette.tone(self.tone)
         fragment = span(
             self.label,
             style=css(
                 LayoutToken.css(self.display_styles),
-                self.typography.badge.css(color=tone.text),
-                padding=f"{self.spacing.xs} {self.spacing.md}",
+                self.style.typography.badge.css(color=tone.text),
+                padding=f"{self.style.spacing.xs} {self.style.spacing.md}",
                 border_radius=self.border_radius,
                 background=tone.bg,
                 border=f"{self.border_type} {tone.border}",
@@ -127,9 +111,7 @@ class Badge(BaseModel):
 class DataItem(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    palette: ColorPalette
-    typography: Typography
-    spacing: SpacingScale
+    style: Style
     label: str
     value: str
     value_tone: PaletteToneName | None = None
@@ -140,8 +122,8 @@ class DataItem(BaseModel):
 
     def value_color(self) -> str:
         if self.value_tone is None:
-            return self.palette.text_primary
-        return self.palette.tone(self.value_tone).text
+            return self.style.palette.text_primary
+        return self.style.palette.tone(self.value_tone).text
 
     def render(self) -> mo.Html:
         fragment = div(
@@ -149,15 +131,17 @@ class DataItem(BaseModel):
                 self.label,
                 style=css(
                     LayoutToken.css(self.label_display_styles),
-                    self.typography.label.css(color=self.palette.text_muted),
+                    self.style.typography.label.css(
+                        color=self.style.palette.text_muted
+                    ),
                     min_width=self.label_min_width,
                 ),
             ),
             span(
                 self.value,
-                style=css(self.typography.body.css(color=self.value_color())),
+                style=css(self.style.typography.body.css(color=self.value_color())),
             ),
-            style=css(margin_top=self.spacing.md),
+            style=css(margin_top=self.style.spacing.md),
         )
         return html_block(fragment)
 
@@ -165,9 +149,7 @@ class DataItem(BaseModel):
 class Title(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    palette: ColorPalette
-    typography: Typography
-    spacing: SpacingScale
+    style: Style
     drop_text: str
     text: str
     drop_text_margin: str = "0"
@@ -179,16 +161,20 @@ class Title(BaseModel):
             p(
                 self.drop_text,
                 style=css(
-                    self.typography.drop_title.css(color=self.palette.text_subtle),
+                    self.style.typography.drop_title.css(
+                        color=self.style.palette.text_subtle
+                    ),
                     margin=self.drop_text_margin,
                 ),
             ),
             p(
                 self.text,
                 style=css(
-                    self.typography.title.css(color=self.palette.text_primary),
+                    self.style.typography.title.css(
+                        color=self.style.palette.text_primary
+                    ),
                     margin=(
-                        f"{self.spacing.xxs} "
+                        f"{self.style.spacing.xxs} "
                         f"{self.text_margin_inline} {self.text_margin_bottom}"
                     ),
                 ),
@@ -200,9 +186,7 @@ class Title(BaseModel):
 class LabeledList(BaseModel):
     model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
 
-    palette: ColorPalette
-    typography: Typography
-    spacing: SpacingScale
+    style: Style
     section_label: str
     items: list[object | str]
     display_styles: list[LayoutToken] = Field(
@@ -217,7 +201,9 @@ class LabeledList(BaseModel):
         return html_block(
             span(
                 f"{self.section_label}:",
-                style=css(self.typography.label.css(color=self.palette.text_muted)),
+                style=css(
+                    self.style.typography.label.css(color=self.style.palette.text_muted)
+                ),
             )
         )
 
@@ -230,8 +216,8 @@ class LabeledList(BaseModel):
                         span(
                             item,
                             style=css(
-                                self.typography.body.css(
-                                    color=self.palette.text_primary
+                                self.style.typography.body.css(
+                                    color=self.style.palette.text_primary
                                 )
                             ),
                         )
@@ -248,10 +234,10 @@ class LabeledList(BaseModel):
                 justify="start",
                 align="center",
                 wrap=True,
-                gap=rem_to_float(self.spacing.sm),
+                gap=rem_to_float(self.style.spacing.sm),
             ),
-            margin_top=self.spacing.lg,
-            line_height=self.spacing.line_height_loose,
+            margin_top=self.style.spacing.lg,
+            line_height=self.style.spacing.line_height_loose,
         )
 
 

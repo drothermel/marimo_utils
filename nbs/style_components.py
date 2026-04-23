@@ -12,7 +12,6 @@ with app.setup:
     from marimo_utils.style import (
         Badge,
         Card,
-        ColorPalette,
         DataItem,
         DateStamp,
         LabeledList,
@@ -20,9 +19,8 @@ with app.setup:
         PieChart,
         PieSlice,
         ProjectStamp,
-        SpacingScale,
+        Style,
         Title,
-        Typography,
     )
 
     NOTEBOOK_PATH = Path(__file__).resolve()
@@ -33,10 +31,8 @@ with app.setup:
 
 @app.cell
 def tokens():
-    palette = ColorPalette.default()
-    typography = Typography.default()
-    spacing = SpacingScale.default()
-    return palette, spacing, typography
+    style = Style.default()
+    return (style,)
 
 
 @app.cell(hide_code=True)
@@ -50,8 +46,18 @@ def _():
         "stats": {"class_a": 5, "class_b": 10, "class_c": 5, "class_d": 1},
         "date": datetime(2026, 4, 22),
     }
-    demo_data
+    mo.vstack(
+        [
+            mo.md("**Demo Data**"),
+            demo_data,
+        ]
+    )
     return (demo_data,)
+
+
+@app.cell
+def _():
+    return
 
 
 @app.cell(column=1, hide_code=True)
@@ -77,13 +83,11 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(demo_data, palette, spacing, typography):
+def _(demo_data, style):
     badge_row = mo.hstack(
         [
             Badge(
-                palette=palette,
-                typography=typography,
-                spacing=spacing,
+                style=style,
                 label=_label,
                 tone=_tone,
             ).render()
@@ -118,13 +122,11 @@ def _(demo_data, palette, spacing, typography):
 
 
 @app.cell(hide_code=True)
-def _(demo_data, palette, spacing, typography):
+def _(demo_data, style):
     data_item_list = mo.vstack(
         [
             DataItem(
-                palette=palette,
-                typography=typography,
-                spacing=spacing,
+                style=style,
                 label=_label.replace("_", " ").title(),
                 value=str(_value),
                 value_tone=_tone,
@@ -161,19 +163,15 @@ def _(demo_data, palette, spacing, typography):
 
 
 @app.cell(hide_code=True)
-def _(demo_data, palette, spacing, typography):
+def _(demo_data, style):
     classic_card_title = Title(
-        palette=palette,
-        typography=typography,
-        spacing=spacing,
+        style=style,
         drop_text=demo_data["type"],
         text=demo_data["title"],
     ).render()
 
     pie_card_title = Title(
-        palette=palette,
-        typography=typography,
-        spacing=spacing,
+        style=style,
         drop_text="Pie Card",
         text=demo_data["title"],
     ).render()
@@ -195,19 +193,15 @@ def _(demo_data, palette, spacing, typography):
 
 
 @app.cell(hide_code=True)
-def _(demo_data, palette, spacing, typography):
+def _(demo_data, style):
     meta_stamp_row = mo.hstack(
         [
             DateStamp(
-                palette=palette,
-                typography=typography,
-                spacing=spacing,
+                style=style,
                 value=demo_data["date"],
             ).render(),
             ProjectStamp(
-                palette=palette,
-                typography=typography,
-                spacing=spacing,
+                style=style,
                 project_name=demo_data["project_name"],
             ).render(),
         ],
@@ -233,17 +227,13 @@ def _(demo_data, palette, spacing, typography):
 
 
 @app.cell(hide_code=True)
-def _(demo_data, palette, spacing, typography):
+def _(demo_data, style):
     labeled_list_demo = LabeledList(
-        palette=palette,
-        typography=typography,
-        spacing=spacing,
+        style=style,
         section_label=demo_data["badge_section_label"],
         items=[
             Badge(
-                palette=palette,
-                typography=typography,
-                spacing=spacing,
+                style=style,
                 label=_name,
             ).render()
             for _name in demo_data["badges"]
@@ -267,10 +257,9 @@ def _(demo_data, palette, spacing, typography):
 
 
 @app.cell(hide_code=True)
-def _(demo_data, palette, typography):
+def _(demo_data, style):
     pie_chart_demo = PieChart(
-        palette=palette,
-        typography=typography,
+        style=style,
         slices=[
             PieSlice(
                 label=_label.replace("_", " ").title(),
@@ -288,7 +277,7 @@ def _(demo_data, palette, typography):
                 strict=False,
             )
         ],
-    ).render()
+    )
 
     mo.vstack(
         [
@@ -296,8 +285,10 @@ def _(demo_data, palette, typography):
                 r"""
                 ### PieChart
 
-                A categorical pie chart using the shared `demo_data["stats"]`
-                values and the palette tones used elsewhere in the notebook.
+                A plotly-backed pie chart with outside labels (`label+value`)
+                so small slices stay readable. Displayed bare it renders
+                non-reactively via `_repr_html_`; call `.reactive()` for a
+                marimo-reactive widget.
                 """
             ),
             pie_chart_demo,
@@ -312,9 +303,7 @@ def _(
     data_item_list,
     labeled_list_demo,
     meta_stamp_row,
-    palette,
-    spacing,
-    typography,
+    style,
 ):
     card_header = mo.vstack(
         [meta_stamp_row, labeled_list_demo],
@@ -322,9 +311,7 @@ def _(
     )
 
     card_demo = Card(
-        palette=palette,
-        typography=typography,
-        spacing=spacing,
+        style=style,
         width="22rem",
         title=classic_card_title,
         header=card_header,
@@ -349,18 +336,9 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(
-    card_header,
-    palette,
-    pie_card_title,
-    pie_chart_demo,
-    spacing,
-    typography,
-):
+def _(card_header, pie_card_title, pie_chart_demo, style):
     pie_card_demo = Card(
-        palette=palette,
-        typography=typography,
-        spacing=spacing,
+        style=style,
         width="22rem",
         title=pie_card_title,
         header=card_header,
