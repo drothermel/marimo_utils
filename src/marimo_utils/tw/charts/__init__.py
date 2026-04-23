@@ -8,7 +8,9 @@ from marimo_utils.tw.charts._base import (
 from marimo_utils.tw.charts.bar import BarChart, BarItem
 from marimo_utils.tw.charts.heatmap import HeatmapChart
 from marimo_utils.tw.charts.histogram import HistNorm, HistogramChart
+from marimo_utils.tw.charts.line import LineChart, LineDash, LineSeries
 from marimo_utils.tw.charts.pie import PieChart, PieSlice
+from marimo_utils.tw.charts.scatter import ScatterChart, ScatterSeries
 from marimo_utils.tw.charts.violin import ViolinChart, ViolinGroup, ViolinPoints
 
 __all__ = [
@@ -21,9 +23,14 @@ __all__ = [
     "HeatmapChart",
     "HistNorm",
     "HistogramChart",
+    "LineChart",
+    "LineDash",
+    "LineSeries",
     "PieChart",
     "PieSlice",
     "PlotlyChart",
+    "ScatterChart",
+    "ScatterSeries",
     "ViolinChart",
     "ViolinGroup",
     "ViolinPoints",

@@ -24,10 +24,14 @@ with app.setup:
         HeatmapChart,
         HistogramChart,
         LabeledList,
+        LineChart,
+        LineSeries,
         LucideIcon,
         PieChart,
         PieSlice,
         ProjectStamp,
+        ScatterChart,
+        ScatterSeries,
         ViolinChart,
         ViolinGroup,
         bootstrap_tailwind,
@@ -54,13 +58,33 @@ def _():
     GROUP_TEST = [_rng.gauss(0.52, 0.11) for _ in range(120)]
     CONFUSION_Z = [[42, 3, 1], [4, 38, 2], [2, 5, 33]]
     CONFUSION_LABELS = ["cat", "dog", "bird"]
+
+    # Two scatter clusters with overlapping spread.
+    SCATTER_A_X = [_rng.gauss(2.0, 0.6) for _ in range(60)]
+    SCATTER_A_Y = [_rng.gauss(2.5, 0.6) for _ in range(60)]
+    SCATTER_B_X = [_rng.gauss(3.5, 0.6) for _ in range(60)]
+    SCATTER_B_Y = [_rng.gauss(1.5, 0.6) for _ in range(60)]
+
+    # Learning curves — monotone decay plus small noise, 30 steps.
+    LINE_STEPS = [float(i) for i in range(30)]
+    LINE_TRAIN_LOSS = [0.9 * (0.92**i) + _rng.gauss(0.0, 0.015) for i in range(30)]
+    LINE_VAL_LOSS = [
+        0.95 * (0.94**i) + 0.05 + _rng.gauss(0.0, 0.025) for i in range(30)
+    ]
     return (
         CONFUSION_LABELS,
         CONFUSION_Z,
         GROUP_TEST,
         GROUP_TRAIN,
         GROUP_VAL,
+        LINE_STEPS,
+        LINE_TRAIN_LOSS,
+        LINE_VAL_LOSS,
         LOSS_VALUES,
+        SCATTER_A_X,
+        SCATTER_A_Y,
+        SCATTER_B_X,
+        SCATTER_B_Y,
     )
 
 
@@ -450,7 +474,6 @@ def _():
                 title="Class Distribution",
                 x_label="Class",
                 y_label="Count",
-                y_range=(4.0, 9.0),
             ),
         ]
     )
@@ -481,7 +504,6 @@ def _(LOSS_VALUES):
                 title="Loss Distribution",
                 x_label="Loss",
                 y_label="Count",
-                x_range=(0.2, 0.5),
             ),
         ]
     )
@@ -549,6 +571,147 @@ def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
                 title="Loss Distribution by Split",
                 x_label="Split",
                 y_label="Loss",
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## ScatterChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(SCATTER_A_X, SCATTER_A_Y, SCATTER_B_X, SCATTER_B_Y):
+    mo.vstack(
+        [
+            mo.md(r"""
+            Multi-series scatter — one trace per `ScatterSeries` so each
+            cluster gets its own palette color (cycling `CHART_COLORWAY`
+            by index). The second figure embeds the same chart inside a
+            `Card` to verify shadow-DOM handling, mirroring the pie demo.
+            """),
+            mo.md("---"),
+            mo.hstack(
+                [
+                    ScatterChart(
+                        series=[
+                            ScatterSeries(
+                                label="cluster A",
+                                x=SCATTER_A_X,
+                                y=SCATTER_A_Y,
+                            ),
+                            ScatterSeries(
+                                label="cluster B",
+                                x=SCATTER_B_X,
+                                y=SCATTER_B_Y,
+                            ),
+                        ],
+                        title="Embedding Clusters",
+                        show_legend=True,
+                        x_label="x",
+                        y_label="y",
+                    ),
+                    Card(
+                        title="Embedding Clusters",
+                        description="Two-cluster projection preview",
+                        content=ScatterChart(
+                            series=[
+                                ScatterSeries(
+                                    label="cluster A",
+                                    x=SCATTER_A_X,
+                                    y=SCATTER_A_Y,
+                                ),
+                                ScatterSeries(
+                                    label="cluster B",
+                                    x=SCATTER_B_X,
+                                    y=SCATTER_B_Y,
+                                ),
+                            ],
+                            height=220,
+                            show_legend=True,
+                            x_label="x",
+                            y_label="y",
+                        ),
+                        width="w-80",
+                    ).render(),
+                ],
+                justify="space-around",
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## LineChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(LINE_STEPS, LINE_TRAIN_LOSS, LINE_VAL_LOSS):
+    mo.vstack(
+        [
+            mo.md(r"""
+            Multi-series line chart — one trace per `LineSeries`. Use
+            `dash="dash"` on a series to distinguish paired lines
+            (e.g., solid train vs dashed validation).
+            """),
+            mo.md("---"),
+            mo.hstack(
+                [
+                    LineChart(
+                        series=[
+                            LineSeries(
+                                label="train",
+                                x=LINE_STEPS,
+                                y=LINE_TRAIN_LOSS,
+                            ),
+                            LineSeries(
+                                label="val",
+                                x=LINE_STEPS,
+                                y=LINE_VAL_LOSS,
+                                dash="dash",
+                            ),
+                        ],
+                        title="Training Curves",
+                        show_legend=True,
+                        x_label="Step",
+                        y_label="Loss",
+                    ),
+                    Card(
+                        title="Training Curves",
+                        description="Train vs. validation loss",
+                        content=LineChart(
+                            series=[
+                                LineSeries(
+                                    label="train",
+                                    x=LINE_STEPS,
+                                    y=LINE_TRAIN_LOSS,
+                                ),
+                                LineSeries(
+                                    label="val",
+                                    x=LINE_STEPS,
+                                    y=LINE_VAL_LOSS,
+                                    dash="dash",
+                                ),
+                            ],
+                            show_legend=True,
+                            x_label="Step",
+                            y_label="Loss",
+                            height=220,
+                        ),
+                        width="w-80",
+                    ).render(),
+                ],
+                justify="space-around",
             ),
         ]
     )
