@@ -1,5 +1,6 @@
 from marimo_utils.tw.bootstrap import bootstrap_tailwind
-from marimo_utils.tw.components import Badge
+from marimo_utils.tw.card import Card
+from marimo_utils.tw.components import Badge, CardDescription, CardTitle, DataItem
 from marimo_utils.tw.variants import (
     BADGE_BASE,
     BADGE_VARIANT_CLASSES,
@@ -11,5 +12,9 @@ __all__ = [
     "BADGE_VARIANT_CLASSES",
     "Badge",
     "BadgeVariant",
+    "Card",
+    "CardDescription",
+    "CardTitle",
+    "DataItem",
     "bootstrap_tailwind",
 ]
