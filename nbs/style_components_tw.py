@@ -4,6 +4,7 @@ __generated_with = "0.23.2"
 app = marimo.App(width="columns")
 
 with app.setup:
+    import random
     from datetime import datetime
     from pathlib import Path
 
@@ -12,16 +13,23 @@ with app.setup:
     from marimo_utils.tw import (
         Badge,
         BadgeVariant,
+        BarChart,
+        BarItem,
         Card,
         CardDescription,
         CardTitle,
+        ChartColor,
         DataItem,
         DateStamp,
+        HeatmapChart,
+        HistogramChart,
         LabeledList,
         LucideIcon,
         PieChart,
         PieSlice,
         ProjectStamp,
+        ViolinChart,
+        ViolinGroup,
         bootstrap_tailwind,
     )
 
@@ -35,6 +43,25 @@ with app.setup:
 def _():
     bootstrap_tailwind()
     return
+
+
+@app.cell(hide_code=True)
+def _():
+    _rng = random.Random(42)
+    LOSS_VALUES = [_rng.gauss(0.4, 0.12) for _ in range(180)]
+    GROUP_TRAIN = [_rng.gauss(0.35, 0.10) for _ in range(120)]
+    GROUP_VAL = [_rng.gauss(0.45, 0.14) for _ in range(120)]
+    GROUP_TEST = [_rng.gauss(0.52, 0.11) for _ in range(120)]
+    CONFUSION_Z = [[42, 3, 1], [4, 38, 2], [2, 5, 33]]
+    CONFUSION_LABELS = ["cat", "dog", "bird"]
+    return (
+        CONFUSION_LABELS,
+        CONFUSION_Z,
+        GROUP_TEST,
+        GROUP_TRAIN,
+        GROUP_VAL,
+        LOSS_VALUES,
+    )
 
 
 @app.cell(column=1, hide_code=True)
@@ -361,29 +388,150 @@ def _():
             plotly blob, so card chrome resolves shadcn utilities locally.
             """),
             mo.md("---"),
-            PieChart(
-                slices=[
-                    PieSlice(label="Class A", value=5),
-                    PieSlice(label="Class B", value=10),
-                    PieSlice(label="Class C", value=5),
-                    PieSlice(label="Class D", value=1),
+            mo.hstack(
+                [
+                    PieChart(
+                        slices=[
+                            PieSlice(label="Class A", value=5),
+                            PieSlice(label="Class B", value=10),
+                            PieSlice(label="Class C", value=5),
+                            PieSlice(label="Class D", value=1),
+                        ],
+                    ),
+                    Card(
+                        title="Class Distribution",
+                        description="Class counts across the training split",
+                        content=PieChart(
+                            slices=[
+                                PieSlice(label="Class A", value=5),
+                                PieSlice(label="Class B", value=10),
+                                PieSlice(label="Class C", value=5),
+                                PieSlice(label="Class D", value=1),
+                            ],
+                            height=220,
+                        ),
+                        width="w-80",
+                    ).render(),
+                ],
+                justify="space-around",
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## BarChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.vstack(
+        [
+            mo.md(r"""
+            Single-series categorical bar chart. Bars without an explicit
+            `color` cycle through `CHART_COLORWAY` by index; pin specific
+            bars with `color=ChartColor.X`.
+            """),
+            mo.md("---"),
+            BarChart(
+                items=[
+                    BarItem(label="Class A", value=5),
+                    BarItem(label="Class B", value=10),
+                    BarItem(label="Class C", value=5),
+                    BarItem(label="Class D", value=1),
                 ],
             ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## HistogramChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(LOSS_VALUES):
+    mo.vstack(
+        [
+            mo.md(r"""
+            1-D distribution histogram — single-color chart. Set
+            `color=ChartColor.X` to pick one of the five palette colors.
+            """),
             mo.md("---"),
-            Card(
-                title="Class Distribution",
-                description="Class counts across the training split",
-                content=PieChart(
-                    slices=[
-                        PieSlice(label="Class A", value=5),
-                        PieSlice(label="Class B", value=10),
-                        PieSlice(label="Class C", value=5),
-                        PieSlice(label="Class D", value=1),
-                    ],
-                    height=220,
-                ),
-                width="w-80",
-            ).render(),
+            HistogramChart(
+                values=LOSS_VALUES,
+                color=ChartColor.TWO,
+                nbins=28,
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## HeatmapChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(CONFUSION_LABELS, CONFUSION_Z):
+    mo.vstack(
+        [
+            mo.md(r"""
+            2-D heatmap with a single-hue sequential gradient (low-alpha to
+            saturated chart color). Cells display their values formatted
+            via `value_format`. Typical use: confusion matrix.
+            """),
+            mo.md("---"),
+            HeatmapChart(
+                z=CONFUSION_Z,
+                x_labels=CONFUSION_LABELS,
+                y_labels=CONFUSION_LABELS,
+                color=ChartColor.THREE,
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## ViolinChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
+    mo.vstack(
+        [
+            mo.md(r"""
+            Grouped violin plot — one trace per `ViolinGroup` so each gets
+            its own palette color (cycling `CHART_COLORWAY` by index).
+            The legend appears automatically when multiple groups render.
+            """),
+            mo.md("---"),
+            ViolinChart(
+                groups=[
+                    ViolinGroup(label="train", values=GROUP_TRAIN),
+                    ViolinGroup(label="val", values=GROUP_VAL),
+                    ViolinGroup(label="test", values=GROUP_TEST),
+                ],
+            ),
         ]
     )
     return

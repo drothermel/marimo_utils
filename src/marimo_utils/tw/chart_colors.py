@@ -32,4 +32,22 @@ CHART_HEX: dict[ChartColor, str] = {
 CHART_COLORWAY: list[str] = list(CHART_HEX.values())
 
 
-__all__ = ["CHART_COLORWAY", "CHART_HEX", "ChartColor"]
+def chart_colorscale(
+    color: ChartColor, *, light_alpha: float = 0.12
+) -> list[list[float | str]]:
+    """Two-stop sequential colorscale for plotly heatmap/choropleth.
+
+    Low stop is the chart color at low alpha (airy background); high stop
+    is the full saturated chart color. Mirrors the contract of the
+    existing `Style.tone_colorscale` — plug the return value into
+    `go.Heatmap(colorscale=...)`.
+    """
+    hex_color = CHART_HEX[color]
+    r = int(hex_color[1:3], 16)
+    g = int(hex_color[3:5], 16)
+    b = int(hex_color[5:7], 16)
+    light = f"rgba({r}, {g}, {b}, {light_alpha})"
+    return [[0.0, light], [1.0, hex_color]]
+
+
+__all__ = ["CHART_COLORWAY", "CHART_HEX", "ChartColor", "chart_colorscale"]
