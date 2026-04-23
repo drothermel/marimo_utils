@@ -1,14 +1,14 @@
 [project]
 name = "marimo-utils"
-version = "0.5.0"
-description = "Utilities for working with marimo notebooks, including Pydantic model display and a notebook-native hybrid design system"
+version = "0.6.0"
+description = "Utilities for working with marimo notebooks: Pydantic model display plus a Tailwind + shadcn UI primitives package"
 readme = "README.md"
 license = "MIT"
 authors = [
     { name = "Danielle Rothermel", email = "danielle.rothermel@gmail.com" }
 ]
 requires-python = ">=3.12"
-keywords = ["marimo", "notebooks", "pydantic", "display", "mohtml", "html", "style"]
+keywords = ["marimo", "notebooks", "pydantic", "display", "mohtml", "tailwind", "shadcn", "ui", "plotly"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

@@ -4,37 +4,34 @@ from typing import Literal
 
 import plotly.graph_objects as go
 
-from marimo_utils.style.charts._base import PlotlyChart
-from marimo_utils.style.settings import PaletteToneName
+from marimo_utils.ui.chart_colors import CHART_HEX, ChartColor
+from marimo_utils.ui.charts._base import PlotlyChart
 
 HistNorm = Literal["", "percent", "probability", "density", "probability density"]
 
 
 class HistogramChart(PlotlyChart):
-    """1-D distribution histogram with a single palette tone.
+    """1-D distribution histogram in a single chart-palette color.
 
-    Raw values go in; plotly handles binning via ``nbins`` or ``bin_size``.
+    Raw values go in; plotly handles binning via `nbins` or `bin_size`.
+    Single-color chart — the `color` field is required (defaults to
+    `ChartColor.ONE`).
     """
 
     values: list[float]
-    tone: PaletteToneName = PaletteToneName.INFO
-    color: str | None = None
+    color: ChartColor = ChartColor.ONE
     nbins: int | None = None
     bin_size: float | None = None
     histnorm: HistNorm = ""
     orientation: Literal["v", "h"] = "v"
     height: int | None = 220
-    stroke_color: str = "#f8fafc"
+    stroke_color: str = "#ffffff"
     stroke_width: int = 1
-
-    def resolved_color(self) -> str:
-        if self.color is not None:
-            return self.color
-        return self.style.palette.tone(self.tone).border
+    x_range: tuple[float, float] | None = None
 
     def empty_state_html(self) -> str:
         return (
-            '<div style="opacity: 0.6; font-style: italic;">'
+            '<div class="text-sm italic text-muted-foreground">'
             "No values to histogram."
             "</div>"
         )
@@ -44,11 +41,8 @@ class HistogramChart(PlotlyChart):
 
     def _build_figure(self) -> go.Figure:
         marker = {
-            "color": self.resolved_color(),
-            "line": {
-                "color": self.stroke_color,
-                "width": self.stroke_width,
-            },
+            "color": CHART_HEX[self.color],
+            "line": {"color": self.stroke_color, "width": self.stroke_width},
         }
         axis_kwarg: dict[str, object] = {}
         if self.orientation == "v":
@@ -75,7 +69,9 @@ class HistogramChart(PlotlyChart):
             **axis_kwarg,
         )
         fig = go.Figure(data=[hist])
-        fig.update_layout(**self.style.plotly_layout())
+        # Histogram is the one chart with a genuinely numeric x-axis, so
+        # it's also the one that threads `x_range` through to the layout.
+        fig.update_layout(**self._layout(x_range=self.x_range))
         fig.update_layout(bargap=0.05)
         self._apply_dimensions(fig)
         return fig
