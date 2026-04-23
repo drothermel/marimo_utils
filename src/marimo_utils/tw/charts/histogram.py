@@ -27,6 +27,7 @@ class HistogramChart(PlotlyChart):
     height: int | None = 220
     stroke_color: str = "#ffffff"
     stroke_width: int = 1
+    x_range: tuple[float, float] | None = None
 
     def empty_state_html(self) -> str:
         return (
@@ -68,7 +69,9 @@ class HistogramChart(PlotlyChart):
             **axis_kwarg,
         )
         fig = go.Figure(data=[hist])
-        fig.update_layout(**self._layout())
+        # Histogram is the one chart with a genuinely numeric x-axis, so
+        # it's also the one that threads `x_range` through to the layout.
+        fig.update_layout(**self._layout(x_range=self.x_range))
         fig.update_layout(bargap=0.05)
         self._apply_dimensions(fig)
         return fig

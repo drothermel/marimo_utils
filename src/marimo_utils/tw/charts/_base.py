@@ -31,6 +31,8 @@ def shadcn_plotly_layout(
     title_font_size: int | None = None,
     x_label: str | None = None,
     y_label: str | None = None,
+    x_range: tuple[float, float] | None = None,
+    y_range: tuple[float, float] | None = None,
 ) -> dict[str, object]:
     """Build a shadcn-themed plotly layout dict parameterized by typography.
 
@@ -45,11 +47,14 @@ def shadcn_plotly_layout(
     `automargin` expands the relevant margin to fit. `title_font_size`
     sets the plot title size independently; when `None`, it defaults to
     `font_size + 2`. The title is always rendered bold (shadcn-style
-    card-heading weight).
+    card-heading weight). `x_range` / `y_range` pin the axis bounds to a
+    `(min, max)` tuple; leave `None` for plotly's auto-range.
     """
     effective_tick_size = font_size if tick_font_size is None else tick_font_size
 
-    def _axis(label: str | None) -> dict[str, object]:
+    def _axis(
+        label: str | None, range_: tuple[float, float] | None
+    ) -> dict[str, object]:
         axis: dict[str, object] = {
             "gridcolor": SHADCN_BORDER_HEX,
             "zerolinecolor": SHADCN_BORDER_HEX,
@@ -59,6 +64,8 @@ def shadcn_plotly_layout(
         if label is not None:
             axis["title"] = {"text": label}
             axis["automargin"] = True
+        if range_ is not None:
+            axis["range"] = list(range_)
         return axis
 
     margin = {"l": 8, "r": 8, "t": 8, "b": 8}
@@ -76,8 +83,8 @@ def shadcn_plotly_layout(
         "margin": margin,
         "colorway": CHART_COLORWAY,
         "showlegend": show_legend,
-        "xaxis": _axis(x_label),
-        "yaxis": _axis(y_label),
+        "xaxis": _axis(x_label, x_range),
+        "yaxis": _axis(y_label, y_range),
     }
     if title is not None:
         effective_title_size = (
@@ -127,12 +134,23 @@ class PlotlyChart(BaseModel):
     title_font_size: int | None = None
     x_label: str | None = None
     y_label: str | None = None
+    y_range: tuple[float, float] | None = None
 
     def _effective_tick_font_size(self) -> int:
         """Tick font size, inheriting from `font_size` when unset."""
         return self.font_size if self.tick_font_size is None else self.tick_font_size
 
-    def _layout(self) -> dict[str, object]:
+    def _layout(
+        self, *, x_range: tuple[float, float] | None = None
+    ) -> dict[str, object]:
+        """Build the per-chart layout dict.
+
+        `x_range` is accepted here (not as a base field) because it only
+        makes sense on charts with a continuous-numeric x-axis — currently
+        `HistogramChart`. Charts with categorical x (Bar, Violin, Heatmap)
+        don't pass it; pinning a numeric range on a categorical axis
+        silently clips by category index, which is rarely what you want.
+        """
         return shadcn_plotly_layout(
             font_size=self.font_size,
             tick_font_size=self.tick_font_size,
@@ -142,6 +160,8 @@ class PlotlyChart(BaseModel):
             title_font_size=self.title_font_size,
             x_label=self.x_label,
             y_label=self.y_label,
+            x_range=x_range,
+            y_range=self.y_range,
         )
 
     def _has_data(self) -> bool:

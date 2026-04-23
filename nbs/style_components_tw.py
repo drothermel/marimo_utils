@@ -450,6 +450,7 @@ def _():
                 title="Class Distribution",
                 x_label="Class",
                 y_label="Count",
+                y_range=(4.0, 9.0),
             ),
         ]
     )
@@ -480,6 +481,7 @@ def _(LOSS_VALUES):
                 title="Loss Distribution",
                 x_label="Loss",
                 y_label="Count",
+                x_range=(0.2, 0.5),
             ),
         ]
     )
