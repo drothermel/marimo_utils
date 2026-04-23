@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable
+from typing import Protocol
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
@@ -8,7 +8,6 @@ from dr_widget.inline import ActiveHtml
 from marimo_utils.ui.theme import SHADCN_STYLE_BLOCK
 
 
-@runtime_checkable
 class HtmlRenderable(Protocol):
     def __str__(self) -> str: ...
 

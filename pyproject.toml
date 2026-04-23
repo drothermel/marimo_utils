@@ -8,7 +8,7 @@ authors = [
     { name = "Danielle Rothermel", email = "danielle.rothermel@gmail.com" }
 ]
 requires-python = ">=3.12"
-keywords = ["marimo", "notebooks", "pydantic", "display", "tailwind", "shadcn", "ui", "plotly"]
+keywords = ["marimo", "notebooks", "pydantic", "display", "mohtml", "tailwind", "shadcn", "ui", "plotly"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

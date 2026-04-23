@@ -146,10 +146,11 @@ class PlotlyChart(BaseModel):
         """Build the per-chart layout dict.
 
         `x_range` is accepted here (not as a base field) because it only
-        makes sense on charts with a continuous-numeric x-axis — currently
-        `HistogramChart`. Charts with categorical x (Bar, Violin, Heatmap)
-        don't pass it; pinning a numeric range on a categorical axis
-        silently clips by category index, which is rarely what you want.
+        makes sense on charts with a continuous-numeric x-axis —
+        `HistogramChart`, `ScatterChart`, `LineChart`. Charts with
+        categorical x (Bar, Violin, Heatmap) don't pass it; pinning a
+        numeric range on a categorical axis silently clips by category
+        index, which is rarely what you want.
         """
         return shadcn_plotly_layout(
             font_size=self.font_size,

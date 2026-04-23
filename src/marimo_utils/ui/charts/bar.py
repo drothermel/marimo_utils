@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 import plotly.graph_objects as go
-from pydantic import BaseModel, ConfigDict, computed_field
+from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
 from marimo_utils.ui.charts._base import PlotlyChart
@@ -31,11 +31,6 @@ class BarChart(PlotlyChart):
     stroke_color: str = "#ffffff"
     stroke_width: int = 1
 
-    @computed_field
-    @property
-    def visible_items(self) -> list[BarItem]:
-        return list(self.items)
-
     def _color_for_item(self, item: BarItem, index: int) -> str:
         if item.color is not None:
             return CHART_HEX[item.color]
@@ -49,13 +44,12 @@ class BarChart(PlotlyChart):
         )
 
     def _has_data(self) -> bool:
-        return bool(self.visible_items)
+        return bool(self.items)
 
     def _build_figure(self) -> go.Figure:
-        items = self.visible_items
-        labels = [item.label for item in items]
-        values = [item.value for item in items]
-        colors = [self._color_for_item(item, i) for i, item in enumerate(items)]
+        labels = [item.label for item in self.items]
+        values = [item.value for item in self.items]
+        colors = [self._color_for_item(item, i) for i, item in enumerate(self.items)]
 
         marker = {
             "color": colors,

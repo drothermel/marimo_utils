@@ -62,10 +62,24 @@ See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every at
 
 ### 0.6.0 — Tailwind + shadcn UI package
 
-- **Breaking:** removes `marimo_utils.style` (the inline-CSS design system) and renames the Tailwind implementation from `marimo_utils.tw` to the canonical `marimo_utils.ui`. Update imports from `marimo_utils.style` / `marimo_utils.tw` to `marimo_utils.ui`.
+- **Breaking:** removes `marimo_utils.style` (the inline-CSS design system) and renames the Tailwind implementation from `marimo_utils.tw` to the canonical `marimo_utils.ui`.
 - Adds `ScatterChart` / `ScatterSeries` and `LineChart` / `LineSeries` (with solid/dotted/dashed styling via `LineDash`) — multi-series numeric-axis charts that accept `x_range` and `y_range`.
 - Every chart section in `nbs/ui_components.py` now renders both a standalone chart and a Card-wrapped variant via `mo.hstack`, exercising the shadow-DOM embedding path uniformly.
 - Renames the demo notebook from `nbs/style_components_tw.py` to `nbs/ui_components.py`.
+
+**Migration from 0.5.x.** The rename is not purely syntactic — `marimo_utils.ui` uses shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`) instead of the old tone palette, and charts use `ChartColor.ONE..FIVE` instead of `PaletteToneName`. Common translations:
+
+| 0.5.x (`marimo_utils.style`) | 0.6.0 (`marimo_utils.ui`) |
+|---|---|
+| `from marimo_utils.style import ...` | `from marimo_utils.ui import ...` |
+| `Style.default()` / passing `style=...` | removed — call `bootstrap_tailwind()` once per notebook |
+| `Title(drop_text=..., text=...)` | `CardTitle(text=...)` + `CardDescription(text=...)` |
+| `PaletteToneName.SUCCESS` / `.WARNING` / `.DANGER` | `ChartColor.ONE..FIVE` (neutral categorical palette) |
+| `Style.tone_colorscale(tone)` | `chart_colorscale(ChartColor.X)` |
+| `Card(style=..., width="22rem", height="22rem", title=..., content=...)` | `Card(title=..., description=..., content=..., width="w-80").render()` (Tailwind width utilities) |
+| Chart `height=None` for responsive fill inside a sized `Card` | Charts have fixed default heights; pass explicit `height=220` for in-card use |
+
+See [`nbs/ui_components.py`](./nbs/ui_components.py) for current usage of every atom and chart.
 
 ### 0.5.0
 

@@ -26,11 +26,11 @@ class PieChart(PlotlyChart):
 
     slices: list[PieSlice]
     height: int | None = 260
-    hole: float = 0.0
+    hole: float = Field(default=0.0, ge=0.0, le=1.0)
     textposition: str = "outside"
     textinfo: str = "label+value"
     stroke_color: str = "#ffffff"
-    stroke_width: int = 2
+    stroke_width: int = Field(default=2, ge=0)
 
     @computed_field
     @property

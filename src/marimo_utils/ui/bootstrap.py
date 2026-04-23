@@ -1,15 +1,21 @@
 from __future__ import annotations
 
+import json
+
 from dr_widget.inline import ActiveHtml
 
 from marimo_utils.ui.theme import SHADCN_THEME_CSS
 
+# `json.dumps` produces a proper JS string literal — backslashes in the CSS
+# (Tailwind-escaped class names like `.hover\:bg-primary\/80`) survive JS
+# parsing. A backtick template literal would eat the `\:` and `\/` escapes,
+# silently collapsing selectors to invalid ones like `.hover:bg-primary/80`.
 _BOOTSTRAP_JS = f"""
 (function () {{
   if (document.getElementById('shadcn-theme')) return;
   const style = document.createElement('style');
   style.id = 'shadcn-theme';
-  style.textContent = `{SHADCN_THEME_CSS}`;
+  style.appendChild(document.createTextNode({json.dumps(SHADCN_THEME_CSS)}));
   document.head.appendChild(style);
 }})();
 """
