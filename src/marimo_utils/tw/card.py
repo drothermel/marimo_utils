@@ -5,20 +5,8 @@ from dr_widget.inline import ActiveHtml
 from mohtml import div  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.tw._rendering import html_block
+from marimo_utils.tw._rendering import auto_render, html_block
 from marimo_utils.tw.components import CardDescription, CardTitle
-
-
-def _auto_render(obj: object) -> object:
-    """Call `.render()` if present; otherwise pass through.
-
-    Mohtml concatenates children via `__str__`, so mo.Html / ActiveHtml /
-    raw strings all work as-is once rendered.
-    """
-    render_fn = getattr(obj, "render", None)
-    if callable(render_fn):
-        return render_fn()
-    return obj
 
 
 class Card(BaseModel):
@@ -54,7 +42,7 @@ class Card(BaseModel):
             )
         if self.content is not None:
             content_padding = "p-6 pt-0" if header_children else "p-6"
-            sections.append(div(_auto_render(self.content), klass=content_padding))
+            sections.append(div(auto_render(self.content), klass=content_padding))
 
         return html_block(div(*sections, klass=container_cls))
 

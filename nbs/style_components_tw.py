@@ -4,6 +4,7 @@ __generated_with = "0.23.2"
 app = marimo.App(width="columns")
 
 with app.setup:
+    from datetime import datetime
     from pathlib import Path
 
     import marimo as mo
@@ -15,6 +16,10 @@ with app.setup:
         CardDescription,
         CardTitle,
         DataItem,
+        DateStamp,
+        LabeledList,
+        LucideIcon,
+        ProjectStamp,
         bootstrap_tailwind,
     )
 
@@ -201,12 +206,119 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    ## Card
+    ## LucideIcon
     """)
     return
 
 
 @app.cell(hide_code=True)
+def _():
+    mo.vstack(
+        [
+            mo.md(r"""
+            Shadcn-style icon primitive: SVG sized by Tailwind utilities on
+            the wrapper (default `h-4 w-4`), `stroke="currentColor"` so the
+            color inherits from any `text-*` utility on an ancestor. Below:
+            the same `calendar` icon at default, larger, and inside a
+            `text-destructive` parent so it tints without a color prop.
+            """),
+            mo.md("---"),
+            mo.hstack(
+                [
+                    LucideIcon(name="calendar").render(),
+                    LucideIcon(name="calendar", size="h-6 w-6").render(),
+                    mo.Html(
+                        f'<span class="text-destructive inline-flex">'
+                        f"{LucideIcon(name='calendar').render().text}</span>"
+                    ),
+                ],
+                justify="start",
+                align="center",
+                gap=1.0,
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## DateStamp & ProjectStamp
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.vstack(
+        [
+            mo.md(r"""
+            Inline icon + text meta rows using the shadcn `flex items-center
+            gap-2 text-sm text-muted-foreground` idiom. Icon color inherits
+            from the container's muted text color via `currentColor`.
+            """),
+            mo.md("---"),
+            mo.hstack(
+                [
+                    DateStamp(value=datetime(2026, 4, 22)).render(),
+                    ProjectStamp(project_name="demo-project").render(),
+                ],
+                justify="start",
+                align="center",
+                gap=1.0,
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## LabeledList
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.vstack(
+        [
+            mo.md(r"""
+            Section label prefix + flex-wrapping list of rendered items.
+            Label uses shadcn's muted `text-sm font-medium` style rather
+            than the form-coupled `Label` primitive. Items auto-render
+            (any `.render()`-bearing component) or pass through.
+            """),
+            mo.md("---"),
+            mo.hstack(
+                [
+                    LabeledList(
+                        label="Axes",
+                        items=[
+                            Badge(label="model", variant=BadgeVariant.SECONDARY),
+                            Badge(label="dataset", variant=BadgeVariant.SECONDARY),
+                            Badge(label="split", variant=BadgeVariant.SECONDARY),
+                        ],
+                    ).render()
+                ],
+                justify="start",
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(column=2, hide_code=True)
+def _():
+    mo.md(r"""
+    ## Card
+    """)
+    return
+
+
+@app.cell
 def _():
     mo.vstack(
         [
@@ -226,10 +338,6 @@ def _():
                         description="Class counts across the training split",
                         content=mo.vstack(
                             [
-                                DataItem(label="Class A", value="5").render(),
-                                DataItem(label="Class B", value="10").render(),
-                                DataItem(label="Class C", value="5").render(),
-                                DataItem(label="Class D", value="1").render(),
                                 mo.hstack(
                                     [
                                         Badge(
@@ -239,6 +347,10 @@ def _():
                                     ],
                                     justify="start",
                                 ),
+                                DataItem(label="Class A", value="5").render(),
+                                DataItem(label="Class B", value="10").render(),
+                                DataItem(label="Class C", value="5").render(),
+                                DataItem(label="Class D", value="1").render(),
                             ],
                             gap=0.25,
                         ),
@@ -251,7 +363,12 @@ def _():
     return
 
 
-@app.cell(column=2, hide_code=True)
+@app.cell
+def _():
+    return
+
+
+@app.cell(column=3, hide_code=True)
 def _():
     mo.md(r"""
     leave space

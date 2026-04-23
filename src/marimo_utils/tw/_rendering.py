@@ -24,4 +24,16 @@ def html_block(fragment: HtmlRenderable) -> mo.Html | ActiveHtml:
     return mo.Html(html)
 
 
-__all__ = ["HtmlRenderable", "html_block"]
+def auto_render(obj: object) -> object:
+    """Call `.render()` if present; otherwise pass through.
+
+    Mohtml concatenates children via `__str__`, so `mo.Html` / `ActiveHtml` /
+    raw strings all work as-is once rendered.
+    """
+    render_fn = getattr(obj, "render", None)
+    if callable(render_fn):
+        return render_fn()
+    return obj
+
+
+__all__ = ["HtmlRenderable", "auto_render", "html_block"]
