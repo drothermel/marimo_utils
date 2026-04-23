@@ -20,6 +20,7 @@ class Card(BaseModel):
     header: HtmlRenderable | None = None
     content: object | None = None
     width: str = "18rem"
+    height: str | None = None
     border_radius: str = "16px"
     border_type: str = "1px solid"
     divider_border_type: str = "1px solid"
@@ -36,6 +37,8 @@ class Card(BaseModel):
         )
 
     def render(self) -> mo.Html | ActiveHtml:
+        constrained = self.height is not None
+
         sections: list[HtmlRenderable] = []
         if self.title is not None:
             sections.append(
@@ -46,7 +49,18 @@ class Card(BaseModel):
         if sections and self.content is not None:
             sections.append(self.divider())
         if self.content is not None:
-            sections.append(as_html(self.content))
+            content_fragment = as_html(self.content)
+            if constrained:
+                content_fragment = div(
+                    content_fragment,
+                    style=css(
+                        flex="1 1 auto",
+                        min_height="0",
+                        display="flex",
+                        flex_direction="column",
+                    ),
+                )
+            sections.append(content_fragment)
 
         return html_block(
             div(
@@ -55,6 +69,10 @@ class Card(BaseModel):
                     font_family=self.style.typography.font_family,
                     color=self.style.palette.text_primary,
                     width=self.width,
+                    height=self.height,
+                    display="flex" if constrained else None,
+                    flex_direction="column" if constrained else None,
+                    box_sizing="border-box" if constrained else None,
                     padding=f"{self.style.spacing.xl} {self.style.spacing.xxl}",
                     border_radius=self.border_radius,
                     border=(f"{self.border_type} {self.style.palette.surface_border}"),

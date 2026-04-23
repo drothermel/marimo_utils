@@ -4,6 +4,7 @@ __generated_with = "0.23.2"
 app = marimo.App(width="columns")
 
 with app.setup:
+    import random
     from datetime import datetime
     from pathlib import Path
 
@@ -11,9 +12,13 @@ with app.setup:
 
     from marimo_utils.style import (
         Badge,
+        BarChart,
+        BarItem,
         Card,
         DataItem,
         DateStamp,
+        HeatmapChart,
+        HistogramChart,
         LabeledList,
         PaletteToneName,
         PieChart,
@@ -21,6 +26,8 @@ with app.setup:
         ProjectStamp,
         Style,
         Title,
+        ViolinChart,
+        ViolinGroup,
     )
 
     NOTEBOOK_PATH = Path(__file__).resolve()
@@ -37,6 +44,7 @@ def tokens():
 
 @app.cell(hide_code=True)
 def _():
+    _rng = random.Random(42)
     demo_data = {
         "type": "Classic Card",
         "title": "Class Distribution",
@@ -45,6 +53,17 @@ def _():
         "badges": ["model", "dataset", "split"],
         "stats": {"class_a": 5, "class_b": 10, "class_c": 5, "class_d": 1},
         "date": datetime(2026, 4, 22),
+        "loss_values": [_rng.gauss(0.4, 0.12) for _ in range(180)],
+        "group_distributions": {
+            "train": [_rng.gauss(0.35, 0.10) for _ in range(120)],
+            "val": [_rng.gauss(0.45, 0.14) for _ in range(120)],
+            "test": [_rng.gauss(0.52, 0.11) for _ in range(120)],
+        },
+        "confusion": {
+            "rows": ["cat", "dog", "bird"],
+            "cols": ["cat", "dog", "bird"],
+            "z": [[42, 3, 1], [4, 38, 2], [2, 5, 33]],
+        },
     }
     mo.vstack(
         [
@@ -53,11 +72,6 @@ def _():
         ]
     )
     return (demo_data,)
-
-
-@app.cell
-def _():
-    return
 
 
 @app.cell(column=1, hide_code=True)
@@ -297,6 +311,136 @@ def _(demo_data, style):
     return (pie_chart_demo,)
 
 
+@app.cell(hide_code=True)
+def _(demo_data, style):
+    bar_chart_demo = BarChart(
+        style=style,
+        height=200,
+        items=[
+            BarItem(
+                label=_label.replace("_", " ").title(),
+                value=_value,
+                tone=_tone,
+            )
+            for (_label, _value), _tone in zip(
+                demo_data["stats"].items(),
+                (
+                    PaletteToneName.NEUTRAL,
+                    PaletteToneName.INFO,
+                    PaletteToneName.SUCCESS,
+                    PaletteToneName.WARNING,
+                ),
+                strict=False,
+            )
+        ],
+    )
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### BarChart
+
+                Categorical bar chart with per-bar tones. Shares the
+                palette/tone semantics of `PieSlice` via `BarItem`.
+                """
+            ),
+            bar_chart_demo,
+        ]
+    )
+    return (bar_chart_demo,)
+
+
+@app.cell(hide_code=True)
+def _(demo_data, style):
+    histogram_demo = HistogramChart(
+        style=style,
+        height=200,
+        values=demo_data["loss_values"],
+        tone=PaletteToneName.INFO,
+        nbins=24,
+    )
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### HistogramChart
+
+                1-D distribution via `go.Histogram`. Single tone; plotly
+                handles binning via `nbins` or `bin_size`.
+                """
+            ),
+            histogram_demo,
+        ]
+    )
+    return (histogram_demo,)
+
+
+@app.cell(hide_code=True)
+def _(demo_data, style):
+    violin_chart_demo = ViolinChart(
+        style=style,
+        height=240,
+        groups=[
+            ViolinGroup(label=_name, values=_values, tone=_tone)
+            for (_name, _values), _tone in zip(
+                demo_data["group_distributions"].items(),
+                (
+                    PaletteToneName.INFO,
+                    PaletteToneName.SUCCESS,
+                    PaletteToneName.WARNING,
+                ),
+                strict=False,
+            )
+        ],
+    )
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### ViolinChart
+
+                Grouped violin plot — one trace per `ViolinGroup` so each
+                group gets its own palette tone.
+                """
+            ),
+            violin_chart_demo,
+        ]
+    )
+    return (violin_chart_demo,)
+
+
+@app.cell(hide_code=True)
+def _(demo_data, style):
+    heatmap_demo = HeatmapChart(
+        style=style,
+        height=240,
+        z=demo_data["confusion"]["z"],
+        x_labels=demo_data["confusion"]["cols"],
+        y_labels=demo_data["confusion"]["rows"],
+        tone=PaletteToneName.INFO,
+    )
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### HeatmapChart
+
+                2-D matrix with a tone-driven sequential colorscale (from
+                `Style.tone_colorscale`). Rows align with `y_labels`,
+                columns with `x_labels`; cell values are annotated via
+                `show_values`.
+                """
+            ),
+            heatmap_demo,
+        ]
+    )
+    return (heatmap_demo,)
+
+
 @app.cell(column=2, hide_code=True)
 def _(
     classic_card_title,
@@ -356,6 +500,186 @@ def _(card_header, pie_card_title, pie_chart_demo, style):
                 """
             ),
             pie_card_demo,
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(bar_chart_demo, card_header, demo_data, style):
+    bar_card_title = Title(
+        style=style,
+        drop_text="Bar Card",
+        text=demo_data["title"],
+    ).render()
+    bar_card_demo = Card(
+        style=style,
+        # width="22rem",
+        width="10rem",
+        title=bar_card_title,
+        header=card_header,
+        content=bar_chart_demo,
+    ).render()
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### Bar Card
+
+                Card variant that swaps the content area for the shared
+                bar chart renderable.
+                """
+            ),
+            bar_card_demo,
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(card_header, histogram_demo, style):
+    histogram_card_title = Title(
+        style=style,
+        drop_text="Histogram Card",
+        text="Loss Distribution",
+    ).render()
+    histogram_card_demo = Card(
+        style=style,
+        width="22rem",
+        title=histogram_card_title,
+        header=card_header,
+        content=histogram_demo,
+    ).render()
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### Histogram Card
+
+                Card variant showing a 1-D distribution via the
+                `HistogramChart` renderable.
+                """
+            ),
+            histogram_card_demo,
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(card_header, style, violin_chart_demo):
+    violin_card_title = Title(
+        style=style,
+        drop_text="Violin Card",
+        text="Split Distributions",
+    ).render()
+    violin_card_demo = Card(
+        style=style,
+        width="22rem",
+        title=violin_card_title,
+        header=card_header,
+        content=violin_chart_demo,
+    ).render()
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### Violin Card
+
+                Card variant showing grouped distributions via the
+                `ViolinChart` renderable.
+                """
+            ),
+            violin_card_demo,
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(card_header, heatmap_demo, style):
+    heatmap_card_title = Title(
+        style=style,
+        drop_text="Heatmap Card",
+        text="Confusion Matrix",
+    ).render()
+    heatmap_card_demo = Card(
+        style=style,
+        width="22rem",
+        title=heatmap_card_title,
+        header=card_header,
+        content=heatmap_demo,
+    ).render()
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### Heatmap Card
+
+                Card variant showing a 2-D matrix via the
+                `HeatmapChart` renderable.
+                """
+            ),
+            heatmap_card_demo,
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(card_header, demo_data, style):
+    constrained_chart = BarChart(
+        style=style,
+        height=None,
+        items=[
+            BarItem(
+                label=_label.replace("_", " ").title(),
+                value=_value,
+                tone=_tone,
+            )
+            for (_label, _value), _tone in zip(
+                demo_data["stats"].items(),
+                (
+                    PaletteToneName.NEUTRAL,
+                    PaletteToneName.INFO,
+                    PaletteToneName.SUCCESS,
+                    PaletteToneName.WARNING,
+                ),
+                strict=False,
+            )
+        ],
+    )
+    constrained_card_title = Title(
+        style=style,
+        drop_text="Constrained Card",
+        text="Fixed Height",
+    ).render()
+    constrained_card_demo = Card(
+        style=style,
+        width="22rem",
+        height="22rem",
+        title=constrained_card_title,
+        header=card_header,
+        content=constrained_chart,
+    ).render()
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### Constrained Card
+
+                `Card(height=...)` turns the card into a flex column and wraps
+                the content area with `flex: 1 1 auto`, so a responsive chart
+                (`height=None`) fills the remaining vertical space below the
+                title, header, and divider.
+                """
+            ),
+            constrained_card_demo,
         ]
     )
     return

@@ -1,7 +1,19 @@
 from dr_widget.inline import ActiveHtml
 
 from marimo_utils.style.card import Card
-from marimo_utils.style.charts import PieChart, PieSlice
+from marimo_utils.style.charts import (
+    BarChart,
+    BarItem,
+    HeatmapChart,
+    HistNorm,
+    HistogramChart,
+    PieChart,
+    PieSlice,
+    PlotlyChart,
+    ViolinChart,
+    ViolinGroup,
+    ViolinPoints,
+)
 from marimo_utils.style.components import (
     Badge,
     DataItem,
@@ -27,10 +39,15 @@ from marimo_utils.style.settings import (
 __all__ = [
     "ActiveHtml",
     "Badge",
+    "BarChart",
+    "BarItem",
     "Card",
     "ColorPalette",
     "DataItem",
     "DateStamp",
+    "HeatmapChart",
+    "HistNorm",
+    "HistogramChart",
     "IconStyle",
     "LabeledList",
     "LayoutToken",
@@ -38,6 +55,7 @@ __all__ = [
     "PaletteToneName",
     "PieChart",
     "PieSlice",
+    "PlotlyChart",
     "ProjectStamp",
     "SpacingScale",
     "Style",
@@ -45,5 +63,8 @@ __all__ = [
     "Title",
     "TonePalette",
     "Typography",
+    "ViolinChart",
+    "ViolinGroup",
+    "ViolinPoints",
     "css",
 ]

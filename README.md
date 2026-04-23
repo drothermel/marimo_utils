@@ -28,53 +28,51 @@ When a `MyConfig` instance is the last expression in a marimo cell, it renders w
 
 ### `marimo_utils.style` — notebook-native design primitives
 
-A small design-system for rendering Pydantic-backed inspection cards in marimo notebooks. The style system is notebook-native: components return marimo renderables, cards can host both styled HTML fragments and native notebook outputs, and [`mohtml`](https://github.com/koaning/mohtml) remains the HTML authoring tool for the styled atoms. The package includes tokens (`ColorPalette`, `Typography`, `SpacingScale`), atoms (`Badge`, `Title`, `DataItem`, `DateStamp`, `ProjectStamp`, `LabeledList`, `MetaStamp`), a flexible `Card` container, and reusable chart primitives (`PieChart`, `PieSlice`).
+A small design-system for rendering Pydantic-backed inspection cards in marimo notebooks. The style system is notebook-native: components return marimo renderables, cards can host both styled HTML fragments and native notebook outputs, and [`mohtml`](https://github.com/koaning/mohtml) remains the HTML authoring tool for the styled atoms. The package includes tokens (`Style`, `ColorPalette`, `Typography`, `SpacingScale`), atoms (`Badge`, `Title`, `DataItem`, `DateStamp`, `ProjectStamp`, `LabeledList`, `MetaStamp`), a flexible `Card` container, and a plotly-backed chart family (`PieChart`, `BarChart`, `HistogramChart`, `ViolinChart`, `HeatmapChart`) that share a common `PlotlyChart` base.
 
 ```python
-import marimo as mo
 from marimo_utils.style import (
-    Badge, Card, ColorPalette, PaletteToneName,
-    PieChart, PieSlice, SpacingScale, Title, Typography,
+    BarChart, BarItem, Card, PaletteToneName, Style, Title,
 )
 
-palette = ColorPalette.default()
-typography = Typography.default()
-spacing = SpacingScale.default()
+style = Style.default()
 
 card = Card(
-    palette=palette,
-    typography=typography,
-    spacing=spacing,
+    style=style,
+    width="22rem",
+    height="22rem",  # optional; omit for unconstrained height
     title=Title(
-        palette=palette,
-        typography=typography,
-        spacing=spacing,
-        drop_text="Pool Card",
-        text="demo pool",
+        style=style,
+        drop_text="Bar Card",
+        text="Class Distribution",
     ).render(),
-    header=Badge(
-        palette=palette,
-        typography=typography,
-        spacing=spacing,
-        label="complete",
-        tone=PaletteToneName.SUCCESS,
-    ).render(),
-    content=PieChart(
-        palette=palette,
-        slices=[
-            PieSlice(label="Samples", value=120, tone=PaletteToneName.SUCCESS),
-            PieSlice(label="Pending", value=18, tone=PaletteToneName.WARNING),
-            PieSlice(label="Failed", value=3, tone=PaletteToneName.DANGER),
+    content=BarChart(
+        style=style,
+        height=None,  # responsive: fills remaining vertical space in the card
+        items=[
+            BarItem(label="Samples", value=120, tone=PaletteToneName.SUCCESS),
+            BarItem(label="Pending", value=18, tone=PaletteToneName.WARNING),
+            BarItem(label="Failed", value=3, tone=PaletteToneName.DANGER),
         ],
-    ).render(),
-)
-
-card.render()
+    ),
+).render()
 ```
 
-See [`IMPORT_STYLE.md`](./IMPORT_STYLE.md) for design notes on the mohtml leverage points and CSS helper.
+Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a tone-driven palette (`PaletteToneName`) that unifies colors across atoms and charts. `Style.tone_colorscale(tone)` provides a matching sequential gradient for heatmaps. `Card` accepts any `HtmlRenderable` as `content`; `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
+
+**Sizing model.** Charts default to `width=None` (fill container) with `responsive=True`, and each chart type keeps a sensible fixed `height`. Pass explicit ints to pin either dimension; pass `height=None` to let plotly fill a constrained `Card(height=...)` vertically.
+
+See [`nbs/style_components.py`](./nbs/style_components.py) for a live demo of every atom, chart, and card variant, and [`IMPORT_STYLE.md`](./IMPORT_STYLE.md) for design notes on the mohtml leverage points and CSS helper.
 
 ## Changes
+
+### 0.5.0
+
+- Adds four Card-ready chart primitives alongside `PieChart`: `BarChart` / `BarItem`, `HistogramChart`, `ViolinChart` / `ViolinGroup`, `HeatmapChart`. All share per-tone palette colors via `PaletteToneName` and plug into `Card` the same way `PieChart` does.
+- Refactors `marimo_utils.style.charts` into a subpackage with a shared `PlotlyChart` base that owns `_repr_html_`, `__str__`, `reactive()`, empty-state rendering, and dimension application. Subclasses implement only `_has_data` and `_build_figure`. Public imports are unchanged — everything is still re-exported from `marimo_utils.style`.
+- Adds `Style.tone_colorscale(tone)` — a two-stop `[bg → border]` sequential colorscale for heatmap / choropleth use.
+- Turns on plotly responsive mode by default (`PlotlyChart.responsive = True`, config passed to `pio.to_html`). Charts now default to `width=None` (fill container) and resize with their wrapper.
+- Adds `Card.height: str | None = None` (CSS value). When set, the card becomes a `display: flex; flex-direction: column` container and wraps its content region with `flex: 1 1 auto; min-height: 0` so a responsive chart (`height=None`) fills the remaining vertical space below the title and header.
 
 ### 0.4.0
 
