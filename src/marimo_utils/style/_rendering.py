@@ -3,8 +3,8 @@ from __future__ import annotations
 import marimo as mo
 import plotly.graph_objects as go
 import plotly.io as pio
+from dr_widget.inline import ActiveHtml
 
-from marimo_utils.style._active_html import ActiveHtml
 from marimo_utils.style.protocols import HtmlRenderable
 
 

@@ -1,4 +1,5 @@
-from marimo_utils.style._active_html import ActiveHtml
+from dr_widget.inline import ActiveHtml
+
 from marimo_utils.style.card import Card
 from marimo_utils.style.charts import PieChart, PieSlice
 from marimo_utils.style.components import (

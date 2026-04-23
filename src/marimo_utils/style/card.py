@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import marimo as mo
+from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.style._active_html import ActiveHtml
 from marimo_utils.style._mohtml import div
 from marimo_utils.style._rendering import as_html, html_block
 from marimo_utils.style.components import Title

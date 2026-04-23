@@ -4,10 +4,10 @@ import abc
 from datetime import datetime
 
 import marimo as mo
+from dr_widget.inline import ActiveHtml
 from lucide import lucide_icon
 from pydantic import BaseModel, ConfigDict, Field
 
-from marimo_utils.style._active_html import ActiveHtml
 from marimo_utils.style._mohtml import div, p, span
 from marimo_utils.style._rendering import html_block, rem_to_float
 from marimo_utils.style.css import css
