@@ -19,6 +19,8 @@ with app.setup:
         DateStamp,
         LabeledList,
         LucideIcon,
+        PieChart,
+        PieSlice,
         ProjectStamp,
         bootstrap_tailwind,
     )
@@ -82,7 +84,9 @@ def _():
             mo.hstack(
                 [
                     Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
-                    Badge(label="secondary", variant=BadgeVariant.SECONDARY).render(),
+                    Badge(
+                        label="secondary", variant=BadgeVariant.SECONDARY
+                    ).render(),
                     Badge(
                         label="destructive", variant=BadgeVariant.DESTRUCTIVE
                     ).render(),
@@ -301,7 +305,7 @@ def _():
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     mo.vstack(
         [
@@ -336,8 +340,52 @@ def _():
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
+    mo.md(r"""
+    ## PieChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.vstack(
+        [
+            mo.md(r"""
+            Shadcn-themed pie chart. Slices cycle through the `--chart-1` →
+            `--chart-5` palette by default; pass `color=ChartColor.X` on a
+            slice to pin a specific color. The second figure renders the
+            chart inside a `Card` to exercise shadow-DOM handling — the
+            theme `<style>` travels into the shadow root alongside the
+            plotly blob, so card chrome resolves shadcn utilities locally.
+            """),
+            mo.md("---"),
+            PieChart(
+                slices=[
+                    PieSlice(label="Class A", value=5),
+                    PieSlice(label="Class B", value=10),
+                    PieSlice(label="Class C", value=5),
+                    PieSlice(label="Class D", value=1),
+                ],
+            ),
+            mo.md("---"),
+            Card(
+                title="Class Distribution",
+                description="Class counts across the training split",
+                content=PieChart(
+                    slices=[
+                        PieSlice(label="Class A", value=5),
+                        PieSlice(label="Class B", value=10),
+                        PieSlice(label="Class C", value=5),
+                        PieSlice(label="Class D", value=1),
+                    ],
+                    height=220,
+                ),
+                width="w-80",
+            ).render(),
+        ]
+    )
     return
 
 

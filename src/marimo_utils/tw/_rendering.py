@@ -5,6 +5,8 @@ from typing import Protocol, runtime_checkable
 import marimo as mo
 from dr_widget.inline import ActiveHtml
 
+from marimo_utils.tw.theme import SHADCN_STYLE_BLOCK
+
 
 @runtime_checkable
 class HtmlRenderable(Protocol):
@@ -17,10 +19,16 @@ def html_block(fragment: HtmlRenderable) -> mo.Html | ActiveHtml:
     `mo.Html` silently drops inline `<script>` tags via its react html-parser,
     so anything with scripts (Tailwind Play CDN, plotly) must go through
     `ActiveHtml`, which re-executes script nodes after mount.
+
+    When routing through `ActiveHtml` the payload is prepended with
+    `SHADCN_STYLE_BLOCK`. `ActiveHtml` mounts its content inside a shadow
+    DOM, and styles in `document.head` don't cascade into shadow roots —
+    so a Card-with-plotly-chart would lose its Tailwind chrome without
+    the local style injection.
     """
     html = str(fragment)
     if "<script" in html.lower():
-        return ActiveHtml(html=html)
+        return ActiveHtml(html=SHADCN_STYLE_BLOCK + html)
     return mo.Html(html)
 
 
