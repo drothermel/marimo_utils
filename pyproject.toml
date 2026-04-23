@@ -1,7 +1,7 @@
 [project]
 name = "marimo-utils"
-version = "0.2.0"
-description = "Utilities for working with marimo notebooks, including Pydantic model display and a mohtml-based design system"
+version = "0.4.0"
+description = "Utilities for working with marimo notebooks, including Pydantic model display and a notebook-native hybrid design system"
 readme = "README.md"
 license = "MIT"
 authors = [
@@ -18,9 +18,13 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
+    "anywidget>=0.9",
+    "dr-widget==0.2.0",
     "marimo[recommended]>=0.19.4",
     "mohtml>=0.1.11",
+    "plotly>=6.7.0",
     "pydantic>=2.12.5",
+    "python-lucide>=0.2.24",
 ]
 
 [project.urls]
@@ -33,6 +37,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "playwright>=1.58.0",
     "ruff>=0.14.13",
     "ty>=0.0.13",
 ]
@@ -58,6 +63,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "src/marimo_utils/display.py" = ["B009", "B010"]  # getattr/setattr needed for type checker
+"nbs/*.py" = ["ANN001", "ANN201", "ANN202", "B018"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["marimo_utils"]
