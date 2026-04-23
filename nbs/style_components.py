@@ -34,7 +34,6 @@ with app.setup:
     REPO_ROOT = NOTEBOOK_PATH.parent.parent
     SRC_ROOT = REPO_ROOT / "src"
     PACKAGE_ROOT = SRC_ROOT / "marimo_utils"
-    DEMO_RNG = random.Random(42)
 
 
 @app.cell

@@ -5,12 +5,14 @@ from marimo_utils.style.charts import (
     BarChart,
     BarItem,
     HeatmapChart,
+    HistNorm,
     HistogramChart,
     PieChart,
     PieSlice,
     PlotlyChart,
     ViolinChart,
     ViolinGroup,
+    ViolinPoints,
 )
 from marimo_utils.style.components import (
     Badge,
@@ -44,6 +46,7 @@ __all__ = [
     "DataItem",
     "DateStamp",
     "HeatmapChart",
+    "HistNorm",
     "HistogramChart",
     "IconStyle",
     "LabeledList",
@@ -62,5 +65,6 @@ __all__ = [
     "Typography",
     "ViolinChart",
     "ViolinGroup",
+    "ViolinPoints",
     "css",
 ]
