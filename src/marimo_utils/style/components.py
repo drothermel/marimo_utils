@@ -3,9 +3,11 @@ from __future__ import annotations
 import abc
 from datetime import datetime
 
+import marimo as mo
 from pydantic import BaseModel, ConfigDict, Field
 
 from marimo_utils.style._mohtml import div, p, path, rect, span, svg
+from marimo_utils.style._rendering import html_block, rem_to_float
 from marimo_utils.style.css import css
 from marimo_utils.style.protocols import HtmlRenderable
 from marimo_utils.style.settings import (
@@ -38,8 +40,8 @@ class MetaStamp(BaseModel, abc.ABC):
     @abc.abstractmethod
     def text(self) -> str: ...
 
-    def render(self) -> HtmlRenderable:
-        return div(
+    def render(self) -> mo.Html:
+        fragment = div(
             self.icon(),
             span(
                 self.text(),
@@ -51,6 +53,7 @@ class MetaStamp(BaseModel, abc.ABC):
                 gap=self.spacing.sm,
             ),
         )
+        return html_block(fragment)
 
 
 class DateStamp(MetaStamp):
@@ -105,9 +108,9 @@ class Badge(BaseModel):
         default_factory=lambda: [LayoutToken.INLINE_BLOCK, LayoutToken.NOWRAP]
     )
 
-    def render(self) -> HtmlRenderable:
+    def render(self) -> mo.Html:
         tone = self.palette.tone(self.tone)
-        return span(
+        fragment = span(
             self.label,
             style=css(
                 LayoutToken.css(self.display_styles),
@@ -118,6 +121,7 @@ class Badge(BaseModel):
                 border=f"{self.border_type} {tone.border}",
             ),
         )
+        return html_block(fragment)
 
 
 class DataItem(BaseModel):
@@ -139,8 +143,8 @@ class DataItem(BaseModel):
             return self.palette.text_primary
         return self.palette.tone(self.value_tone).text
 
-    def render(self) -> HtmlRenderable:
-        return div(
+    def render(self) -> mo.Html:
+        fragment = div(
             span(
                 self.label,
                 style=css(
@@ -155,6 +159,7 @@ class DataItem(BaseModel):
             ),
             style=css(margin_top=self.spacing.md),
         )
+        return html_block(fragment)
 
 
 class Title(BaseModel):
@@ -169,8 +174,8 @@ class Title(BaseModel):
     text_margin_inline: str = "0"
     text_margin_bottom: str = "0"
 
-    def render(self) -> HtmlRenderable:
-        return div(
+    def render(self) -> mo.Html:
+        fragment = div(
             p(
                 self.drop_text,
                 style=css(
@@ -189,6 +194,7 @@ class Title(BaseModel):
                 ),
             ),
         )
+        return html_block(fragment)
 
 
 class LabeledList(BaseModel):
@@ -198,7 +204,7 @@ class LabeledList(BaseModel):
     typography: Typography
     spacing: SpacingScale
     section_label: str
-    items: list[HtmlRenderable | str]
+    items: list[object | str]
     display_styles: list[LayoutToken] = Field(
         default_factory=lambda: [
             LayoutToken.FLEX,
@@ -207,19 +213,45 @@ class LabeledList(BaseModel):
         ]
     )
 
-    def render(self) -> HtmlRenderable:
-        return div(
+    def section_label_item(self) -> mo.Html:
+        return html_block(
             span(
                 f"{self.section_label}:",
                 style=css(self.typography.label.css(color=self.palette.text_muted)),
+            )
+        )
+
+    def rendered_items(self) -> list[object]:
+        rendered: list[object] = []
+        for item in self.items:
+            if isinstance(item, str):
+                rendered.append(
+                    html_block(
+                        span(
+                            item,
+                            style=css(
+                                self.typography.body.css(
+                                    color=self.palette.text_primary
+                                )
+                            ),
+                        )
+                    )
+                )
+                continue
+            rendered.append(item)
+        return rendered
+
+    def render(self) -> mo.Html:
+        return mo.style(
+            mo.hstack(
+                [self.section_label_item(), *self.rendered_items()],
+                justify="start",
+                align="center",
+                wrap=True,
+                gap=rem_to_float(self.spacing.sm),
             ),
-            *self.items,
-            style=css(
-                LayoutToken.css(self.display_styles),
-                margin_top=self.spacing.lg,
-                gap=self.spacing.sm,
-                line_height=self.spacing.line_height_loose,
-            ),
+            margin_top=self.spacing.lg,
+            line_height=self.spacing.line_height_loose,
         )
 
 

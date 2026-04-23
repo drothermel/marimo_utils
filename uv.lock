@@ -618,9 +618,10 @@ recommended = [
 
 [[package]]
 name = "marimo-utils"
-version = "0.2.0"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
+    { name = "altair" },
     { name = "marimo", extra = ["recommended"] },
     { name = "mohtml" },
     { name = "pydantic" },
@@ -634,6 +635,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "altair", specifier = ">=5.5.0" },
     { name = "marimo", extras = ["recommended"], specifier = ">=0.19.4" },
     { name = "mohtml", specifier = ">=0.1.11" },
     { name = "pydantic", specifier = ">=2.12.5" },

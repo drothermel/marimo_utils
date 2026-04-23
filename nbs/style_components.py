@@ -4,11 +4,10 @@ __generated_with = "0.23.2"
 app = marimo.App(width="columns")
 
 with app.setup:
-    import marimo as mo
     from datetime import datetime
     from pathlib import Path
 
-    from mohtml import div
+    import marimo as mo
 
     from marimo_utils.style import (
         Badge,
@@ -18,6 +17,8 @@ with app.setup:
         DateStamp,
         LabeledList,
         PaletteToneName,
+        PieChart,
+        PieSlice,
         ProjectStamp,
         SpacingScale,
         Title,
@@ -35,9 +36,22 @@ def tokens():
     palette = ColorPalette.default()
     typography = Typography.default()
     spacing = SpacingScale.default()
+    return palette, spacing, typography
 
-    demo_date = datetime(2026, 4, 22)
-    return demo_date, palette, spacing, typography
+
+@app.cell(hide_code=True)
+def _():
+    demo_data = {
+        "type": "Classic Card",
+        "title": "Class Distribution",
+        "project_name": "demo-project",
+        "badge_section_label": "Axes",
+        "badges": ["model", "dataset", "split"],
+        "stats": {"class_a": 5, "class_b": 10, "class_c": 5, "class_d": 1},
+        "date": datetime(2026, 4, 22),
+    }
+    demo_data
+    return (demo_data,)
 
 
 @app.cell(column=1, hide_code=True)
@@ -53,8 +67,9 @@ def _():
     mo.md(r"""
     `marimo_utils.style` is a small design system for rendering Pydantic-backed
     inspection cards in marimo notebooks. Each atom is a frozen `BaseModel` with
-    a `.render()` method returning HTML (via `mohtml`). Tokens — `ColorPalette`,
-    `Typography`, `SpacingScale` — flow in as dependencies.
+    a `.render()` method returning a marimo-native renderable. `mohtml` remains
+    the HTML authoring tool for the styled atoms, while `Card` can now host
+    both those styled fragments and native notebook outputs like charts.
 
     The demos below compose the shared defaults defined in the left column.
     """)
@@ -62,42 +77,72 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(palette, spacing, typography):
+def _(demo_data, palette, spacing, typography):
+    badge_row = mo.hstack(
+        [
+            Badge(
+                palette=palette,
+                typography=typography,
+                spacing=spacing,
+                label=_label,
+                tone=_tone,
+            ).render()
+            for _label, _tone in zip(
+                demo_data["badges"],
+                (
+                    PaletteToneName.INFO,
+                    PaletteToneName.SUCCESS,
+                    PaletteToneName.WARNING,
+                ),
+                strict=False,
+            )
+        ],
+        justify="start",
+        gap=0.5,
+    )
+
     mo.vstack(
         [
             mo.md(
                 r"""
                 ### Badge
 
-                A pill-shaped label with palette-tone aware colors. Tones come
-                from `PaletteToneName`.
+                A pill-shaped label with palette-tone aware colors. This demo now
+                reuses the shared badge labels from `demo_data`.
                 """
             ),
-            mo.hstack(
-                [
-                    mo.Html(
-                        str(
-                            Badge(
-                                palette=palette,
-                                typography=typography,
-                                spacing=spacing,
-                                label=tone.value,
-                                tone=tone,
-                            ).render()
-                        )
-                    )
-                    for tone in PaletteToneName
-                ],
-                justify="start",
-                gap=0.5,
-            ),
+            badge_row,
         ]
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(palette, spacing, typography):
+def _(demo_data, palette, spacing, typography):
+    data_item_list = mo.vstack(
+        [
+            DataItem(
+                palette=palette,
+                typography=typography,
+                spacing=spacing,
+                label=_label.replace("_", " ").title(),
+                value=str(_value),
+                value_tone=_tone,
+            ).render()
+            for (_label, _value), _tone in zip(
+                demo_data["stats"].items(),
+                (
+                    PaletteToneName.NEUTRAL,
+                    PaletteToneName.INFO,
+                    PaletteToneName.SUCCESS,
+                    PaletteToneName.WARNING,
+                ),
+                strict=False,
+            )
+        ],
+        gap=0,
+    )
+
     mo.vstack(
         [
             mo.md(
@@ -105,61 +150,34 @@ def _(palette, spacing, typography):
                 ### DataItem
 
                 Label + value pair. Optional `value_tone` colors the value using
-                the palette.
+                the palette. This demo now reads its labels and values from
+                `demo_data["stats"]`.
                 """
             ),
-            mo.Html(
-                str(
-                    div(
-                        DataItem(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            label="Samples",
-                            value="12,345",
-                            value_tone=PaletteToneName.SUCCESS,
-                        ).render(),
-                        DataItem(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            label="In flight",
-                            value="7",
-                            value_tone=PaletteToneName.INFO,
-                        ).render(),
-                        DataItem(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            label="Pending",
-                            value="124",
-                            value_tone=PaletteToneName.WARNING,
-                        ).render(),
-                        DataItem(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            label="Failed",
-                            value="2",
-                            value_tone=PaletteToneName.DANGER,
-                        ).render(),
-                        DataItem(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            label="Notes",
-                            value="no special tone",
-                        ).render(),
-                    )
-                )
-            ),
+            data_item_list,
         ]
     )
-    return
+    return (data_item_list,)
 
 
 @app.cell(hide_code=True)
-def _(palette, spacing, typography):
+def _(demo_data, palette, spacing, typography):
+    classic_card_title = Title(
+        palette=palette,
+        typography=typography,
+        spacing=spacing,
+        drop_text=demo_data["type"],
+        text=demo_data["title"],
+    ).render()
+
+    pie_card_title = Title(
+        palette=palette,
+        typography=typography,
+        spacing=spacing,
+        drop_text="Pie Card",
+        text=demo_data["title"],
+    ).render()
+
     mo.vstack(
         [
             mo.md(
@@ -170,24 +188,34 @@ def _(palette, spacing, typography):
                 `text`. Used as the `Card`'s top section.
                 """
             ),
-            mo.Html(
-                str(
-                    Title(
-                        palette=palette,
-                        typography=typography,
-                        spacing=spacing,
-                        drop_text="Pool Card",
-                        text="demo pool",
-                    ).render()
-                )
-            ),
+            classic_card_title,
         ]
     )
-    return
+    return classic_card_title, pie_card_title
 
 
 @app.cell(hide_code=True)
-def _(demo_date, palette, spacing, typography):
+def _(demo_data, palette, spacing, typography):
+    meta_stamp_row = mo.hstack(
+        [
+            DateStamp(
+                palette=palette,
+                typography=typography,
+                spacing=spacing,
+                value=demo_data["date"],
+            ).render(),
+            ProjectStamp(
+                palette=palette,
+                typography=typography,
+                spacing=spacing,
+                project_name=demo_data["project_name"],
+            ).render(),
+        ],
+        justify="start",
+        align="center",
+        gap=0.5,
+    )
+
     mo.vstack(
         [
             mo.md(
@@ -195,34 +223,33 @@ def _(demo_date, palette, spacing, typography):
                 ### DateStamp and ProjectStamp
 
                 Inline icon + text meta stamps, both `MetaStamp` subclasses.
+                Both values now come from `demo_data`.
                 """
             ),
-            mo.Html(
-                str(
-                    div(
-                        DateStamp(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            value=demo_date,
-                        ).render(),
-                        ProjectStamp(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            project_name="demo-project",
-                        ).render(),
-                        style="display: flex; gap: 1rem; align-items: center;",
-                    )
-                )
-            ),
+            meta_stamp_row,
         ]
     )
-    return
+    return (meta_stamp_row,)
 
 
 @app.cell(hide_code=True)
-def _(palette, spacing, typography):
+def _(demo_data, palette, spacing, typography):
+    labeled_list_demo = LabeledList(
+        palette=palette,
+        typography=typography,
+        spacing=spacing,
+        section_label=demo_data["badge_section_label"],
+        items=[
+            Badge(
+                palette=palette,
+                typography=typography,
+                spacing=spacing,
+                label=_name,
+            ).render()
+            for _name in demo_data["badges"]
+        ],
+    ).render()
+
     mo.vstack(
         [
             mo.md(
@@ -233,113 +260,76 @@ def _(palette, spacing, typography):
                 Wraps to multiple lines.
                 """
             ),
-            mo.Html(
-                str(
-                    LabeledList(
-                        palette=palette,
-                        typography=typography,
-                        spacing=spacing,
-                        section_label="Axes",
-                        items=[
-                            Badge(
-                                palette=palette,
-                                typography=typography,
-                                spacing=spacing,
-                                label=name,
-                            ).render()
-                            for name in (
-                                "model",
-                                "dataset",
-                                "split",
-                                "seed",
-                                "step",
-                            )
-                        ],
-                    ).render()
-                )
-            ),
+            labeled_list_demo,
         ]
     )
-    return
+    return (labeled_list_demo,)
 
 
 @app.cell(hide_code=True)
-def _(demo_date, palette, spacing, typography):
-    _card_header = div(
-        Badge(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            label="in_progress",
-            tone=PaletteToneName.WARNING,
-        ).render(),
-        ProjectStamp(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            project_name="demo-project",
-        ).render(),
-        DateStamp(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            value=demo_date,
-        ).render(),
-        LabeledList(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            section_label="Axes",
-            items=[
-                Badge(
-                    palette=palette,
-                    typography=typography,
-                    spacing=spacing,
-                    label=name,
-                ).render()
-                for name in ("model", "dataset", "split")
-            ],
-        ).render(),
-        style=(
-            "display: flex; flex-wrap: wrap; gap: 0.5rem; "
-            "align-items: center; margin-top: 0.25rem;"
-        ),
+def _(demo_data, palette, typography):
+    pie_chart_demo = PieChart(
+        palette=palette,
+        typography=typography,
+        slices=[
+            PieSlice(
+                label=_label.replace("_", " ").title(),
+                value=_value,
+                tone=_tone,
+            )
+            for (_label, _value), _tone in zip(
+                demo_data["stats"].items(),
+                (
+                    PaletteToneName.NEUTRAL,
+                    PaletteToneName.INFO,
+                    PaletteToneName.SUCCESS,
+                    PaletteToneName.WARNING,
+                ),
+                strict=False,
+            )
+        ],
+    ).render()
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### PieChart
+
+                A categorical pie chart using the shared `demo_data["stats"]`
+                values and the palette tones used elsewhere in the notebook.
+                """
+            ),
+            pie_chart_demo,
+        ]
+    )
+    return (pie_chart_demo,)
+
+
+@app.cell(column=2, hide_code=True)
+def _(
+    classic_card_title,
+    data_item_list,
+    labeled_list_demo,
+    meta_stamp_row,
+    palette,
+    spacing,
+    typography,
+):
+    card_header = mo.vstack(
+        [meta_stamp_row, labeled_list_demo],
+        gap=0,
     )
 
-    _card_content = div(
-        DataItem(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            label="Samples",
-            value="12,345",
-            value_tone=PaletteToneName.SUCCESS,
-        ).render(),
-        DataItem(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            label="In flight",
-            value="7",
-            value_tone=PaletteToneName.INFO,
-        ).render(),
-        DataItem(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            label="Pending",
-            value="124",
-            value_tone=PaletteToneName.WARNING,
-        ).render(),
-        DataItem(
-            palette=palette,
-            typography=typography,
-            spacing=spacing,
-            label="Failed",
-            value="2",
-            value_tone=PaletteToneName.DANGER,
-        ).render(),
-    )
+    card_demo = Card(
+        palette=palette,
+        typography=typography,
+        spacing=spacing,
+        width="22rem",
+        title=classic_card_title,
+        header=card_header,
+        content=data_item_list,
+    ).render()
 
     mo.vstack(
         [
@@ -347,37 +337,53 @@ def _(demo_date, palette, spacing, typography):
                 r"""
                 ### Card
 
-                The top-level composer. Wraps an optional `Title`, a `header`
-                div, and a `content` div inside a styled surface. A divider is
-                drawn automatically between the header and content when both
-                are present.
+                The top-level composer. This classic card reuses the component
+                globals defined above and renders the shared data-item list as its
+                content.
                 """
             ),
-            mo.Html(
-                str(
-                    Card(
-                        palette=palette,
-                        typography=typography,
-                        spacing=spacing,
-                        width="22rem",
-                        title=Title(
-                            palette=palette,
-                            typography=typography,
-                            spacing=spacing,
-                            drop_text="Pool Card",
-                            text="demo pool",
-                        ),
-                        header=_card_header,
-                        content=_card_content,
-                    ).render()
-                )
+            card_demo,
+        ]
+    )
+    return (card_header,)
+
+
+@app.cell(hide_code=True)
+def _(
+    card_header,
+    palette,
+    pie_card_title,
+    pie_chart_demo,
+    spacing,
+    typography,
+):
+    pie_card_demo = Card(
+        palette=palette,
+        typography=typography,
+        spacing=spacing,
+        width="22rem",
+        title=pie_card_title,
+        header=card_header,
+        content=pie_chart_demo,
+    ).render()
+
+    mo.vstack(
+        [
+            mo.md(
+                r"""
+                ### Pie Card
+
+                A second card variant that reuses the same header components and
+                swaps the content area to the shared pie chart renderable.
+                """
             ),
+            pie_card_demo,
         ]
     )
     return
 
 
-@app.cell(column=2, hide_code=True)
+@app.cell(column=3, hide_code=True)
 def _():
     mo.md(r"""
     leave space

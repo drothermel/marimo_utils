@@ -1,4 +1,5 @@
 from marimo_utils.style.card import Card
+from marimo_utils.style.charts import PieChart, PieSlice
 from marimo_utils.style.components import (
     Badge,
     DataItem,
@@ -9,7 +10,6 @@ from marimo_utils.style.components import (
     Title,
 )
 from marimo_utils.style.css import css
-from marimo_utils.style.protocols import HtmlRenderable
 from marimo_utils.style.settings import (
     ColorPalette,
     IconStyle,
@@ -27,12 +27,13 @@ __all__ = [
     "ColorPalette",
     "DataItem",
     "DateStamp",
-    "HtmlRenderable",
     "IconStyle",
     "LabeledList",
     "LayoutToken",
     "MetaStamp",
     "PaletteToneName",
+    "PieChart",
+    "PieSlice",
     "ProjectStamp",
     "SpacingScale",
     "TextStyle",
