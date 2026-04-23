@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict, computed_field
 
 from marimo_utils.tw.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
-from marimo_utils.tw.charts._base import SHADCN_PLOTLY_LAYOUT, PlotlyChart
+from marimo_utils.tw.charts._base import PlotlyChart
 
 
 class BarItem(BaseModel):
@@ -67,7 +67,7 @@ class BarChart(PlotlyChart):
             bar = go.Bar(x=values, y=labels, orientation="h", marker=marker)
 
         fig = go.Figure(data=[bar])
-        fig.update_layout(**SHADCN_PLOTLY_LAYOUT)
+        fig.update_layout(**self._layout())
         self._apply_dimensions(fig)
         return fig
 

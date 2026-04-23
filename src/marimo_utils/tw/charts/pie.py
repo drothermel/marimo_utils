@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 from marimo_utils.tw.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
-from marimo_utils.tw.charts._base import SHADCN_PLOTLY_LAYOUT, PlotlyChart
+from marimo_utils.tw.charts._base import PlotlyChart
 
 
 class PieSlice(BaseModel):
@@ -83,7 +83,7 @@ class PieChart(PlotlyChart):
                 )
             ]
         )
-        fig.update_layout(**SHADCN_PLOTLY_LAYOUT)
+        fig.update_layout(**self._layout())
         self._apply_dimensions(fig)
         return fig
 

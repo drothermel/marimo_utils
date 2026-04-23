@@ -5,7 +5,7 @@ from typing import Literal
 import plotly.graph_objects as go
 
 from marimo_utils.tw.chart_colors import CHART_HEX, ChartColor
-from marimo_utils.tw.charts._base import SHADCN_PLOTLY_LAYOUT, PlotlyChart
+from marimo_utils.tw.charts._base import PlotlyChart
 
 HistNorm = Literal["", "percent", "probability", "density", "probability density"]
 
@@ -68,7 +68,7 @@ class HistogramChart(PlotlyChart):
             **axis_kwarg,
         )
         fig = go.Figure(data=[hist])
-        fig.update_layout(**SHADCN_PLOTLY_LAYOUT)
+        fig.update_layout(**self._layout())
         fig.update_layout(bargap=0.05)
         self._apply_dimensions(fig)
         return fig

@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.tw.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
-from marimo_utils.tw.charts._base import SHADCN_PLOTLY_LAYOUT, PlotlyChart
+from marimo_utils.tw.charts._base import PlotlyChart
 
 ViolinPoints = Literal["all", "outliers", "suspectedoutliers", False]
 
@@ -74,8 +74,12 @@ class ViolinChart(PlotlyChart):
             traces.append(go.Violin(**shared))
 
         fig = go.Figure(data=traces)
-        fig.update_layout(**SHADCN_PLOTLY_LAYOUT)
-        fig.update_layout(violinmode="group", showlegend=len(traces) > 1)
+        fig.update_layout(**self._layout())
+        # `violinmode="overlay"` (the default) pairs with the categorical x
+        # values above so each violin anchors to its own x-tick. With
+        # `violinmode="group"`, plotly adds a trace-index offset inside each
+        # category and the outer violins drift outward from their labels.
+        fig.update_layout(violinmode="overlay", showlegend=len(traces) > 1)
         self._apply_dimensions(fig)
         return fig
 

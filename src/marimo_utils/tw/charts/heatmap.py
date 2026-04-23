@@ -5,8 +5,8 @@ from pydantic import Field, model_validator
 
 from marimo_utils.tw.chart_colors import ChartColor, chart_colorscale
 from marimo_utils.tw.charts._base import (
+    SHADCN_FONT_FAMILY,
     SHADCN_FOREGROUND_HEX,
-    SHADCN_PLOTLY_LAYOUT,
     PlotlyChart,
 )
 
@@ -80,15 +80,13 @@ class HeatmapChart(PlotlyChart):
             ]
             heatmap_kwargs["texttemplate"] = "%{text}"
             heatmap_kwargs["textfont"] = {
-                "family": (
-                    "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
-                ),
+                "family": SHADCN_FONT_FAMILY,
                 "color": SHADCN_FOREGROUND_HEX,
-                "size": 11,
+                "size": self._effective_tick_font_size(),
             }
 
         fig = go.Figure(data=[go.Heatmap(**heatmap_kwargs)])
-        fig.update_layout(**SHADCN_PLOTLY_LAYOUT)
+        fig.update_layout(**self._layout())
         fig.update_xaxes(showgrid=False, zeroline=False)
         fig.update_yaxes(showgrid=False, zeroline=False, autorange="reversed")
         self._apply_dimensions(fig)
