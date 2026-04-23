@@ -252,6 +252,16 @@ class Style(BaseModel):
             "colorway": [self.palette.tone(tone).border for tone in tones],
         }
 
+    def tone_colorscale(self, tone: PaletteToneName) -> list[list[float | str]]:
+        """Sequential two-stop colorscale derived from a palette tone.
+
+        Maps ``0.0`` to the tone's ``bg`` (light) and ``1.0`` to its
+        ``border`` (saturated). Intended for ``go.Heatmap`` / choropleth
+        use where plotly expects ``list[[float, str]]``.
+        """
+        palette = self.palette.tone(tone)
+        return [[0.0, palette.bg], [1.0, palette.border]]
+
 
 __all__ = [
     "ColorPalette",
