@@ -1,6 +1,6 @@
 [project]
 name = "marimo-utils"
-version = "0.6.0"
+version = "0.7.0"
 description = "Utilities for working with marimo notebooks: Pydantic model display plus a Tailwind + shadcn UI primitives package"
 readme = "README.md"
 license = "MIT"
