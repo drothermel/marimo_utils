@@ -1,15 +1,41 @@
 from __future__ import annotations
 
+import re
 from datetime import datetime
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
 from lucide import lucide_icon  # type: ignore[import-untyped]
-from mohtml import div, h3, p, span  # type: ignore[import-untyped]
+from mohtml import br, div, h3, p, span, strong  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui._rendering import auto_render, html_block
 from marimo_utils.ui.variants import BADGE_BASE, BADGE_VARIANT_CLASSES, BadgeVariant
+
+_BOLD_PATTERN = re.compile(r"\*\*(.+?)\*\*")
+
+
+def _render_inline(text: str) -> list[object]:
+    """Render a description string as child nodes.
+
+    Splits on `\\n` (rendered as `<br/>`) and parses `**text**` as
+    `<strong>`. Deliberately narrow — just line breaks and bold, no
+    full-markdown support — so the rendering is predictable inside a
+    Card's `<p>` element.
+    """
+    children: list[object] = []
+    for i, line in enumerate(text.split("\n")):
+        if i > 0:
+            children.append(br())
+        pos = 0
+        for match in _BOLD_PATTERN.finditer(line):
+            if match.start() > pos:
+                children.append(line[pos : match.start()])
+            children.append(strong(match.group(1)))
+            pos = match.end()
+        if pos < len(line):
+            children.append(line[pos:])
+    return children
 
 
 class Badge(BaseModel):
@@ -52,7 +78,7 @@ class CardDescription(BaseModel):
     def render(self) -> mo.Html | ActiveHtml:
         base = "text-sm text-muted-foreground"
         classes = f"{base} {self.klass}" if self.klass else base
-        return html_block(p(self.text, klass=classes))
+        return html_block(p(*_render_inline(self.text), klass=classes))
 
 
 class DataItem(BaseModel):

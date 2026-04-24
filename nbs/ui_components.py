@@ -15,6 +15,9 @@ with app.setup:
         BadgeVariant,
         BarChart,
         BarItem,
+        BoxChart,
+        BoxGroup,
+        BoxPlotCard,
         Card,
         CardDescription,
         CardTitle,
@@ -22,6 +25,7 @@ with app.setup:
         DataItem,
         DateStamp,
         HeatmapChart,
+        HistogramCard,
         HistogramChart,
         LabeledList,
         LineChart,
@@ -34,6 +38,7 @@ with app.setup:
         ScatterSeries,
         ViolinChart,
         ViolinGroup,
+        ViolinPlotCard,
         bootstrap_tailwind,
     )
 
@@ -135,9 +140,7 @@ def _():
             mo.hstack(
                 [
                     Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
-                    Badge(
-                        label="secondary", variant=BadgeVariant.SECONDARY
-                    ).render(),
+                    Badge(label="secondary", variant=BadgeVariant.SECONDARY).render(),
                     Badge(
                         label="destructive", variant=BadgeVariant.DESTRUCTIVE
                     ).render(),
@@ -526,16 +529,14 @@ def _(LOSS_VALUES):
                         x_label="Loss",
                         y_label="Count",
                     ),
-                    Card(
+                    HistogramCard(
+                        column="loss",
+                        data=LOSS_VALUES,
                         title="Loss Distribution",
                         description="Per-sample training loss",
-                        content=HistogramChart(
-                            values=LOSS_VALUES,
-                            color=ChartColor.TWO,
-                            nbins=28,
-                            height=220,
-                        ),
-                        width="w-80",
+                        color=ChartColor.TWO,
+                        nbins=28,
+                        y_label="Count",
                     ).render(),
                 ],
                 justify="space-around",
@@ -611,6 +612,14 @@ def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
             Grouped violin plot — one trace per `ViolinGroup` so each gets
             its own palette color (cycling `CHART_COLORWAY` by index).
             The legend appears automatically when multiple groups render.
+
+            For large datasets, `max_samples=N` downsamples each group in
+            Python (deterministic via `sample_seed`) before shipping to
+            Plotly — essential because `go.Violin` otherwise serializes
+            every raw point and computes the KDE client-side. The Card on
+            the right demos this with `max_samples=40` and
+            `spanmode="hard"` to clip the KDE at the data range rather
+            than letting bandwidth smear into negatives.
             """),
             mo.md("---"),
             mo.hstack(
@@ -626,19 +635,68 @@ def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
                         x_label="Split",
                         y_label="Loss",
                     ),
-                    Card(
-                        title="Loss by Split",
-                        description="Train / val / test distributions",
-                        content=ViolinChart(
-                            groups=[
-                                ViolinGroup(label="train", values=GROUP_TRAIN),
-                                ViolinGroup(label="val", values=GROUP_VAL),
-                                ViolinGroup(label="test", values=GROUP_TEST),
-                            ],
-                            show_legend=True,
-                            height=220,
-                        ),
-                        width="w-80",
+                    ViolinPlotCard(
+                        column="train_loss",
+                        data=GROUP_TRAIN,
+                        title="Train Loss Distribution",
+                        description="Single-column violin card",
+                        color=ChartColor.ONE,
+                        spanmode="hard",
+                        max_samples=40,
+                        y_label="Loss",
+                    ).render(),
+                ],
+                justify="space-around",
+            ),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## BoxChart
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
+    mo.vstack(
+        [
+            mo.md(r"""
+            Grouped box plot — one trace per `BoxGroup`. Two input modes:
+            raw `values` (Plotly computes quartiles and Tukey whiskers)
+            and precomputed stats (`q1`, `median`, `q3`, optional
+            `lowerfence` / `upperfence` / `mean` / `sd`). Custom fences
+            replace Plotly's default 1.5x IQR rule — essential for
+            heavy-tailed data where you want whiskers at meaningful
+            percentiles (p1/p99, min/max) rather than generating a swarm
+            of "outlier" markers. The Card on the right ships only five
+            floats to Plotly — no raw points travel to the browser.
+            """),
+            mo.md("---"),
+            mo.hstack(
+                [
+                    BoxChart(
+                        groups=[
+                            BoxGroup(label="train", values=GROUP_TRAIN),
+                            BoxGroup(label="val", values=GROUP_VAL),
+                            BoxGroup(label="test", values=GROUP_TEST),
+                        ],
+                        show_legend=True,
+                        title="Loss Distribution by Split",
+                        x_label="Split",
+                        y_label="Loss",
+                    ),
+                    BoxPlotCard(
+                        column="train_loss",
+                        data=GROUP_TRAIN,
+                        title="Train Loss Distribution",
+                        description="Precomputed stats via BoxPlotCard",
+                        color=ChartColor.ONE,
+                        y_label="Loss",
                     ).render(),
                 ],
                 justify="space-around",
