@@ -29,6 +29,7 @@ from marimo_utils.ui.charts.quantiles import (
     skew_label,
 )
 from marimo_utils.ui.charts.scatter import ScatterChart, ScatterSeries
+from marimo_utils.ui.charts.value_counts import FrequencyBarCard
 from marimo_utils.ui.charts.violin import (
     ViolinChart,
     ViolinGroup,
@@ -51,6 +52,7 @@ __all__ = [
     "BoxMean",
     "BoxPlotCard",
     "BoxPoints",
+    "FrequencyBarCard",
     "HeatmapChart",
     "HistNorm",
     "HistogramCard",
