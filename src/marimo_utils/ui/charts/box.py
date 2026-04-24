@@ -84,6 +84,7 @@ class BoxGroup(BaseModel):
             "q1": q(Quantile.P25),
             "median": q(Quantile.P50),
             "q3": q(Quantile.P75),
+            "sd": float(series.std(ddof=0)),
         }
         if color is not None:
             kwargs["color"] = color

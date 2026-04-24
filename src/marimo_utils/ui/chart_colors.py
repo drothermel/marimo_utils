@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+import re
 from enum import IntEnum
 
 
@@ -52,7 +54,17 @@ def hex_to_rgba(hex_color: str, alpha: float) -> str:
     trace-level `opacity` dims fills and outlines equally, which washes
     out box-plot median lines and violin inner-box markings.
     """
+    if not isinstance(hex_color, str):
+        raise ValueError("hex_to_rgba: hex_color must be a string")
+    if not isinstance(alpha, int | float) or not math.isfinite(alpha):
+        raise ValueError("hex_to_rgba: alpha must be a finite number in [0.0, 1.0]")
+
     h = hex_color.lstrip("#")
+    if len(h) != 6 or re.fullmatch(r"[0-9A-Fa-f]{6}", h) is None:
+        raise ValueError("hex_to_rgba: hex_color must be exactly 6 hex characters")
+    if not 0.0 <= float(alpha) <= 1.0:
+        raise ValueError("hex_to_rgba: alpha must be in [0.0, 1.0]")
+
     r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
     return f"rgba({r}, {g}, {b}, {alpha})"
 

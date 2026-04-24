@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import math
 
+import pytest
+
 from marimo_utils.ui import compute_gini, skew_label
 
 
@@ -36,6 +38,22 @@ def test_gini_concentrated_approaches_n_minus_1_over_n() -> None:
 
 def test_gini_drops_none_and_nan() -> None:
     assert compute_gini([3, 3, 3, None, float("nan")]) == 0.0
+
+
+@pytest.mark.parametrize(
+    "counts",
+    [
+        [-1, 1],
+        [float("-inf"), 1],
+        [float("inf"), 1],
+        [-1, None, float("nan")],
+    ],
+)
+def test_gini_rejects_negative_and_infinite_values(counts: list[float | None]) -> None:
+    with pytest.raises(
+        ValueError, match="compute_gini: counts must contain only finite, non-negative values"
+    ):
+        compute_gini(counts)
 
 
 def test_gini_moderate_skew_in_range() -> None:

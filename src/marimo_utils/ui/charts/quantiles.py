@@ -54,6 +54,10 @@ def compute_gini(counts: Sequence[float | None]) -> float:
         for c in counts
         if c is not None and not (isinstance(c, float) and math.isnan(c))
     ]
+    if any(not math.isfinite(c) or c < 0.0 for c in cleaned):
+        raise ValueError(
+            "compute_gini: counts must contain only finite, non-negative values"
+        )
     n = len(cleaned)
     if n <= 1:
         return 0.0

@@ -14,6 +14,8 @@ from marimo_utils.ui.charts.bar import BarChart, BarItem
 
 
 def _truncate(s: str, n: int) -> str:
+    if n <= 0:
+        raise ValueError("label_width must be a positive integer")
     if len(s) <= n:
         return s
     return s[: n - 1] + "…"
@@ -99,6 +101,8 @@ class FrequencyBarCard(BaseModel):
         if counts.empty:
             content: object = mo.md("_No values to display._")
         else:
+            if self.top_n <= 0:
+                raise ValueError("top_n must be a positive integer")
             ordered = self._ordered(counts).head(self.top_n)
             items = [
                 BarItem(
@@ -110,7 +114,7 @@ class FrequencyBarCard(BaseModel):
             ]
             # Horizontal charts read top-down, so reverse the list — the
             # largest count lands at the top of the axis.
-            if self.orientation == "h" and self.sort == "count_desc":
+            if self.orientation == "h":
                 items = list(reversed(items))
             content = BarChart(
                 items=items,

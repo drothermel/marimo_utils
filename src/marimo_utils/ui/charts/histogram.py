@@ -35,9 +35,9 @@ class HistogramChart(PlotlyChart):
     Raw values go in; plotly handles binning via `nbins` / `bin_size`, or
     — when `binning="integer"` — unit-width bars centered on integer
     ticks. `binning="auto"` (default) picks `"integer"` when the values
-    are integer-valued *and* their range fits within
-    `integer_range_threshold`; otherwise `"continuous"`. `log_y` applies
-    a log scale to the count axis (x when `orientation="h"`).
+    are integer-valued *and* their range fits within `max_integer_bars`;
+    otherwise `"continuous"`. `log_y` applies a log scale to the count
+    axis (x when `orientation="h"`).
     """
 
     values: list[float]
