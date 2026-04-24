@@ -22,6 +22,7 @@ dependencies = [
     "dr-widget==0.2.0",
     "marimo[recommended]>=0.19.4",
     "mohtml>=0.1.11",
+    "pandas>=2.0",
     "plotly>=6.7.0",
     "pydantic>=2.12.5",
     "python-lucide>=0.2.24",
@@ -38,6 +39,8 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "playwright>=1.58.0",
+    "pytest>=8.3",
+    "pytest-xdist>=3.6",
     "ruff>=0.14.13",
     "ty>=0.0.13",
 ]
@@ -64,9 +67,25 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "src/marimo_utils/display.py" = ["B009", "B010"]  # getattr/setattr needed for type checker
 "nbs/*.py" = ["ANN001", "ANN201", "ANN202", "B018"]
+"tests/*.py" = ["ANN001", "ANN201"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["marimo_utils"]
 
 [tool.ty.environment]
 python-version = "3.12"
+
+[tool.ty.src]
+# The ui/ module relies on mohtml (untyped) and other Tailwind-adjacent
+# constructs that produce spurious ty diagnostics. Excluding it avoids
+# training agents and contributors to make suboptimal design choices in
+# pursuit of a clean type-check that the tooling can't actually deliver
+# here. Keep the exclude tight — the rest of the package should stay
+# type-checked.
+exclude = [
+    "src/marimo_utils/ui/**",
+    "nbs/**",
+]

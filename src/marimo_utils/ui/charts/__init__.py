@@ -6,12 +6,37 @@ from marimo_utils.ui.charts._base import (
     PlotlyChart,
 )
 from marimo_utils.ui.charts.bar import BarChart, BarItem
+from marimo_utils.ui.charts.box import (
+    BoxChart,
+    BoxGroup,
+    BoxMean,
+    BoxPlotCard,
+    BoxPoints,
+)
 from marimo_utils.ui.charts.heatmap import HeatmapChart
-from marimo_utils.ui.charts.histogram import HistNorm, HistogramChart
+from marimo_utils.ui.charts.histogram import (
+    Binning,
+    HistNorm,
+    HistogramCard,
+    HistogramChart,
+)
 from marimo_utils.ui.charts.line import LineChart, LineDash, LineSeries
 from marimo_utils.ui.charts.pie import PieChart, PieSlice
+from marimo_utils.ui.charts.quantiles import (
+    Quantile,
+    QuantileFences,
+    compute_gini,
+    skew_label,
+)
 from marimo_utils.ui.charts.scatter import ScatterChart, ScatterSeries
-from marimo_utils.ui.charts.violin import ViolinChart, ViolinGroup, ViolinPoints
+from marimo_utils.ui.charts.violin import (
+    ViolinChart,
+    ViolinGroup,
+    ViolinPlotCard,
+    ViolinPoints,
+    ViolinSide,
+    ViolinSpanmode,
+)
 
 __all__ = [
     "SHADCN_BORDER_HEX",
@@ -20,8 +45,15 @@ __all__ = [
     "SHADCN_PLOTLY_LAYOUT",
     "BarChart",
     "BarItem",
+    "Binning",
+    "BoxChart",
+    "BoxGroup",
+    "BoxMean",
+    "BoxPlotCard",
+    "BoxPoints",
     "HeatmapChart",
     "HistNorm",
+    "HistogramCard",
     "HistogramChart",
     "LineChart",
     "LineDash",
@@ -29,9 +61,16 @@ __all__ = [
     "PieChart",
     "PieSlice",
     "PlotlyChart",
+    "Quantile",
+    "QuantileFences",
     "ScatterChart",
     "ScatterSeries",
     "ViolinChart",
     "ViolinGroup",
+    "ViolinPlotCard",
     "ViolinPoints",
+    "ViolinSide",
+    "ViolinSpanmode",
+    "compute_gini",
+    "skew_label",
 ]

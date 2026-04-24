@@ -33,6 +33,8 @@ def shadcn_plotly_layout(
     y_label: str | None = None,
     x_range: tuple[float, float] | None = None,
     y_range: tuple[float, float] | None = None,
+    x_tick_format: str | None = None,
+    y_tick_format: str | None = None,
 ) -> dict[str, object]:
     """Build a shadcn-themed plotly layout dict parameterized by typography.
 
@@ -53,7 +55,9 @@ def shadcn_plotly_layout(
     effective_tick_size = font_size if tick_font_size is None else tick_font_size
 
     def _axis(
-        label: str | None, range_: tuple[float, float] | None
+        label: str | None,
+        range_: tuple[float, float] | None,
+        tick_format: str | None,
     ) -> dict[str, object]:
         axis: dict[str, object] = {
             "gridcolor": SHADCN_BORDER_HEX,
@@ -66,6 +70,8 @@ def shadcn_plotly_layout(
             axis["automargin"] = True
         if range_ is not None:
             axis["range"] = list(range_)
+        if tick_format is not None:
+            axis["tickformat"] = tick_format
         return axis
 
     margin = {"l": 8, "r": 8, "t": 8, "b": 8}
@@ -83,8 +89,8 @@ def shadcn_plotly_layout(
         "margin": margin,
         "colorway": CHART_COLORWAY,
         "showlegend": show_legend,
-        "xaxis": _axis(x_label, x_range),
-        "yaxis": _axis(y_label, y_range),
+        "xaxis": _axis(x_label, x_range, x_tick_format),
+        "yaxis": _axis(y_label, y_range, y_tick_format),
     }
     if title is not None:
         effective_title_size = (
@@ -135,6 +141,8 @@ class PlotlyChart(BaseModel):
     x_label: str | None = None
     y_label: str | None = None
     y_range: tuple[float, float] | None = None
+    x_tick_format: str | None = None
+    y_tick_format: str | None = None
 
     def _effective_tick_font_size(self) -> int:
         """Tick font size, inheriting from `font_size` when unset."""
@@ -163,6 +171,8 @@ class PlotlyChart(BaseModel):
             y_label=self.y_label,
             x_range=x_range,
             y_range=self.y_range,
+            x_tick_format=self.x_tick_format,
+            y_tick_format=self.y_tick_format,
         )
 
     def _has_data(self) -> bool:

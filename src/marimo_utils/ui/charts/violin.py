@@ -1,14 +1,28 @@
 from __future__ import annotations
 
+import random
+from collections.abc import Sequence
 from typing import Literal
 
+import marimo as mo
+import pandas as pd
 import plotly.graph_objects as go
+from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
+from marimo_utils.ui.card import Card
+from marimo_utils.ui.chart_colors import (
+    CHART_COLORWAY,
+    CHART_HEX,
+    ChartColor,
+    filled_trace_colors,
+)
 from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.quantiles import QuantileFences
 
 ViolinPoints = Literal["all", "outliers", "suspectedoutliers", False]
+ViolinSpanmode = Literal["soft", "hard"]
+ViolinSide = Literal["both", "positive", "negative"]
 
 
 class ViolinGroup(BaseModel):
@@ -23,7 +37,16 @@ class ViolinChart(PlotlyChart):
     """Grouped violin plot — one trace per `ViolinGroup` so each gets its own color.
 
     Groups without an explicit `color` cycle through `CHART_COLORWAY` by
-    index.
+    index. For large datasets, set `max_samples` to downsample each group
+    in Python before the trace is serialized — Plotly's violin trace
+    otherwise ships every point to the browser and computes the KDE
+    client-side, so payload and render time both scale with raw N.
+
+    Tail-legibility knobs: `spanmode="hard"` clips the KDE at the data
+    range (vs. the default soft smoothing which can smear a latency
+    distribution into negative territory); `bandwidth` overrides the KDE
+    bandwidth; `jitter` spreads overlaid points when `points != False`;
+    `side` supports half-violins.
     """
 
     groups: list[ViolinGroup]
@@ -32,6 +55,12 @@ class ViolinChart(PlotlyChart):
     points: ViolinPoints = "outliers"
     orientation: Literal["v", "h"] = "v"
     height: int | None = 260
+    max_samples: int | None = None
+    sample_seed: int = 0
+    spanmode: ViolinSpanmode = "soft"
+    bandwidth: float | None = None
+    jitter: float | None = None
+    side: ViolinSide = "both"
 
     def _color_for_group(self, group: ViolinGroup, index: int) -> str:
         if group.color is not None:
@@ -48,27 +77,40 @@ class ViolinChart(PlotlyChart):
     def _has_data(self) -> bool:
         return any(len(group.values) > 0 for group in self.groups)
 
+    def _subsample(self, values: list[float], index: int) -> list[float]:
+        # Seed offset by group index so groups don't correlate but the
+        # render is reproducible across reruns.
+        if self.max_samples is None or len(values) <= self.max_samples:
+            return values
+        rng = random.Random(self.sample_seed + index)
+        return rng.sample(values, self.max_samples)
+
     def _build_figure(self) -> go.Figure:
         traces: list[go.Violin] = []
         for i, group in enumerate(self.groups):
             if not group.values:
                 continue
+            values = self._subsample(group.values, i)
             color = self._color_for_group(group, i)
             shared: dict[str, object] = {
                 "name": group.label,
                 "box_visible": self.show_box,
                 "meanline_visible": self.show_meanline,
                 "points": self.points,
-                "line_color": color,
-                "fillcolor": color,
-                "opacity": 0.55,
+                "spanmode": self.spanmode,
+                "side": self.side,
+                **filled_trace_colors(color),
             }
-            category = [group.label] * len(group.values)
+            if self.bandwidth is not None:
+                shared["bandwidth"] = self.bandwidth
+            if self.jitter is not None:
+                shared["jitter"] = self.jitter
+            category = [group.label] * len(values)
             if self.orientation == "v":
-                shared["y"] = group.values
+                shared["y"] = values
                 shared["x"] = category
             else:
-                shared["x"] = group.values
+                shared["x"] = values
                 shared["y"] = category
                 shared["orientation"] = "h"
             traces.append(go.Violin(**shared))
@@ -84,4 +126,117 @@ class ViolinChart(PlotlyChart):
         return fig
 
 
-__all__ = ["ViolinChart", "ViolinGroup", "ViolinPoints"]
+class ViolinPlotCard(BaseModel):
+    """Card-wrapped `ViolinChart` for one column of data.
+
+    Accepts a `pd.DataFrame` (picked via `column`), a `pd.Series`, or any
+    `Sequence[float]`. Unlike `BoxPlotCard`, violins require the raw
+    values for the KDE, so the efficiency knob is `max_samples` —
+    downsamples before the trace is serialized. `spanmode="hard"` clips
+    the KDE at the data range, which avoids the "latency smeared into
+    negative territory" failure mode on positive-only distributions.
+
+    `clip_fences` drops values outside the given quantile range *before*
+    sampling, so the violin focuses on the distribution's bulk instead
+    of being stretched by extreme outliers. Note that clipping re-fits
+    the KDE on the remaining data — it changes the density's shape near
+    the clip boundary, not just its support. For p1/p99 this is usually
+    imperceptible; at p10/p90 the shoulders visibly bulge. Pairs
+    naturally with an unclipped `BoxPlotCard` next to it: the box's
+    whiskers mark the clip region, the violin shows fine shape inside.
+    """
+
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
+    column: str
+    data: pd.DataFrame | pd.Series | Sequence[float]
+    label: str | None = None
+    title: str | None = None
+    description: str | None = None
+    orientation: Literal["v", "h"] = "v"
+    color: ChartColor | None = None
+    show_box: bool = True
+    show_meanline: bool = True
+    points: ViolinPoints = False
+    spanmode: ViolinSpanmode = "hard"
+    clip_fences: QuantileFences | None = None
+    max_samples: int | None = 2000
+    sample_seed: int = 0
+    bandwidth: float | None = None
+    jitter: float | None = None
+    side: ViolinSide = "both"
+    value_scale: float = 1.0
+    tick_format: str | None = None
+    x_label: str | None = None
+    y_label: str | None = None
+    height: int = 220
+    width: str = "w-80"
+
+    def _series(self) -> pd.Series:
+        if isinstance(self.data, pd.DataFrame):
+            raw = self.data[self.column]
+        elif isinstance(self.data, pd.Series):
+            raw = self.data
+        else:
+            raw = pd.Series(list(self.data))
+        series = pd.to_numeric(raw, errors="coerce").dropna()
+        if self.value_scale != 1.0:
+            series = series * self.value_scale
+        return series
+
+    def _clip(self, series: pd.Series) -> pd.Series:
+        if self.clip_fences is None:
+            return series
+        lower, upper = self.clip_fences.value
+        lo = float(series.quantile(float(lower)))
+        hi = float(series.quantile(float(upper)))
+        return series[(series >= lo) & (series <= hi)]
+
+    def render(self) -> mo.Html | ActiveHtml:
+        series = self._clip(self._series())
+        if series.empty:
+            content: object = mo.md("_No numeric data to display._")
+        else:
+            x_tick = self.tick_format if self.orientation == "h" else None
+            y_tick = self.tick_format if self.orientation == "v" else None
+            content = ViolinChart(
+                groups=[
+                    ViolinGroup(
+                        label=self.label if self.label is not None else self.column,
+                        values=series.tolist(),
+                        color=self.color,
+                    ),
+                ],
+                show_box=self.show_box,
+                show_meanline=self.show_meanline,
+                points=self.points,
+                spanmode=self.spanmode,
+                max_samples=self.max_samples,
+                sample_seed=self.sample_seed,
+                bandwidth=self.bandwidth,
+                jitter=self.jitter,
+                side=self.side,
+                orientation=self.orientation,
+                height=self.height,
+                show_legend=False,
+                x_label=self.x_label,
+                y_label=self.y_label,
+                x_tick_format=x_tick,
+                y_tick_format=y_tick,
+            )
+        return Card(
+            title=self.title,
+            description=self.description,
+            content=content,
+            width=self.width,
+        ).render()
+
+
+__all__ = [
+    "ViolinChart",
+    "ViolinGroup",
+    "ViolinPlotCard",
+    "ViolinPoints",
+    "ViolinSide",
+    "ViolinSpanmode",
+]
