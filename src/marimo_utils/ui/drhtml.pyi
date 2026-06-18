@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from enum import StrEnum
 from typing import Protocol
 
 import marimo as mo
@@ -8,7 +9,9 @@ class HtmlTag:
     html_name: str
     args: tuple[object, ...]
     kwargs: dict[str, object]
-    def __init__(self, html_name: str, *args: object, **kwargs: object) -> None: ...
+    def __init__(
+        self, html_name: str, *args: object, **kwargs: object
+    ) -> None: ...
     def __str__(self) -> str: ...
     def __repr__(self) -> str: ...
 
@@ -16,6 +19,8 @@ TagFn = Callable[..., HtmlTag]
 
 class HtmlRenderable(Protocol):
     def __str__(self) -> str: ...
+
+def cn(*values: str | StrEnum | None) -> str: ...
 
 def html_block(fragment: HtmlRenderable) -> mo.Html | ActiveHtml: ...
 
