@@ -50,17 +50,11 @@ from marimo_utils.ui.components import (
     LucideIcon,
     ProjectStamp,
 )
-from marimo_utils.ui.variants import (
-    BADGE_BASE,
-    BADGE_VARIANT_CLASSES,
-    BadgeVariant,
-)
 from marimo_utils.ui.drhtml import cn
-from marimo_utils.ui.styles import DivLayouts, SpanLayouts
+from marimo_utils.ui.styles import BADGE_BASE, BadgeVariant, DivLayouts, SpanLayouts
 
 __all__ = [
     "BADGE_BASE",
-    "BADGE_VARIANT_CLASSES",
     "CHART_COLORWAY",
     "CHART_HEX",
     "Badge",

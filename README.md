@@ -62,8 +62,7 @@ See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every at
 
 Tailwind class strings are centralized in `marimo_utils.ui.styles` as `StrEnum` groups. Components compose them with `cn()` from `drhtml` (tailwind-merge); pass per-instance overrides through each component's `klass` prop last.
 
-- **This pass:** `DivLayouts` (card sections, inline rows, key/value rows) and `SpanLayouts` (label column, icon frame).
-- **Semantic variants:** `BadgeVariant` color maps stay in `variants.py` — meaning, not raw CSS.
+- **This pass:** `DivLayouts` (card sections, inline rows, key/value rows), `SpanLayouts` (label column, icon frame), and `BadgeVariant` (shadcn badge colors).
 - **Planned next passes** in `styles.py`: `Typography` (text size/weight/color), `Surface` (border, background, shadow, radius), optional `Sizing` (named widths and icon sizes).
 
 Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum instead.

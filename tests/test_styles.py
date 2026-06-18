@@ -9,7 +9,7 @@ from marimo_utils.ui.components.badge import Badge
 from marimo_utils.ui.components.data_item import DataItem
 from marimo_utils.ui.components.lucide_icon import LucideIcon
 from marimo_utils.ui.drhtml import cn
-from marimo_utils.ui.styles import DivLayouts, SpanLayouts
+from marimo_utils.ui.styles import BadgeVariant, DivLayouts, SpanLayouts
 
 
 def test_div_layout_values() -> None:
@@ -54,6 +54,13 @@ def test_card_content_only_uses_col_without_pt0() -> None:
     html = rendered.text
     assert "flex flex-col p-6 gap-1.5" in html
     assert "pt-0" not in html
+
+
+def test_badge_variant_values() -> None:
+    assert "bg-primary" in BadgeVariant.DEFAULT
+    assert "bg-secondary" in BadgeVariant.SECONDARY
+    assert "bg-destructive" in BadgeVariant.DESTRUCTIVE
+    assert BadgeVariant.OUTLINE == "text-foreground"
 
 
 def test_badge_renders_div_with_inline_row() -> None:

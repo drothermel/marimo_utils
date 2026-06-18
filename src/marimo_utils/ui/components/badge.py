@@ -5,12 +5,7 @@ from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.drhtml import cn, div, html_block
-from marimo_utils.ui.styles import DivLayouts
-from marimo_utils.ui.variants import (
-    BADGE_BASE,
-    BADGE_VARIANT_CLASSES,
-    BadgeVariant,
-)
+from marimo_utils.ui.styles import BADGE_BASE, BadgeVariant, DivLayouts
 
 
 class Badge(BaseModel):
@@ -27,7 +22,7 @@ class Badge(BaseModel):
                 klass=cn(
                     DivLayouts.INLINE_ROW,
                     BADGE_BASE,
-                    BADGE_VARIANT_CLASSES[self.variant],
+                    self.variant,
                     self.klass,
                 ),
             )
