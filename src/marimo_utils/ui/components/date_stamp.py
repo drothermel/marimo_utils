@@ -4,11 +4,10 @@ from datetime import datetime
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
-from mohtml import div, span  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui._rendering import html_block
 from marimo_utils.ui.components.lucide_icon import LucideIcon
+from marimo_utils.ui.drhtml import div, html_block, span
 
 
 class DateStamp(BaseModel):

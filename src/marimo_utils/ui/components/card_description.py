@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
-from mohtml import p  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui._rendering import html_block, render_inline
+from marimo_utils.ui.drhtml import html_block, p
+from marimo_utils.ui.rendering import render_inline
 
 
 class CardDescription(BaseModel):

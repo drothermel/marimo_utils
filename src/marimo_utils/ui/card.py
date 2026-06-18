@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
-from mohtml import div  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui._rendering import auto_render, html_block
 from marimo_utils.ui.components import CardDescription, CardTitle
+from marimo_utils.ui.drhtml import div, html_block
+from marimo_utils.ui.rendering import auto_render
 
 
 class Card(BaseModel):

@@ -8,7 +8,7 @@ authors = [
     { name = "Danielle Rothermel", email = "danielle.rothermel@gmail.com" }
 ]
 requires-python = ">=3.12"
-keywords = ["marimo", "notebooks", "pydantic", "display", "mohtml", "tailwind", "shadcn", "ui", "plotly"]
+keywords = ["marimo", "notebooks", "pydantic", "display", "tailwind", "shadcn", "ui", "plotly"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -21,11 +21,11 @@ dependencies = [
     "anywidget>=0.9",
     "dr-widget==0.2.0",
     "marimo[recommended]>=0.19.4",
-    "mohtml>=0.1.11",
     "pandas>=2.0",
     "plotly>=6.7.0",
     "pydantic>=2.12.5",
     "python-lucide>=0.2.24",
+    "tailwind-merge>=0.3.3",
 ]
 
 [project.urls]
@@ -79,7 +79,7 @@ known-first-party = ["marimo_utils"]
 python-version = "3.12"
 
 [tool.ty.src]
-# The ui/ module relies on mohtml (untyped) and other Tailwind-adjacent
+# The ui/ module relies on Tailwind-adjacent
 # constructs that produce spurious ty diagnostics. Excluding it avoids
 # training agents and contributors to make suboptimal design choices in
 # pursuit of a clean type-check that the tooling can't actually deliver

@@ -3,10 +3,9 @@ from __future__ import annotations
 import marimo as mo
 from dr_widget.inline import ActiveHtml
 from lucide import lucide_icon  # type: ignore[import-untyped]
-from mohtml import span  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui._rendering import html_block
+from marimo_utils.ui.drhtml import html_block, span
 
 
 class LucideIcon(BaseModel):

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
-from mohtml import div, span  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui._rendering import auto_render, html_block
+from marimo_utils.ui.drhtml import div, html_block, span
+from marimo_utils.ui.rendering import auto_render
 
 
 class LabeledList(BaseModel):
@@ -14,7 +14,7 @@ class LabeledList(BaseModel):
     Label uses shadcn's muted inline-label style (`text-sm font-medium
     text-muted-foreground`) rather than the form-coupled `Label` primitive.
     Items are auto-rendered (any component with `.render()`) or passed
-    through for string coercion by mohtml.
+    through for string coercion by drhtml tag builders.
     """
 
     model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
