@@ -71,6 +71,3 @@ SHADCN_THEME_CSS = r"""
 
 
 SHADCN_STYLE_BLOCK = f"<style>{SHADCN_THEME_CSS}</style>"
-
-
-__all__ = ["SHADCN_STYLE_BLOCK", "SHADCN_THEME_CSS"]

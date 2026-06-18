@@ -98,6 +98,3 @@ class HeatmapChart(PlotlyChart):
         fig.update_yaxes(showgrid=False, zeroline=False, autorange="reversed")
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["HeatmapChart"]

@@ -19,7 +19,8 @@ BADGE_BASE = (
 
 BADGE_VARIANT_CLASSES: dict[BadgeVariant, str] = {
     BadgeVariant.DEFAULT: (
-        "border-transparent bg-primary text-primary-foreground hover:bg-primary/80"
+        "border-transparent bg-primary "
+        "text-primary-foreground hover:bg-primary/80"
     ),
     BadgeVariant.SECONDARY: (
         "border-transparent bg-secondary text-secondary-foreground "
@@ -31,6 +32,3 @@ BADGE_VARIANT_CLASSES: dict[BadgeVariant, str] = {
     ),
     BadgeVariant.OUTLINE: "text-foreground",
 }
-
-
-__all__ = ["BADGE_BASE", "BADGE_VARIANT_CLASSES", "BadgeVariant"]

@@ -74,6 +74,3 @@ class LineChart(PlotlyChart):
         fig.update_layout(**self._layout(x_range=self.x_range))
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["LineChart", "LineDash", "LineSeries"]

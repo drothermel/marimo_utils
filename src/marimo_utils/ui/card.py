@@ -48,6 +48,3 @@ class Card(BaseModel):
             sections.append(div(auto_render(self.content), klass=content_padding))
 
         return html_block(div(*sections, klass=container_cls))
-
-
-__all__ = ["Card"]

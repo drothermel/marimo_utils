@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import re
 from typing import Protocol
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
+from mohtml import br, strong  # type: ignore[import-untyped]
 
 from marimo_utils.ui.theme import SHADCN_STYLE_BLOCK
+
+_BOLD_PATTERN = re.compile(r"\*\*(.+?)\*\*")
 
 
 class HtmlRenderable(Protocol):
@@ -13,7 +17,7 @@ class HtmlRenderable(Protocol):
 
 
 def html_block(fragment: HtmlRenderable) -> mo.Html | ActiveHtml:
-    """Render an HTML fragment; routes through ActiveHtml when it contains scripts.
+    """Render HTML fragment; routes through ActiveHtml when contains scripts.
 
     `mo.Html` silently drops inline `<script>` tags via its react html-parser,
     so anything with scripts (Tailwind Play CDN, plotly) must go through
@@ -43,4 +47,24 @@ def auto_render(obj: object) -> object:
     return obj
 
 
-__all__ = ["HtmlRenderable", "auto_render", "html_block"]
+def render_inline(text: str) -> list[object]:
+    """Render a description string as mohtml child nodes.
+
+    Splits on `\\n` (rendered as `<br/>`) and parses `**text**` as
+    `<strong>`. Deliberately narrow — just line breaks and bold, no
+    full-markdown support — so the rendering is predictable inside a
+    Card's `<p>` element.
+    """
+    children: list[object] = []
+    for i, line in enumerate(text.split("\n")):
+        if i > 0:
+            children.append(br())
+        pos = 0
+        for match in _BOLD_PATTERN.finditer(line):
+            if match.start() > pos:
+                children.append(line[pos : match.start()])
+            children.append(strong(match.group(1)))
+            pos = match.end()
+        if pos < len(line):
+            children.append(line[pos:])
+    return children

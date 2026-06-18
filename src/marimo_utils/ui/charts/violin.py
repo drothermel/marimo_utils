@@ -230,13 +230,3 @@ class ViolinPlotCard(BaseModel):
             content=content,
             width=self.width,
         ).render()
-
-
-__all__ = [
-    "ViolinChart",
-    "ViolinGroup",
-    "ViolinPlotCard",
-    "ViolinPoints",
-    "ViolinSide",
-    "ViolinSpanmode",
-]

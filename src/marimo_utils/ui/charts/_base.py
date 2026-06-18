@@ -210,16 +210,3 @@ class PlotlyChart(BaseModel):
         if not self._has_data():
             return mo.Html(self.empty_state_html())
         return mo.ui.plotly(self._build_figure())
-
-
-__all__ = [
-    "DEFAULT_FONT_SIZE",
-    "DEFAULT_TICK_LABEL_STANDOFF",
-    "SHADCN_BORDER_HEX",
-    "SHADCN_FONT_FAMILY",
-    "SHADCN_FOREGROUND_HEX",
-    "SHADCN_MUTED_FG_HEX",
-    "SHADCN_PLOTLY_LAYOUT",
-    "PlotlyChart",
-    "shadcn_plotly_layout",
-]

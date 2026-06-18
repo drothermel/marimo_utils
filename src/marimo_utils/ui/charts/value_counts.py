@@ -130,6 +130,3 @@ class FrequencyBarCard(BaseModel):
             content=content,
             width=self.width,
         ).render()
-
-
-__all__ = ["FrequencyBarCard"]

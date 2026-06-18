@@ -73,6 +73,3 @@ class ScatterChart(PlotlyChart):
         fig.update_layout(**self._layout(x_range=self.x_range))
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["ScatterChart", "ScatterSeries"]

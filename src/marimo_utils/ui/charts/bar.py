@@ -64,6 +64,3 @@ class BarChart(PlotlyChart):
         fig.update_layout(**self._layout())
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["BarChart", "BarItem"]

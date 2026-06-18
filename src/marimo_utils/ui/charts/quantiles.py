@@ -84,6 +84,3 @@ def skew_label(gini: float) -> str:
     if gini < 0.7:
         return "high skew"
     return "dominated"
-
-
-__all__ = ["Quantile", "QuantileFences", "compute_gini", "skew_label"]

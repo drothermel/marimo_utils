@@ -51,6 +51,3 @@ def bootstrap_tailwind() -> ActiveHtml:
     executes inside the anywidget shadow DOM.
     """
     return ActiveHtml(html=_BOOTSTRAP_HTML)
-
-
-__all__ = ["bootstrap_tailwind"]

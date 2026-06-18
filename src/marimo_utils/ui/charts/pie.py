@@ -89,6 +89,3 @@ class PieChart(PlotlyChart):
         fig.update_layout(**self._layout())
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["PieChart", "PieSlice"]
