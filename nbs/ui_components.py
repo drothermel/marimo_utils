@@ -132,9 +132,11 @@ def _():
     mo.vstack(
         [
             mo.md(r"""
-            Four shadcn badge variants. If all four render as distinct
-            pills with different fills, the full stack is live: CDN
-            loaded, config extension applied, CSS variables resolved.
+            Four shadcn badge variants rendered as `div` elements with
+            `DivLayouts.INLINE_ROW` plus badge shell utilities. If all
+            four render as distinct pills with different fills, the full
+            stack is live: CDN loaded, config extension applied, CSS
+            variables resolved.
             """),
             mo.md("---"),
             mo.hstack(
@@ -157,7 +159,12 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    ## Escape hatch: `klass=` override
+    ## Escape hatch: `klass=` override and `styles.py`
+
+    Layout classes live in `marimo_utils.ui.styles` as named enums
+    (`DivLayouts`, `SpanLayouts`). Components compose them via `cn()`
+    (tailwind-merge). Pass extra utilities through `klass=` — they merge
+    last and win within each Tailwind group.
     """)
     return
 
@@ -199,8 +206,8 @@ def _():
             `text-2xl font-semibold leading-none tracking-tight`) above
             `CardDescription` (`<p>` with `text-sm text-muted-foreground`).
             Rendered here standalone with a small gap; when used inside
-            `Card` they sit in a shared `flex flex-col space-y-1.5 p-6`
-            wrapper that matches shadcn's `CardHeader`.
+            `Card` they sit in a `DivLayouts.COL` section (`flex flex-col
+            p-6 gap-1.5`) inside the card's `DivLayouts.COL_SHELL` stack.
             """),
             mo.md("---"),
             mo.vstack(
@@ -365,11 +372,13 @@ def _():
         [
             mo.md(r"""
             Card chrome with shadcn-style flat `title=` and `description=`
-            string params. Internally they compose into a `CardHeader`-
-            shaped wrapper (`flex flex-col space-y-1.5 p-6`) containing
-            `CardTitle` + `CardDescription`. `content` renders in a
-            sibling `p-6 pt-0` block. Default width `w-72` (~18rem);
-            override with `width="w-96"` or any Tailwind width utility.
+            string params. Internally the outer wrapper uses
+            `DivLayouts.COL_SHELL`; title and description compose into a
+            `DivLayouts.COL` header section; `content` renders in a
+            sibling `DivLayouts.COL` with `pt-0` when a header is present
+            (full `COL` padding when there is no header). Default width
+            `w-72` (~18rem); override with `width="w-96"` or any Tailwind
+            width utility.
             """),
             mo.md("---"),
             Card(

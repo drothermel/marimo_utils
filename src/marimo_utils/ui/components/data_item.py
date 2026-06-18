@@ -4,7 +4,8 @@ import marimo as mo
 from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import div, html_block, span
+from marimo_utils.ui.drhtml import cn, div, html_block, span
+from marimo_utils.ui.styles import DivLayouts, SpanLayouts
 
 
 class DataItem(BaseModel):
@@ -15,22 +16,20 @@ class DataItem(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        container = "flex items-baseline gap-3"
-        if self.klass:
-            container = f"{container} {self.klass}"
         return html_block(
             div(
                 span(
                     self.label,
-                    klass=(
-                        "inline-block min-w-28 text-xs font-medium "
-                        "uppercase tracking-wide text-muted-foreground"
+                    klass=cn(
+                        SpanLayouts.KEY_VAL_LABEL,
+                        "text-xs font-medium uppercase tracking-wide "
+                        "text-muted-foreground",
                     ),
                 ),
                 span(
                     self.value,
                     klass="text-sm font-semibold text-foreground",
                 ),
-                klass=container,
+                klass=cn(DivLayouts.KEY_VAL_ROW, self.klass),
             )
         )

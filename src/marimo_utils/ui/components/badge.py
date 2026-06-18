@@ -4,7 +4,8 @@ import marimo as mo
 from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import html_block, span
+from marimo_utils.ui.drhtml import cn, div, html_block
+from marimo_utils.ui.styles import DivLayouts
 from marimo_utils.ui.variants import (
     BADGE_BASE,
     BADGE_VARIANT_CLASSES,
@@ -20,8 +21,14 @@ class Badge(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        parts = [BADGE_BASE, BADGE_VARIANT_CLASSES[self.variant]]
-        if self.klass:
-            parts.append(self.klass)
-        classes = " ".join(parts)
-        return html_block(span(self.label, klass=classes))
+        return html_block(
+            div(
+                self.label,
+                klass=cn(
+                    DivLayouts.INLINE_ROW,
+                    BADGE_BASE,
+                    BADGE_VARIANT_CLASSES[self.variant],
+                    self.klass,
+                ),
+            )
+        )

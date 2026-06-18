@@ -4,8 +4,9 @@ import marimo as mo
 from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import div, html_block, span
+from marimo_utils.ui.drhtml import cn, div, html_block, span
 from marimo_utils.ui.rendering import auto_render
+from marimo_utils.ui.styles import DivLayouts
 
 
 class LabeledList(BaseModel):
@@ -24,9 +25,6 @@ class LabeledList(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        container = "self-start inline-flex flex-wrap items-center gap-2"
-        if self.klass:
-            container = f"{container} {self.klass}"
         rendered_items = [auto_render(item) for item in self.items]
         return html_block(
             div(
@@ -35,6 +33,6 @@ class LabeledList(BaseModel):
                     klass="text-sm font-medium text-muted-foreground",
                 ),
                 *rendered_items,
-                klass=container,
+                klass=cn(DivLayouts.INLINE_ROW, self.klass),
             )
         )

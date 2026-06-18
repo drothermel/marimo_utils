@@ -58,6 +58,16 @@ Components use shadcn's stock variant names (`default`, `secondary`, `destructiv
 
 See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every atom, chart, and card variant side-by-side.
 
+#### Styling conventions (`styles.py`)
+
+Tailwind class strings are centralized in `marimo_utils.ui.styles` as `StrEnum` groups. Components compose them with `cn()` from `drhtml` (tailwind-merge); pass per-instance overrides through each component's `klass` prop last.
+
+- **This pass:** `DivLayouts` (card sections, inline rows, key/value rows) and `SpanLayouts` (label column, icon frame).
+- **Semantic variants:** `BadgeVariant` color maps stay in `variants.py` — meaning, not raw CSS.
+- **Planned next passes** in `styles.py`: `Typography` (text size/weight/color), `Surface` (border, background, shadow, radius), optional `Sizing` (named widths and icon sizes).
+
+Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum instead.
+
 ## Changes
 
 ### 0.6.0 — Tailwind + shadcn UI package

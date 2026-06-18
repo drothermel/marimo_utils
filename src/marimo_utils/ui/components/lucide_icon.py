@@ -5,7 +5,8 @@ from dr_widget.inline import ActiveHtml
 from lucide import lucide_icon  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import html_block, span
+from marimo_utils.ui.drhtml import cn, html_block, span
+from marimo_utils.ui.styles import SpanLayouts
 
 
 class LucideIcon(BaseModel):
@@ -35,7 +36,6 @@ class LucideIcon(BaseModel):
             stroke_width="2",
             stroke="currentColor",
         )
-        wrapper = f"inline-flex flex-shrink-0 {self.size}"
-        if self.klass:
-            wrapper = f"{wrapper} {self.klass}"
-        return html_block(span(svg, klass=wrapper))
+        return html_block(
+            span(svg, klass=cn(SpanLayouts.ICON_FRAME, self.size, self.klass))
+        )

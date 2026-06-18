@@ -6,8 +6,9 @@ import marimo as mo
 
 from marimo_utils.ui.components.badge import Badge
 from marimo_utils.ui.components.labeled_list import LabeledList
-from marimo_utils.ui.drhtml import br, div, p, span
+from marimo_utils.ui.drhtml import br, cn, div, p, span
 from marimo_utils.ui.rendering import render_inline
+from marimo_utils.ui.styles import DivLayouts
 
 
 def test_basic_div_p() -> None:
@@ -44,11 +45,17 @@ def test_klass_then_class_prefers_class_for_conflicts() -> None:
     assert "font-medium" not in rendered
 
 
+def test_cn_merges_layout_enum_with_override() -> None:
+    merged = cn(DivLayouts.COL, "pt-0")
+    assert "p-6" in merged
+    assert "pt-0" in merged
+
+
 def test_nested_mo_html_child() -> None:
     badge_html = Badge(label="X").render()
     rendered = str(div(span("Tags:"), badge_html, klass="container"))
     assert "Html()" not in rendered
-    assert ">X</span>" in rendered
+    assert ">X</div>" in rendered
 
 
 def test_labeled_list_composes_badges() -> None:
@@ -57,8 +64,8 @@ def test_labeled_list_composes_badges() -> None:
         items=[Badge(label="A"), Badge(label="B")],
     ).render()
     assert isinstance(rendered, mo.Html)
-    assert ">A</span>" in rendered.text
-    assert ">B</span>" in rendered.text
+    assert ">A</div>" in rendered.text
+    assert ">B</div>" in rendered.text
 
 
 def test_render_inline_bold_and_breaks() -> None:

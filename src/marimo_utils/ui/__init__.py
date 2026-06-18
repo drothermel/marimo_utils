@@ -55,6 +55,8 @@ from marimo_utils.ui.variants import (
     BADGE_VARIANT_CLASSES,
     BadgeVariant,
 )
+from marimo_utils.ui.drhtml import cn
+from marimo_utils.ui.styles import DivLayouts, SpanLayouts
 
 __all__ = [
     "BADGE_BASE",
@@ -77,6 +79,7 @@ __all__ = [
     "ChartColor",
     "DataItem",
     "DateStamp",
+    "DivLayouts",
     "FrequencyBarCard",
     "HeatmapChart",
     "HistNorm",
@@ -94,6 +97,7 @@ __all__ = [
     "QuantileFences",
     "ScatterChart",
     "ScatterSeries",
+    "SpanLayouts",
     "ViolinChart",
     "ViolinGroup",
     "ViolinPlotCard",
@@ -102,6 +106,7 @@ __all__ = [
     "ViolinSpanmode",
     "bootstrap_tailwind",
     "chart_colorscale",
+    "cn",
     "compute_gini",
     "filled_trace_colors",
     "hex_to_rgba",

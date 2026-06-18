@@ -13,6 +13,7 @@ later utilities win within each Tailwind group (same principle as shadcn
 from __future__ import annotations
 
 from collections.abc import Callable
+from enum import StrEnum
 from typing import Protocol
 
 import marimo as mo
@@ -22,6 +23,20 @@ from tailwind_merge import TailwindMerge
 from marimo_utils.ui.theme import SHADCN_STYLE_BLOCK
 
 _twm = TailwindMerge()
+
+
+def cn(*values: str | StrEnum | None) -> str:
+    """Merge Tailwind class strings; later utilities win within each group."""
+    parts: list[str] = []
+    for value in values:
+        if value is None:
+            continue
+        text = value.value if isinstance(value, StrEnum) else value
+        if text.strip():
+            parts.append(text)
+    if not parts:
+        return ""
+    return _twm.merge(*parts)
 
 html_tags = [
     "a",
@@ -125,14 +140,6 @@ self_closing_tags = [
 ]
 
 
-def _merge_class_attr(*values: object) -> str:
-    """Merge Tailwind class strings; later utilities win within each group."""
-    parts = [value for value in values if isinstance(value, str) and value.strip()]
-    if not parts:
-        return ""
-    return _twm.merge(*parts)
-
-
 class HtmlTag:
     """A tree node that renders to an HTML element string."""
 
@@ -158,7 +165,9 @@ class HtmlTag:
         if "class" in kw:
             class_values.append(kw.pop("class"))
         if class_values:
-            kw["class"] = _merge_class_attr(*class_values)
+            kw["class"] = cn(
+                *(value for value in class_values if isinstance(value, str))
+            )
         self.kwargs = kw
 
     def __str__(self) -> str:
