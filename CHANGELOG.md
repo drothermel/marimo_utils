@@ -4,6 +4,8 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+- Adds host adapters: `setup_host()`, `show()` (`mo.Html(c.to_html())`), and `plain_html_page()` for web reuse and Playwright verification.
+- Adds component markup contract (`HtmlComponent`, `MarkupComponent`, `data-component` hooks) and a `data-tw-ready` readiness sentinel in bootstrap and plain-HTML pages.
 - **Breaking:** replaces the Tailwind Play CDN with a precompiled, scoped `dr.css` shipped in the wheel (Preflight off; `.dr-scope` reset on all component output). `bootstrap_tailwind()` injects the bundled stylesheet once per page instead of loading `cdn.tailwindcss.com`.
 - Defines `w-100` (25rem) and `w-160` (40rem) in the Tailwind build; `CardWidth.DEFAULT` / `.WIDE` now resolve correctly.
 - Adds `styles/` build pipeline (`npm run build:css --prefix styles`) and `setup/stylesheet.py` for runtime loading and web-host path access.
