@@ -110,4 +110,4 @@ def test_lucide_icon_frame_and_size() -> None:
     assert isinstance(rendered, mo.Html)
     html = rendered.text
     assert "inline-flex flex-shrink-0" in html
-    assert "h-4 w-4" in html
+    assert "h-6 w-6" in html

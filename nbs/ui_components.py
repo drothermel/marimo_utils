@@ -21,6 +21,7 @@ with app.setup:
         Card,
         CardDescription,
         CardTitle,
+        CardWidth,
         ChartColor,
         DataItem,
         date_stamp,
@@ -142,8 +143,11 @@ def _():
             mo.md("---"),
             mo.hstack(
                 [
+                    Badge(label="outline").render(),
                     Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
-                    Badge(label="secondary", variant=BadgeVariant.SECONDARY).render(),
+                    Badge(
+                        label="secondary", variant=BadgeVariant.SECONDARY
+                    ).render(),
                     Badge(
                         label="destructive", variant=BadgeVariant.DESTRUCTIVE
                     ).render(),
@@ -270,20 +274,16 @@ def _():
         [
             mo.md(r"""
             Shadcn-style icon primitive: SVG sized by Tailwind utilities on
-            the wrapper (default `h-4 w-4`), `stroke="currentColor"` so the
+            the wrapper (default `h-6 w-6`), `stroke="currentColor"` so the
             color inherits from any `text-*` utility on an ancestor. Below:
-            the same `calendar` icon at default, larger, and inside a
-            `text-destructive` parent so it tints without a color prop.
+            the same `calendar` icon at default, large.
             """),
             mo.md("---"),
             mo.hstack(
                 [
                     LucideIcon(name="calendar").render(),
                     LucideIcon(name="calendar", size=IconSize.MEDIUM).render(),
-                    mo.Html(
-                        f'<span class="text-destructive inline-flex">'
-                        f"{LucideIcon(name='calendar').render().text}</span>"
-                    ),
+                    LucideIcon(name="calendar", size=IconSize.LARGE).render(),
                 ],
                 justify="start",
                 align="center",
@@ -450,7 +450,7 @@ def _():
                             ],
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -503,7 +503,7 @@ def _():
                             ],
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -597,7 +597,7 @@ def _(CONFUSION_LABELS, CONFUSION_Z):
                             color=ChartColor.THREE,
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -777,7 +777,7 @@ def _(SCATTER_A_X, SCATTER_A_Y, SCATTER_B_X, SCATTER_B_Y):
                             x_label="x",
                             y_label="y",
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -848,7 +848,7 @@ def _(LINE_STEPS, LINE_TRAIN_LOSS, LINE_VAL_LOSS):
                             y_label="Loss",
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",

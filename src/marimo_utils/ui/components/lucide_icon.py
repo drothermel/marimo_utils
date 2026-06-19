@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class LucideIcon(BaseModel):
     """Lucide icon rendered as an SVG inside an `inline-flex` span.
 
-    `size` carries Tailwind height/width utilities (default ``IconSize.SMALL``);
+    `size` carries Tailwind height/width utilities (default ``IconSize.MEDIUM``);
     the SVG fills the span at `100%` so resizing is driven by the utility class,
     not pixel attributes. `stroke="currentColor"` makes the icon color
     inherit from any `text-*` utility on an ancestor — a Badge tone, a
