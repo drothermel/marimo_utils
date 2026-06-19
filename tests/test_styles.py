@@ -52,6 +52,7 @@ def test_card_default_width() -> None:
     rendered = Card(content="Body").render()
     assert isinstance(rendered, mo.Html)
     assert CardWidth.DEFAULT in rendered.text
+    assert "dr-scope" in rendered.text
 
 
 def test_cn_col_pt0_merge() -> None:
@@ -98,6 +99,7 @@ def test_badge_renders_div_with_inline_row() -> None:
     rendered = Badge(label="Active").render()
     assert isinstance(rendered, mo.Html)
     html = rendered.text
+    assert "dr-scope" in html
     assert "<div" in html
     assert "inline-flex items-center gap-2 flex-wrap" in html
     assert "border-border" in html

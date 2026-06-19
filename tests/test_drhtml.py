@@ -62,6 +62,7 @@ def test_nested_mo_html_child() -> None:
     rendered = str(div(span("Tags:"), badge_html, klass="container"))
     assert "Html()" not in rendered
     assert ">X</div>" in rendered
+    assert "dr-scope" in rendered
 
 
 def test_labeled_list_composes_badges() -> None:
