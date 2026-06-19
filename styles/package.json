@@ -1,0 +1,11 @@
+{
+  "name": "marimo-utils-styles",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:css": "node build.mjs"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}
