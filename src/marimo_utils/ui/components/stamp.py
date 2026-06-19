@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from datetime import datetime  # noqa: TC003
 from enum import StrEnum
 from typing import TYPE_CHECKING
@@ -21,8 +20,9 @@ class StampKind(StrEnum):
     PROJECT = "project"
 
 
-@dataclass(frozen=True)
-class StampPreset:
+class StampPreset(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     icon_name: str
     empty_text: str = "---"
 
