@@ -40,3 +40,12 @@
 
 ## Style
 - Only include an `__all__` list in `__init__.py` files.
+
+## Current Project: Component System Rebuild
+
+- Design + verified decisions: see `GOAL.md` (source of truth).
+- Execution tracked in EPIC #26 and the "Component System Rebuild" project board.
+- Migration is additive/incremental: the new runtime coexists with existing
+  `mo.Html` components, which keep rendering until migrated.
+- Runtime/host work (e.g. #8, #22) happens in the sibling `../dr_widget` repo
+  (editable).
