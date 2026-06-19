@@ -1,4 +1,9 @@
-"""Tailwind readiness sentinel shared by marimo bootstrap and plain-HTML pages."""
+"""Tailwind readiness sentinel shared by marimo bootstrap and plain-HTML pages.
+
+``data-tw-ready="true"`` means the precompiled stylesheet is applied. It does
+not indicate that ``<dr-*>`` runtime elements have upgraded; wait on element
+content separately for runtime-dependent verification dumps.
+"""
 
 from __future__ import annotations
 

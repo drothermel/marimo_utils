@@ -34,6 +34,10 @@ def bootstrap_tailwind() -> ActiveHtml:
     ``document``, so the block lands on the main document even though the
     script itself executes inside the anywidget shadow DOM.
 
+    Also installs a ``data-tw-ready`` sentinel when styles are applied. That
+    flag means the stylesheet is ready, not that ``<dr-*>`` elements have
+    upgraded.
+
     Styles are precompiled at build time: only literal Tailwind classes under
     ``src/`` and ``nbs/`` (plus the safelist in ``styles/tailwind.config.js``)
     ship in ``dr.css``. Dynamic ``klass=`` strings are not compiled unless

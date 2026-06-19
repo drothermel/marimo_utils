@@ -1,4 +1,9 @@
-"""Inline dr_widget runtime script for plain-HTML hosts."""
+"""Inline dr_widget runtime script for plain-HTML hosts.
+
+TODO(dr_widget): replace path-spelunking and duplicated guard logic with a
+public accessor (e.g. ``runtime_bundle_text()`` or ``runtime_script_tag()``)
+exported from ``dr_widget.inline.runtime_loader``.
+"""
 
 from __future__ import annotations
 

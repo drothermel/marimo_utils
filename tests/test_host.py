@@ -40,13 +40,28 @@ def test_markup_component_injects_data_component_on_opening_tag() -> None:
     assert 'data-component="dr-hello"' in component.to_html()
 
 
-def test_show_wraps_markup_in_mo_html() -> None:
+def test_markup_component_injects_on_root_when_nested_child_has_same_marker() -> None:
+    component = MarkupComponent(
+        html=(
+            '<div class="wrap">'
+            '<span data-component="dr-hello">nested</span>'
+            "</div>"
+        ),
+        component="dr-hello",
+    )
+    rendered = component.to_html()
+    assert rendered.startswith('<div class="wrap" data-component="dr-hello">')
+
+
+def test_show_wraps_markup_in_mo_html_with_dr_scope() -> None:
     rendered = show('<dr-hello name="Ada"></dr-hello>')
     assert isinstance(rendered, mo.Html)
-    assert rendered.text == '<dr-hello name="Ada"></dr-hello>'
+    assert rendered.text == (
+        '<div class="dr-scope"><dr-hello name="Ada"></dr-hello></div>'
+    )
 
     rendered_component = show(MarkupComponent(html="<span>ok</span>"))
-    assert rendered_component.text == "<span>ok</span>"
+    assert rendered_component.text == '<div class="dr-scope"><span>ok</span></div>'
 
 
 def test_setup_host_returns_runtime_and_styles() -> None:

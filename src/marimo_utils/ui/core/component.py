@@ -10,6 +10,12 @@ from pydantic import BaseModel, ConfigDict
 
 DATA_COMPONENT = "data-component"
 DATA_PROPS = "data-props"
+DR_SCOPE_CLASS = "dr-scope"
+
+
+def wrap_dr_scope(markup: str) -> str:
+    """Wrap markup so precompiled styles and design tokens apply."""
+    return f'<div class="{DR_SCOPE_CLASS}">{markup}</div>'
 
 
 class HtmlComponent(Protocol):
@@ -49,11 +55,11 @@ class MarkupComponent(BaseModel):
         if self.component is None:
             return self.html
         marker = f'{DATA_COMPONENT}="{html.escape(self.component, quote=True)}"'
-        if marker in self.html:
-            return self.html
         if self.html.startswith("<") and ">" in self.html:
             tag_end = self.html.index(">")
             opening = self.html[:tag_end]
+            if marker in opening:
+                return self.html
             rest = self.html[tag_end:]
             if opening.endswith("/"):
                 insert_at = len(opening) - 1

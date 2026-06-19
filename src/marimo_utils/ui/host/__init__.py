@@ -6,12 +6,8 @@ from dr_widget.inline import ActiveHtml, load_dr_runtime
 
 from marimo_utils.ui.core.component import HtmlComponent, MarkupComponent
 from marimo_utils.ui.host.marimo import show
-from marimo_utils.ui.host.verification import (
-    COMPONENT_SELECTOR,
-    DATA_TW_READY,
-    TW_READY_SELECTOR,
-    selectors_for_dump,
-)
+from marimo_utils.ui.host.tw_ready import DATA_TW_READY, TW_READY_SELECTOR
+from marimo_utils.ui.host.verification import COMPONENT_SELECTOR, selectors_for_dump
 from marimo_utils.ui.host.web import (
     dr_css_text,
     plain_html_page,

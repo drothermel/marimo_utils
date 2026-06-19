@@ -74,7 +74,7 @@ See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every at
 
 #### Host adapters (custom-element path)
 
-For the light-DOM custom-element system, call `setup_host()` once per notebook to load the dr_widget runtime and precompiled styles (including a `data-tw-ready` readiness sentinel). Render markup with `show(component)` — a thin `mo.Html(component.to_html())` adapter — or build a standalone verification page with `plain_html_page(...)`.
+For the light-DOM custom-element system, call `setup_host()` once per notebook to load the dr_widget runtime and precompiled styles (including a `data-tw-ready` readiness sentinel for stylesheet load — not custom-element upgrade). Render markup with `show(component)` — `mo.Html` wrapped in `.dr-scope` for parity with `plain_html_page()` and legacy `html_block()` — or build a standalone verification page with `plain_html_page(...)`.
 
 ```python
 from marimo_utils.ui import MarkupComponent, plain_html_page, setup_host, show
