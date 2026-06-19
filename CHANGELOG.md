@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## Unreleased
+
+- **Breaking:** replaces the Tailwind Play CDN with a precompiled, scoped `dr.css` shipped in the wheel (Preflight off; `.dr-scope` reset on all component output). `bootstrap_tailwind()` injects the bundled stylesheet once per page instead of loading `cdn.tailwindcss.com`.
+- Defines `w-100` (25rem) and `w-160` (40rem) in the Tailwind build; `CardWidth.DEFAULT` / `.WIDE` now resolve correctly.
+- Adds `styles/` build pipeline (`npm run build:css --prefix styles`) and `setup/stylesheet.py` for runtime loading and web-host path access.
+
 ## 0.8.1 — Style tokens, stamps, and surface chrome
 
 - **Breaking:** removes `DateStamp` / `ProjectStamp` classes in favor of registry-backed builders — `date_stamp()`, `project_stamp()`, and `Stamp`. Empty values render `"---"` by default (was `"--- --"` on dates).
