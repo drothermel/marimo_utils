@@ -10,9 +10,9 @@ pip install marimo-utils
 
 ## Usage
 
-### `@add_marimo_display()` decorator
+### `marimo_utils.pydantic` — Pydantic model display in marimo
 
-Adds a `_display_` method to Pydantic models for rich rendering in marimo notebooks.
+Adds marimo's `_display_` protocol to Pydantic models so the last expression in a cell renders class name, source path, and field values.
 
 ```python
 from pydantic import BaseModel
@@ -25,6 +25,15 @@ class MyConfig(BaseModel):
 ```
 
 When a `MyConfig` instance is the last expression in a marimo cell, it renders with the class name, source file path, and all field values.
+
+#### Package layout (`marimo_utils`)
+
+| Path | Role |
+|---|---|
+| `pydantic/` | Pydantic ↔ marimo integration — `add_marimo_display()`, `render_model()` |
+| `ui/` | Styled widget + chart toolkit (see below) |
+
+Import from `marimo_utils` or `marimo_utils.pydantic` in notebooks; internal paths may change between releases.
 
 ### `marimo_utils.ui` — Tailwind + shadcn primitives for marimo
 

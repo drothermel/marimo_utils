@@ -43,7 +43,7 @@ def resolve_repo_root(model: BaseModel) -> Path:
             repo_root = getattr(paths, "repo_root")
             if repo_root:
                 return Path(str(repo_root))
-    return Path(__file__).resolve().parent.parent.parent
+    return Path(__file__).resolve().parent.parent.parent.parent
 
 
 def relative_to_safe(path: Path, base: Path) -> Path:

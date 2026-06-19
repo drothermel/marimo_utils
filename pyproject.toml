@@ -106,7 +106,7 @@ ignore = ["PLR1711", "S101", "TRY003", "ANN401"]
 [tool.ruff.lint.per-file-ignores]
 "nbs/**/*.py" = ["E501", "F841", "RET503", "B018"]
 "src/marimo_utils/ui/**" = ["PLR0913", "PD011"]
-"src/marimo_utils/display.py" = [
+"src/marimo_utils/pydantic/**" = [
     "B009",
     "B010",
 ] # getattr/setattr needed for type checker
