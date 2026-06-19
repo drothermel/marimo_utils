@@ -23,7 +23,7 @@ with app.setup:
         CardTitle,
         ChartColor,
         DataItem,
-        DateStamp,
+        date_stamp,
         HeatmapChart,
         HistogramCard,
         HistogramChart,
@@ -33,7 +33,7 @@ with app.setup:
         LucideIcon,
         PieChart,
         PieSlice,
-        ProjectStamp,
+        project_stamp,
         ScatterChart,
         ScatterSeries,
         ViolinChart,
@@ -296,7 +296,7 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    ## DateStamp & ProjectStamp
+    ## Stamp builders
     """)
     return
 
@@ -309,12 +309,14 @@ def _():
             Inline icon + text meta rows using the shadcn `flex items-center
             gap-2 text-sm text-muted-foreground` idiom. Icon color inherits
             from the container's muted text color via `currentColor`.
+            `date_stamp(None)` renders the default empty placeholder (`---`).
             """),
             mo.md("---"),
             mo.hstack(
                 [
-                    DateStamp(value=datetime(2026, 4, 22)).render(),
-                    ProjectStamp(project_name="demo-project").render(),
+                    date_stamp(datetime(2026, 4, 22)).render(),
+                    date_stamp(None).render(),
+                    project_stamp("demo-project").render(),
                 ],
                 justify="start",
                 align="center",

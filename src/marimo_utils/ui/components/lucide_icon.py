@@ -23,7 +23,7 @@ class LucideIcon(BaseModel):
     muted meta row, etc. — without an explicit color prop here.
 
     Designed as the standalone primitive that other icon-bearing components
-    (`DateStamp`, `ProjectStamp`, future icon-aware Badges) compose.
+    (`date_stamp`, `project_stamp`, future icon-aware Badges) compose.
     """
 
     model_config = ConfigDict(frozen=True)

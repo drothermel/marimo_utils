@@ -19,7 +19,7 @@ import marimo as mo
 from dr_widget.inline import ActiveHtml
 from tailwind_merge import TailwindMerge
 
-from marimo_utils.ui.theme import SHADCN_STYLE_BLOCK
+from marimo_utils.ui.shadcn_theme import SHADCN_STYLE_BLOCK
 
 if TYPE_CHECKING:
     from collections.abc import Callable

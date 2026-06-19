@@ -28,7 +28,7 @@ When a `MyConfig` instance is the last expression in a marimo cell, it renders w
 
 ### `marimo_utils.ui` — Tailwind + shadcn primitives for marimo
 
-Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed with shadcn/ui defaults. The package ships small composable atoms (`Badge`, `CardTitle`, `CardDescription`, `DataItem`, `DateStamp`, `LabeledList`, `LucideIcon`, `ProjectStamp`), a flexible `Card` container, and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject shadcn's CSS variables on `:root` plus the utility rules that depend on them, then load the Tailwind CDN.
+Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed with shadcn/ui defaults. The package ships small composable atoms (`Badge`, `CardTitle`, `CardDescription`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), a flexible `Card` container, and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject shadcn's CSS variables on `:root` plus the utility rules that depend on them, then load the Tailwind CDN.
 
 ```python
 import marimo as mo

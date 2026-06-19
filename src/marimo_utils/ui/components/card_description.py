@@ -4,8 +4,9 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import html_block, p
+from marimo_utils.ui.drhtml import cn, html_block, p
 from marimo_utils.ui.rendering import render_inline
+from marimo_utils.ui.styles import Typography
 
 if TYPE_CHECKING:
     import marimo as mo
@@ -19,6 +20,6 @@ class CardDescription(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        base = "text-sm font-medium text-foreground"  # BODY
-        classes = f"{base} {self.klass}" if self.klass else base
-        return html_block(p(*render_inline(self.text), klass=classes))
+        return html_block(
+            p(*render_inline(self.text), klass=cn(Typography.BODY, self.klass))
+        )
