@@ -11,6 +11,8 @@ from marimo_utils.ui.core.drhtml import cn, div, html_block, span
 from marimo_utils.ui.styles import DivLayouts, Typography
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import marimo as mo
     from dr_widget.inline import ActiveHtml
 
@@ -38,7 +40,7 @@ def register_stamp(
 ):
     """Register a stamp preset and attach it to a builder at import time."""
 
-    def decorator(fn):
+    def decorator(fn: Callable[..., Stamp]) -> Callable[..., Stamp]:
         STAMP_PRESETS[kind] = StampPreset(icon_name=icon_name, empty_text=empty_text)
         return fn
 
