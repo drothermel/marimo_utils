@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from enum import StrEnum
 from typing import Protocol
 
 import marimo as mo
@@ -16,7 +17,7 @@ class HtmlTag:
 class HtmlRenderable(Protocol):
     def __str__(self) -> str: ...
 
-def cn(*values: str | None) -> str: ...
+def cn(*values: str | StrEnum | None) -> str: ...
 def html_block(fragment: HtmlRenderable) -> mo.Html | ActiveHtml: ...
 
 TagFactory = Callable[..., HtmlTag]

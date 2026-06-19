@@ -51,6 +51,12 @@ def test_cn_merges_layout_enum_with_override() -> None:
     assert "pt-0" in merged
 
 
+def test_tag_klass_accepts_enum() -> None:
+    rendered = str(div(klass=DivLayouts.COL))
+    assert "flex flex-col" in rendered
+    assert "p-6" in rendered
+
+
 def test_nested_mo_html_child() -> None:
     badge_html = Badge(label="X").render()
     rendered = str(div(span("Tags:"), badge_html, klass="container"))
