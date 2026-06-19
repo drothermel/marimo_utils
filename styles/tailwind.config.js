@@ -12,6 +12,7 @@ export default {
       },
     },
   },
-  safelist: ["ring-2", "ring-ring", "ring-offset-2", "container"],
+  // Classes must appear as literal strings under content paths (src/, nbs/).
+  // Dynamic klass= overrides are not compiled unless added there or safelisted.
   plugins: [],
 };
