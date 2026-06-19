@@ -6,9 +6,11 @@ from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.drhtml import cn, div, html_block
 from marimo_utils.ui.styles import (
-    BADGE_BASE,
+    BADGE_FOCUS,
+    BORDER,
     BadgeVariant,
     DivLayouts,
+    Padding,
     Typography,
 )
 
@@ -30,7 +32,9 @@ class Badge(BaseModel):
                 self.label,
                 klass=cn(
                     DivLayouts.INLINE_ROW,
-                    BADGE_BASE,
+                    BORDER,
+                    BADGE_FOCUS,
+                    Padding.BADGE,
                     Typography.BODY_SEMIBOLD,
                     self.variant,
                     self.klass,

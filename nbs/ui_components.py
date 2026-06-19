@@ -135,15 +135,15 @@ def _():
         [
             mo.md(r"""
             Four shadcn badge variants rendered as `div` elements with
-            `DivLayouts.INLINE_ROW` plus badge shell utilities. If all
-            four render as distinct pills with different fills, the full
-            stack is live: CDN loaded, config extension applied, CSS
-            variables resolved.
+            `DivLayouts.INLINE_ROW`, shared `BORDER` chrome, and
+            `BadgeVariant` fills from `Background`. If all four render as
+            distinct pills, the full stack is live: CDN loaded, theme CSS
+            injected, variables resolved.
             """),
             mo.md("---"),
             mo.hstack(
                 [
-                    Badge(label="outline").render(),
+                    Badge(label="outline", variant=BadgeVariant.OUTLINE).render(),
                     Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
                     Badge(
                         label="secondary", variant=BadgeVariant.SECONDARY
@@ -165,10 +165,12 @@ def _():
     mo.md(r"""
     ## Escape hatch: `klass=` override and `styles.py`
 
-    Layout classes live in `marimo_utils.ui.styles` as named enums
-    (`DivLayouts`, `SpanLayouts`). Components compose them via `cn()`
-    (tailwind-merge). Pass extra utilities through `klass=` — they merge
-    last and win within each Tailwind group.
+    Tailwind classes live in `marimo_utils.ui.styles` — layout
+    (`DivLayouts`, `SpanLayouts`), typography, sizing (`IconSize`,
+    `CardWidth`, `Padding`), and surface tokens (`BORDER`, `Background`,
+    `BadgeVariant`). Components compose them via `cn()` (tailwind-merge).
+    Pass extra utilities through `klass=` — they merge last and win within
+    each Tailwind group.
     """)
     return
 
@@ -274,7 +276,7 @@ def _():
         [
             mo.md(r"""
             Shadcn-style icon primitive: SVG sized by Tailwind utilities on
-            the wrapper (default `h-6 w-6`), `stroke="currentColor"` so the
+            the wrapper (default `h-4 w-4`), `stroke="currentColor"` so the
             color inherits from any `text-*` utility on an ancestor. Below:
             the same `calendar` icon at default, large.
             """),

@@ -3,12 +3,6 @@
 Convention: no raw layout Tailwind in components — compose ``styles.*`` enums
 via ``cn()`` from ``drhtml`` (tailwind-merge). Override per instance with the
 ``klass`` prop last.
-
-Exports: ``DivLayouts``, ``SpanLayouts``, ``Typography``, ``IconSize``,
-``CardWidth``, ``BadgeVariant``, ``BADGE_BASE``.
-
-Planned additions to this module:
-- ``Surface`` — border, background, shadow, radius
 """
 
 from __future__ import annotations
@@ -49,21 +43,28 @@ class CardWidth(StrEnum):
     WIDE = "w-160"
 
 
-BADGE_BASE = (
-    "rounded-md border px-2.5 py-0.5 transition-colors "
-    "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+class Padding(StrEnum):
+    BADGE = "px-2.5 py-0.5"
+
+
+BORDER = "border border-border rounded-md shadow-sm"
+
+BADGE_FOCUS = (
+    "transition-colors focus:outline-none focus:ring-2 focus:ring-ring "
+    "focus:ring-offset-2"
 )
 
 
+class Background(StrEnum):
+    PRIMARY = "bg-primary text-primary-foreground hover:bg-primary/80"
+    SECONDARY = "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+    DESTRUCTIVE = "bg-destructive text-destructive-foreground hover:bg-destructive/80"
+    CARD = "bg-card"
+    OUTLINE = "text-foreground hover:bg-accent hover:text-accent-foreground"
+
+
 class BadgeVariant(StrEnum):
-    DEFAULT = (
-        "border-transparent bg-primary text-primary-foreground hover:bg-primary/80"
-    )
-    SECONDARY = (
-        "border-transparent bg-secondary text-secondary-foreground "
-        "hover:bg-secondary/80"
-    )
-    DESTRUCTIVE = (
-        "border-transparent bg-destructive text-destructive-foreground "
-        "hover:bg-destructive/80"
-    )
+    DEFAULT = Background.PRIMARY
+    SECONDARY = Background.SECONDARY
+    DESTRUCTIVE = Background.DESTRUCTIVE
+    OUTLINE = Background.OUTLINE

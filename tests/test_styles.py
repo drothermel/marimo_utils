@@ -10,10 +10,13 @@ from marimo_utils.ui.components.data_item import DataItem
 from marimo_utils.ui.components.lucide_icon import LucideIcon
 from marimo_utils.ui.drhtml import cn
 from marimo_utils.ui.styles import (
+    Background,
     BadgeVariant,
+    BORDER,
     CardWidth,
     DivLayouts,
     IconSize,
+    Padding,
     SpanLayouts,
 )
 
@@ -84,6 +87,11 @@ def test_badge_variant_values() -> None:
     assert "bg-primary" in BadgeVariant.DEFAULT
     assert "bg-secondary" in BadgeVariant.SECONDARY
     assert "bg-destructive" in BadgeVariant.DESTRUCTIVE
+    assert "text-foreground" in Background.OUTLINE
+    assert "hover:bg-accent" in Background.OUTLINE
+    assert "border-border" in BORDER
+    assert "shadow-sm" in BORDER
+    assert Padding.BADGE == "px-2.5 py-0.5"
 
 
 def test_badge_renders_div_with_inline_row() -> None:
@@ -92,6 +100,7 @@ def test_badge_renders_div_with_inline_row() -> None:
     html = rendered.text
     assert "<div" in html
     assert "inline-flex items-center gap-2 flex-wrap" in html
+    assert "border-border" in html
     assert "text-sm" in html
     assert "font-semibold" in html
     assert ">Active</div>" in html
@@ -110,4 +119,4 @@ def test_lucide_icon_frame_and_size() -> None:
     assert isinstance(rendered, mo.Html)
     html = rendered.text
     assert "inline-flex flex-shrink-0" in html
-    assert "h-6 w-6" in html
+    assert "h-4 w-4" in html

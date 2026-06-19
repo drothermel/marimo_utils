@@ -33,7 +33,12 @@ Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed wit
 ```python
 import marimo as mo
 from marimo_utils.ui import (
-    BarChart, BarItem, Card, ChartColor, bootstrap_tailwind,
+    BarChart,
+    BarItem,
+    Card,
+    CardWidth,
+    ChartColor,
+    bootstrap_tailwind,
 )
 
 bootstrap_tailwind()
@@ -50,24 +55,51 @@ Card(
         ],
         height=220,
     ),
-    width="w-80",
+    width=CardWidth.NARROW,
 ).render()
 ```
 
-Components use shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`). Charts cycle through the `--chart-1` → `--chart-5` palette by default; pin specific items with `color=ChartColor.X`. Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a `Card`-friendly transparent background. `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
+Components use shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`). Meta rows use registry-backed stamp builders — `date_stamp()` and `project_stamp()` return a `Stamp` with configurable empty text, spacing, and icons. Charts cycle through the `--chart-1` → `--chart-5` palette by default; pin specific items with `color=ChartColor.X`. Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a `Card`-friendly transparent background. `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
 
 See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every atom, chart, and card variant side-by-side.
 
 #### Styling conventions (`styles.py`)
 
-Tailwind class strings are centralized in `marimo_utils.ui.styles` as `StrEnum` groups. Components compose them with `cn()` from `drhtml` (tailwind-merge); pass per-instance overrides through each component's `klass` prop last.
+Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enums and constants. Components compose them with `cn()` from `drhtml` (tailwind-merge); pass per-instance overrides through each component's `klass` prop last.
 
-- **This pass:** `DivLayouts` (card sections, inline rows, key/value rows), `SpanLayouts` (label column, icon frame), and `BadgeVariant` (shadcn badge colors).
-- **Planned next passes** in `styles.py`: `Surface` (border, background, shadow, radius), optional `Sizing` (named widths and icon sizes). `Typography` (text size/weight/color) is implemented.
+| Group | Symbols | Role |
+|---|---|---|
+| Layout | `DivLayouts`, `SpanLayouts` | Card sections, inline rows, key/value rows, icon frame |
+| Typography | `Typography` | Text size, weight, and color |
+| Sizing | `IconSize`, `CardWidth`, `Padding` | Icon dimensions, card widths, badge padding |
+| Surface | `BORDER`, `BADGE_FOCUS`, `Background` | Shared border/radius/shadow, focus ring, fills and hovers |
+| Badges | `BadgeVariant` | Shadcn badge variants (aliases into `Background`) |
 
-Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum instead.
+Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum or shared constant instead.
 
 ## Changes
+
+### 0.8.0 — Style tokens, stamps, and surface chrome
+
+- **Breaking:** removes `DateStamp` / `ProjectStamp` classes in favor of registry-backed builders — `date_stamp()`, `project_stamp()`, and `Stamp`. Empty values render `"---"` by default (was `"--- --"` on dates).
+- **Breaking:** removes `BADGE_BASE`; badge chrome is composed from `BORDER`, `BADGE_FOCUS`, and `Padding.BADGE` in `badge.py`.
+- Adds `Stamp`, `StampKind`, `STAMP_PRESETS`, and `@register_stamp` for import-time stamp presets.
+- Adds `IconSize`, `CardWidth`, `Padding`, `Background`, `BORDER`, and `BADGE_FOCUS` to `styles.py`; `BadgeVariant` now aliases `Background` (including `outline` with accent hover).
+- Cards and badges share `BORDER` chrome (`border-border`, `rounded-md`, `shadow-sm`); card default width is `CardWidth.DEFAULT` (`w-100`).
+- Renames `theme.py` → `shadcn_theme.py`; extends injected theme CSS with outline-badge hover utilities.
+- `CardDescription` uses `Typography.BODY` via `cn()` instead of a duplicated class string.
+
+**Migration from 0.7.x.**
+
+| 0.7.x | 0.8.0 |
+|---|---|
+| `DateStamp(value=dt).render()` | `date_stamp(dt).render()` |
+| `ProjectStamp(project_name="x").render()` | `project_stamp("x").render()` |
+| `from marimo_utils.ui import BADGE_BASE` | `BORDER`, `BADGE_FOCUS`, `Padding.BADGE` |
+| `Card(..., width="w-72")` | `Card(..., width=CardWidth.DEFAULT)` or `CardWidth.NARROW` / `.WIDE` |
+| `LucideIcon(size="h-4 w-4")` | `LucideIcon(size=IconSize.SMALL)` (default unchanged) |
+
+See [`nbs/ui_components.py`](./nbs/ui_components.py) for current usage of every atom and chart.
 
 ### 0.6.0 — Tailwind + shadcn UI package
 
@@ -85,7 +117,7 @@ Contributors and agents: avoid raw layout Tailwind in components; add or reuse a
 | `Title(drop_text=..., text=...)` | `CardTitle(text=...)` + `CardDescription(text=...)` |
 | `PaletteToneName.SUCCESS` / `.WARNING` / `.DANGER` | `ChartColor.ONE..FIVE` (neutral categorical palette) |
 | `Style.tone_colorscale(tone)` | `chart_colorscale(ChartColor.X)` |
-| `Card(style=..., width="22rem", height="22rem", title=..., content=...)` | `Card(title=..., description=..., content=..., width="w-80").render()` (Tailwind width utilities) |
+| `Card(style=..., width="22rem", height="22rem", title=..., content=...)` | `Card(title=..., description=..., content=..., width=CardWidth.NARROW).render()` |
 | Chart `height=None` for responsive fill inside a sized `Card` | Charts have fixed default heights; pass explicit `height=220` for in-card use |
 
 See [`nbs/ui_components.py`](./nbs/ui_components.py) for current usage of every atom and chart.

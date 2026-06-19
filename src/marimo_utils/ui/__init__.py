@@ -57,19 +57,24 @@ from marimo_utils.ui.components import (
 )
 from marimo_utils.ui.drhtml import cn
 from marimo_utils.ui.styles import (
-    BADGE_BASE,
+    BADGE_FOCUS,
+    BORDER,
+    Background,
     BadgeVariant,
     CardWidth,
     DivLayouts,
     IconSize,
+    Padding,
     SpanLayouts,
 )
 
 __all__ = [
-    "BADGE_BASE",
+    "BADGE_FOCUS",
+    "BORDER",
     "CHART_COLORWAY",
     "CHART_HEX",
     "STAMP_PRESETS",
+    "Background",
     "Badge",
     "BadgeVariant",
     "BarChart",
@@ -99,6 +104,7 @@ __all__ = [
     "LineDash",
     "LineSeries",
     "LucideIcon",
+    "Padding",
     "PieChart",
     "PieSlice",
     "Quantile",

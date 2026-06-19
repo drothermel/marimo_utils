@@ -7,21 +7,15 @@ from pydantic import BaseModel, ConfigDict
 from marimo_utils.ui.components import CardDescription, CardTitle
 from marimo_utils.ui.drhtml import cn, div, html_block
 from marimo_utils.ui.rendering import auto_render
-from marimo_utils.ui.styles import CardWidth, DivLayouts, Typography
+from marimo_utils.ui.styles import BORDER, Background, CardWidth, DivLayouts, Typography
 
 if TYPE_CHECKING:
     import marimo as mo
     from dr_widget.inline import ActiveHtml
 
-CARD_SURFACE = cn(
-    "rounded-lg border border-border bg-card shadow-sm",
-    Typography.BODY,
-)
-
 
 class Card(BaseModel):
-    """Shadcn Card
-    ``CARD_SURFACE`` chrome on a ``DivLayouts.COL_SHELL`` stack.
+    """Shadcn Card on a ``DivLayouts.COL_SHELL`` stack with ``BORDER`` chrome.
 
     ``title`` and ``description`` are flat string params that compose into a
     ``DivLayouts.COL`` header section when present. ``content`` goes in
@@ -38,7 +32,14 @@ class Card(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        container_cls = cn(DivLayouts.COL_SHELL, CARD_SURFACE, self.width, self.klass)
+        container_cls = cn(
+            DivLayouts.COL_SHELL,
+            BORDER,
+            Background.CARD,
+            Typography.BODY,
+            self.width,
+            self.klass,
+        )
 
         sections: list[object] = []
         header_children: list[object] = []

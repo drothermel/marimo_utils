@@ -55,6 +55,8 @@ SHADCN_THEME_CSS = r"""
 .hover\:bg-primary\/80:hover { background-color: hsl(var(--primary) / 0.8); }
 .hover\:bg-secondary\/80:hover { background-color: hsl(var(--secondary) / 0.8); }
 .hover\:bg-destructive\/80:hover { background-color: hsl(var(--destructive) / 0.8); }
+.hover\:bg-accent:hover { background-color: hsl(var(--accent)); }
+.hover\:text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
 
 .bg-chart-1 { background-color: hsl(var(--chart-1)); }
 .bg-chart-2 { background-color: hsl(var(--chart-2)); }
