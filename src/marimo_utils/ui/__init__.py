@@ -18,6 +18,7 @@ from marimo_utils.ui.charts import (
     BoxPlotCard,
     BoxPoints,
     FrequencyBarCard,
+    GiniSkewThreshold,
     HeatmapChart,
     HistNorm,
     HistogramCard,
@@ -51,7 +52,12 @@ from marimo_utils.ui.components import (
     ProjectStamp,
 )
 from marimo_utils.ui.drhtml import cn
-from marimo_utils.ui.styles import BADGE_BASE, BadgeVariant, DivLayouts, SpanLayouts
+from marimo_utils.ui.styles import (
+    BADGE_BASE,
+    BadgeVariant,
+    DivLayouts,
+    SpanLayouts,
+)
 
 __all__ = [
     "BADGE_BASE",
@@ -75,6 +81,7 @@ __all__ = [
     "DateStamp",
     "DivLayouts",
     "FrequencyBarCard",
+    "GiniSkewThreshold",
     "HeatmapChart",
     "HistNorm",
     "HistogramCard",

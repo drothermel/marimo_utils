@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import random
-from collections.abc import Sequence
-from typing import Literal
+from collections.abc import Sequence  # noqa: TC003
+from typing import TYPE_CHECKING, Literal
 
 import marimo as mo
 import pandas as pd
 import plotly.graph_objects as go
-from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.card import Card
@@ -18,7 +17,10 @@ from marimo_utils.ui.chart_colors import (
     filled_trace_colors,
 )
 from marimo_utils.ui.charts._base import PlotlyChart
-from marimo_utils.ui.charts.quantiles import QuantileFences
+from marimo_utils.ui.charts.quantiles import QuantileFences  # noqa: TC001
+
+if TYPE_CHECKING:
+    from dr_widget.inline import ActiveHtml
 
 ViolinPoints = Literal["all", "outliers", "suspectedoutliers", False]
 ViolinSpanmode = Literal["soft", "hard"]
@@ -68,11 +70,7 @@ class ViolinChart(PlotlyChart):
         return CHART_COLORWAY[index % len(CHART_COLORWAY)]
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No violin groups available."
-            "</div>"
-        )
+        return self._empty_state_html("No violin groups available.")
 
     def _has_data(self) -> bool:
         return any(len(group.values) > 0 for group in self.groups)
@@ -82,7 +80,7 @@ class ViolinChart(PlotlyChart):
         # render is reproducible across reruns.
         if self.max_samples is None or len(values) <= self.max_samples:
             return values
-        rng = random.Random(self.sample_seed + index)
+        rng = random.Random(self.sample_seed + index)  # noqa: S311
         return rng.sample(values, self.max_samples)
 
     def _build_figure(self) -> go.Figure:

@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import inspect
 import sys
-from collections.abc import Callable
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import marimo as mo
-from marimo._plugins.ui._core.ui_element import UIElement
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from marimo._plugins.ui._core.ui_element import UIElement
 
 TModel = TypeVar("TModel", bound=BaseModel)
 

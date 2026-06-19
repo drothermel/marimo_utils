@@ -4,11 +4,10 @@ Convention: no raw layout Tailwind in components — compose ``styles.*`` enums
 via ``cn()`` from ``drhtml`` (tailwind-merge). Override per instance with the
 ``klass`` prop last.
 
-Layout groups (``DivLayouts``, ``SpanLayouts``) and semantic component variants
-(``BadgeVariant``, etc.) live here until the module grows enough to split.
+Exports: ``DivLayouts``, ``SpanLayouts``, ``Typography``, ``BadgeVariant``,
+``BADGE_BASE``.
 
 Planned additions to this module:
-- ``Typography`` — text size, weight, color
 - ``Surface`` — border, background, shadow, radius
 - ``Sizing`` — optional named widths and icon sizes
 """
@@ -30,17 +29,24 @@ class SpanLayouts(StrEnum):
     ICON_FRAME = "inline-flex flex-shrink-0"
 
 
+class Typography(StrEnum):
+    TITLE = "text-2xl font-semibold leading-none tracking-tight"
+    XS_MUTED = "text-xs font-medium text-muted-foreground"
+    BODY_MUTED = "text-sm font-medium text-muted-foreground"
+    BODY = "text-sm font-medium text-foreground"
+    BODY_SEMIBOLD = "text-sm font-semibold text-foreground"
+    LABEL_CASE = "uppercase tracking-wide"
+
+
 BADGE_BASE = (
-    "rounded-md border px-2.5 py-0.5 text-sm font-semibold transition-colors "
+    "rounded-md border px-2.5 py-0.5 transition-colors "
     "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-    "text-foreground"
 )
 
 
 class BadgeVariant(StrEnum):
     DEFAULT = (
-        "border-transparent bg-primary "
-        "text-primary-foreground hover:bg-primary/80"
+        "border-transparent bg-primary text-primary-foreground hover:bg-primary/80"
     )
     SECONDARY = (
         "border-transparent bg-secondary text-secondary-foreground "
@@ -50,4 +56,3 @@ class BadgeVariant(StrEnum):
         "border-transparent bg-destructive text-destructive-foreground "
         "hover:bg-destructive/80"
     )
-    OUTLINE = "text-foreground"

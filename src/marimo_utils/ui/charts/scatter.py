@@ -37,11 +37,7 @@ class ScatterChart(PlotlyChart):
         return CHART_COLORWAY[index % len(CHART_COLORWAY)]
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No scatter series available."
-            "</div>"
-        )
+        return self._empty_state_html("No scatter series available.")
 
     def _has_data(self) -> bool:
         return any(len(s.x) > 0 and len(s.x) == len(s.y) for s in self.series)

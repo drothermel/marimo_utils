@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
 from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class Quantile(float, Enum):
@@ -41,6 +44,19 @@ class QuantileFences(Enum):
     MIN_MAX = (Quantile.P00, Quantile.P100)
 
 
+class GiniSkewThreshold(float, Enum):
+    """Upper bounds for Gini coefficient skew labels.
+
+    Values strictly below each member map to the corresponding label in
+    ``skew_label``; at or above ``HIGH`` is ``"dominated"``.
+    """
+
+    NEAR_EVEN = 0.1
+    MILD = 0.3
+    MODERATE = 0.5
+    HIGH = 0.7
+
+
 def compute_gini(counts: Sequence[float | None]) -> float:
     """Gini coefficient of a non-negative count distribution.
 
@@ -73,14 +89,15 @@ def skew_label(gini: float) -> str:
     """Human-readable bucket for a Gini coefficient.
 
     Thresholds chosen to match common "how lopsided is this?" intuition:
-    under 0.1 is effectively uniform, over 0.7 is one-value-dominates.
+    under ``GiniSkewThreshold.NEAR_EVEN`` is effectively uniform; at or
+    above ``GiniSkewThreshold.HIGH`` is one-value-dominates.
     """
-    if gini < 0.1:
+    if gini < GiniSkewThreshold.NEAR_EVEN:
         return "near-even"
-    if gini < 0.3:
+    if gini < GiniSkewThreshold.MILD:
         return "mild skew"
-    if gini < 0.5:
+    if gini < GiniSkewThreshold.MODERATE:
         return "moderate skew"
-    if gini < 0.7:
+    if gini < GiniSkewThreshold.HIGH:
         return "high skew"
     return "dominated"

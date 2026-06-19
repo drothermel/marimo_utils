@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.components.lucide_icon import LucideIcon
 from marimo_utils.ui.drhtml import cn, div, html_block, span
-from marimo_utils.ui.styles import DivLayouts
+from marimo_utils.ui.styles import DivLayouts, Typography
+
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
 
 
 class ProjectStamp(BaseModel):
@@ -20,10 +24,7 @@ class ProjectStamp(BaseModel):
         return html_block(
             div(
                 LucideIcon(name=self.icon_name).render(),
-                span(
-                    self.project_name,
-                    klass="text-sm font-medium text-muted-foreground",  # BODY_MUTED
-                ),
+                span(self.project_name, klass=Typography.BODY_MUTED),
                 klass=cn(DivLayouts.INLINE_ROW, "gap-1", self.klass),
             )
         )

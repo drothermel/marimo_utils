@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime  # noqa: TC003
+from typing import TYPE_CHECKING
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.components.lucide_icon import LucideIcon
 from marimo_utils.ui.drhtml import cn, div, html_block, span
-from marimo_utils.ui.styles import DivLayouts
+from marimo_utils.ui.styles import DivLayouts, Typography
+
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
 
 
 class DateStamp(BaseModel):
@@ -27,10 +30,7 @@ class DateStamp(BaseModel):
         return html_block(
             div(
                 LucideIcon(name=self.icon_name).render(),
-                span(
-                    self._text(),
-                    klass="text-sm font-medium text-muted-foreground",  # BODY_MUTED
-                ),
+                span(self._text(), klass=Typography.BODY_MUTED),
                 klass=cn(DivLayouts.INLINE_ROW, "gap-1", self.klass),
             )
         )

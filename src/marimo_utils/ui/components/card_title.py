@@ -1,10 +1,15 @@
 from __future__ import annotations
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import h3, html_block
+from marimo_utils.ui.drhtml import cn, h3, html_block
+from marimo_utils.ui.styles import Typography
+
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
 
 
 class CardTitle(BaseModel):
@@ -14,6 +19,4 @@ class CardTitle(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        base = "text-2xl font-semibold leading-none tracking-tight"  # TITLE
-        classes = f"{base} {self.klass}" if self.klass else base
-        return html_block(h3(self.text, klass=classes))
+        return html_block(h3(self.text, klass=cn(Typography.TITLE, self.klass)))

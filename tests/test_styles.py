@@ -9,7 +9,11 @@ from marimo_utils.ui.components.badge import Badge
 from marimo_utils.ui.components.data_item import DataItem
 from marimo_utils.ui.components.lucide_icon import LucideIcon
 from marimo_utils.ui.drhtml import cn
-from marimo_utils.ui.styles import BadgeVariant, DivLayouts, SpanLayouts
+from marimo_utils.ui.styles import (
+    BadgeVariant,
+    DivLayouts,
+    SpanLayouts,
+)
 
 
 def test_div_layout_values() -> None:
@@ -60,7 +64,6 @@ def test_badge_variant_values() -> None:
     assert "bg-primary" in BadgeVariant.DEFAULT
     assert "bg-secondary" in BadgeVariant.SECONDARY
     assert "bg-destructive" in BadgeVariant.DESTRUCTIVE
-    assert BadgeVariant.OUTLINE == "text-foreground"
 
 
 def test_badge_renders_div_with_inline_row() -> None:
@@ -69,6 +72,8 @@ def test_badge_renders_div_with_inline_row() -> None:
     html = rendered.text
     assert "<div" in html
     assert "inline-flex items-center gap-2 flex-wrap" in html
+    assert "text-sm" in html
+    assert "font-semibold" in html
     assert ">Active</div>" in html
 
 

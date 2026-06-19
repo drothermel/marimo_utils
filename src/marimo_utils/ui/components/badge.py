@@ -1,11 +1,20 @@
 from __future__ import annotations
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.drhtml import cn, div, html_block
-from marimo_utils.ui.styles import BADGE_BASE, BadgeVariant, DivLayouts
+from marimo_utils.ui.styles import (
+    BADGE_BASE,
+    BadgeVariant,
+    DivLayouts,
+    Typography,
+)
+
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
 
 
 class Badge(BaseModel):
@@ -22,6 +31,7 @@ class Badge(BaseModel):
                 klass=cn(
                     DivLayouts.INLINE_ROW,
                     BADGE_BASE,
+                    Typography.BODY_SEMIBOLD,
                     self.variant,
                     self.klass,
                 ),

@@ -33,6 +33,10 @@ CHART_HEX: dict[ChartColor, str] = {
 
 CHART_COLORWAY: list[str] = list(CHART_HEX.values())
 
+# Digit count for `#rrggbb` (six hex chars, no leading `#`).
+RGB_HEX_DIGITS = 6
+_HEX_RGB_PATTERN = re.compile(rf"[0-9A-Fa-f]{{{RGB_HEX_DIGITS}}}")
+
 
 def chart_colorscale(
     color: ChartColor, *, light_alpha: float = 0.12
@@ -55,13 +59,15 @@ def hex_to_rgba(hex_color: str, alpha: float) -> str:
     out box-plot median lines and violin inner-box markings.
     """
     if not isinstance(hex_color, str):
-        raise ValueError("hex_to_rgba: hex_color must be a string")
+        raise TypeError("hex_to_rgba: hex_color must be a string")
     if not isinstance(alpha, int | float) or not math.isfinite(alpha):
         raise ValueError("hex_to_rgba: alpha must be a finite number in [0.0, 1.0]")
 
     h = hex_color.lstrip("#")
-    if len(h) != 6 or re.fullmatch(r"[0-9A-Fa-f]{6}", h) is None:
-        raise ValueError("hex_to_rgba: hex_color must be exactly 6 hex characters")
+    if len(h) != RGB_HEX_DIGITS or _HEX_RGB_PATTERN.fullmatch(h) is None:
+        raise ValueError(
+            f"hex_to_rgba: hex_color must be exactly {RGB_HEX_DIGITS} hex characters"
+        )
     if not 0.0 <= float(alpha) <= 1.0:
         raise ValueError("hex_to_rgba: alpha must be in [0.0, 1.0]")
 

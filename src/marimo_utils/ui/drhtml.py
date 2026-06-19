@@ -12,15 +12,17 @@ later utilities win within each Tailwind group (same principle as shadcn
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from enum import StrEnum
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
 import marimo as mo
 from dr_widget.inline import ActiveHtml
 from tailwind_merge import TailwindMerge
 
 from marimo_utils.ui.theme import SHADCN_STYLE_BLOCK
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _twm = TailwindMerge()
 
@@ -37,6 +39,7 @@ def cn(*values: str | StrEnum | None) -> str:
     if not parts:
         return ""
     return _twm.merge(*parts)
+
 
 html_tags = [
     "a",

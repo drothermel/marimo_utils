@@ -1,17 +1,21 @@
 from __future__ import annotations
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.components import CardDescription, CardTitle
 from marimo_utils.ui.drhtml import cn, div, html_block
 from marimo_utils.ui.rendering import auto_render
-from marimo_utils.ui.styles import DivLayouts
+from marimo_utils.ui.styles import DivLayouts, Typography
 
-CARD_SURFACE = (
-    "rounded-lg border border-border bg-card shadow-sm"
-    "text-sm font-medium text-foreground"  # BODY
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
+
+CARD_SURFACE = cn(
+    "rounded-lg border border-border bg-card shadow-sm",
+    Typography.BODY,
 )
 
 
@@ -34,25 +38,19 @@ class Card(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        container_cls = cn(
-            DivLayouts.COL_SHELL, CARD_SURFACE, self.width, self.klass
-        )
+        container_cls = cn(DivLayouts.COL_SHELL, CARD_SURFACE, self.width, self.klass)
 
         sections: list[object] = []
         header_children: list[object] = []
         if self.title is not None:
             header_children.append(CardTitle(text=self.title).render())
         if self.description is not None:
-            header_children.append(
-                CardDescription(text=self.description).render()
-            )
+            header_children.append(CardDescription(text=self.description).render())
         if header_children:
             sections.append(div(*header_children, klass=DivLayouts.COL))
         if self.content is not None:
             content_cls = (
-                cn(DivLayouts.COL, "pt-0")
-                if header_children
-                else DivLayouts.COL
+                cn(DivLayouts.COL, "pt-0") if header_children else DivLayouts.COL
             )
             sections.append(div(auto_render(self.content), klass=content_cls))
 

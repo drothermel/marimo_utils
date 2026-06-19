@@ -51,11 +51,7 @@ class HeatmapChart(PlotlyChart):
         return self
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No heatmap data available."
-            "</div>"
-        )
+        return self._empty_state_html("No heatmap data available.")
 
     def _has_data(self) -> bool:
         return bool(self.z) and bool(self.z[0])

@@ -1,16 +1,18 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
-from typing import Literal
+from collections.abc import Mapping  # noqa: TC003
+from typing import TYPE_CHECKING, Literal
 
 import marimo as mo
 import pandas as pd
-from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.card import Card
 from marimo_utils.ui.chart_colors import ChartColor
 from marimo_utils.ui.charts.bar import BarChart, BarItem
+
+if TYPE_CHECKING:
+    from dr_widget.inline import ActiveHtml
 
 
 def _truncate(s: str, n: int) -> str:
@@ -115,7 +117,7 @@ class FrequencyBarCard(BaseModel):
             # Horizontal charts read top-down, so reverse the list — the
             # largest count lands at the top of the axis.
             if self.orientation == "h":
-                items = list(reversed(items))
+                items.reverse()
             content = BarChart(
                 items=items,
                 orientation=self.orientation,

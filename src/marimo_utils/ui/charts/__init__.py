@@ -23,6 +23,7 @@ from marimo_utils.ui.charts.histogram import (
 from marimo_utils.ui.charts.line import LineChart, LineDash, LineSeries
 from marimo_utils.ui.charts.pie import PieChart, PieSlice
 from marimo_utils.ui.charts.quantiles import (
+    GiniSkewThreshold,
     Quantile,
     QuantileFences,
     compute_gini,
@@ -53,6 +54,7 @@ __all__ = [
     "BoxPlotCard",
     "BoxPoints",
     "FrequencyBarCard",
+    "GiniSkewThreshold",
     "HeatmapChart",
     "HistNorm",
     "HistogramCard",

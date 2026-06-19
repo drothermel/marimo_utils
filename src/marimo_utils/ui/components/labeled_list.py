@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.drhtml import cn, div, html_block, span
 from marimo_utils.ui.rendering import auto_render
-from marimo_utils.ui.styles import DivLayouts
+from marimo_utils.ui.styles import DivLayouts, Typography
+
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
 
 
 class LabeledList(BaseModel):
@@ -30,9 +34,7 @@ class LabeledList(BaseModel):
             div(
                 span(
                     f"{self.label}:",
-                    klass=(
-                        "text-xs font-medium text-muted-foreground uppercase tracking-wide"
-                    ),  # BODY_MUTED,LABEL_CASE
+                    klass=cn(Typography.BODY_MUTED, Typography.LABEL_CASE),
                 ),
                 *rendered_items,
                 klass=cn(DivLayouts.INLINE_ROW, self.klass),

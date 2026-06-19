@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.drhtml import html_block, p
 from marimo_utils.ui.rendering import render_inline
+
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
 
 
 class CardDescription(BaseModel):

@@ -46,11 +46,7 @@ class PieChart(PlotlyChart):
         return bool(self.visible_slices)
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No slice data available."
-            "</div>"
-        )
+        return self._empty_state_html("No slice data available.")
 
     def _color_for_slice(self, slice_: PieSlice, index: int) -> str:
         if slice_.color is not None:

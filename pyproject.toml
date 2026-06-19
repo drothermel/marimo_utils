@@ -5,10 +5,19 @@ description = "Utilities for working with marimo notebooks: Pydantic model displ
 readme = "README.md"
 license = "MIT"
 authors = [
-    { name = "Danielle Rothermel", email = "danielle.rothermel@gmail.com" }
+    { name = "Danielle Rothermel", email = "danielle.rothermel@gmail.com" },
 ]
 requires-python = ">=3.12"
-keywords = ["marimo", "notebooks", "pydantic", "display", "tailwind", "shadcn", "ui", "plotly"]
+keywords = [
+    "marimo",
+    "notebooks",
+    "pydantic",
+    "display",
+    "tailwind",
+    "shadcn",
+    "ui",
+    "plotly",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -48,44 +57,68 @@ dev = [
 [tool.ruff]
 line-length = 88
 target-version = "py312"
+include = ["scripts/**/*.py", "src/**/*.py"]
 
 [tool.ruff.lint]
 select = [
-    "E",      # pycodestyle errors
-    "W",      # pycodestyle warnings
-    "F",      # pyflakes
-    "I",      # isort
-    "B",      # flake8-bugbear
-    "UP",     # pyupgrade
-    "ANN",    # flake8-annotations
-    "RUF",    # ruff-specific rules
+    "A",
+    "ARG",
+    "ASYNC",
+    "B",
+    "BLE",
+    "C4",
+    "DTZ",
+    "E",
+    "F",
+    "FA",
+    "FBT",
+    "FLY",
+    "FURB",
+    "G",
+    "I",
+    "ICN",
+    "ISC",
+    "LOG",
+    "N",
+    "NPY",
+    "PD",
+    "PERF",
+    "PIE",
+    "PL",
+    "PTH",
+    "PT",
+    "RET",
+    "RSE",
+    "RUF",
+    "S",
+    "SIM",
+    "SLOT",
+    "T10",
+    "TC",
+    "TID",
+    "TRY",
+    "UP",
+    "W",
+    "YTT",
 ]
-ignore = [
-    "ANN401",  # allow Any for generic utilities
-]
+ignore = ["PLR1711", "S101", "TRY003", "ANN401"]
 
 [tool.ruff.lint.per-file-ignores]
-"src/marimo_utils/display.py" = ["B009", "B010"]  # getattr/setattr needed for type checker
-"nbs/*.py" = ["ANN001", "ANN201", "ANN202", "B018"]
-"tests/*.py" = ["ANN001", "ANN201"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+"nbs/**/*.py" = ["E501", "F841", "RET503", "B018"]
+"src/marimo_utils/ui/**" = ["PLR0913", "PD011"]
+"src/marimo_utils/display.py" = [
+    "B009",
+    "B010",
+] # getattr/setattr needed for type checker
 
 [tool.ruff.lint.isort]
 known-first-party = ["marimo_utils"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.ty.environment]
 python-version = "3.12"
 
 [tool.ty.src]
-# The ui/ module relies on Tailwind-adjacent
-# constructs that produce spurious ty diagnostics. Excluding it avoids
-# training agents and contributors to make suboptimal design choices in
-# pursuit of a clean type-check that the tooling can't actually deliver
-# here. Keep the exclude tight — the rest of the package should stay
-# type-checked.
-exclude = [
-    "src/marimo_utils/ui/**",
-    "nbs/**",
-]
+exclude = ["nbs/**", "tests"]

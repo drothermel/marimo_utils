@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-import marimo as mo
-from dr_widget.inline import ActiveHtml
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.drhtml import cn, div, html_block, span
-from marimo_utils.ui.styles import DivLayouts, SpanLayouts
+from marimo_utils.ui.styles import DivLayouts, SpanLayouts, Typography
+
+if TYPE_CHECKING:
+    import marimo as mo
+    from dr_widget.inline import ActiveHtml
 
 
 class DataItem(BaseModel):
@@ -22,13 +26,11 @@ class DataItem(BaseModel):
                     self.label,
                     klass=cn(
                         SpanLayouts.KEY_VAL_LABEL,
-                        "text-xs font-medium text-muted-foreground uppercase tracking-wide",
-                    ),  # XS_MUTED, LABEL_CASE
+                        Typography.XS_MUTED,
+                        Typography.LABEL_CASE,
+                    ),
                 ),
-                span(
-                    self.value,
-                    klass="text-sm font-semibold text-foreground",  # BODY_SEMIBOLD
-                ),
+                span(self.value, klass=Typography.BODY_SEMIBOLD),
                 klass=cn(DivLayouts.KEY_VAL_ROW, self.klass),
             )
         )

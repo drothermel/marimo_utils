@@ -146,7 +146,6 @@ def _():
                     Badge(
                         label="destructive", variant=BadgeVariant.DESTRUCTIVE
                     ).render(),
-                    Badge(label="outline", variant=BadgeVariant.OUTLINE).render(),
                 ],
                 justify="start",
                 gap=0.5,
