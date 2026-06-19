@@ -169,7 +169,9 @@ def _():
     `CardWidth`, `Padding`), and surface tokens (`BORDER`, `Background`,
     `BadgeVariant`). Components compose them via `cn()` (tailwind-merge).
     Pass extra utilities through `klass=` — they merge last and win within
-    each Tailwind group.
+    each Tailwind group. Only classes that were precompiled into `dr.css`
+    (literals under `src/` / `nbs/`, or the safelist) actually render;
+    arbitrary runtime strings are ignored.
     """)
     return
 

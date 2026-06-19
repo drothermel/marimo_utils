@@ -1,9 +1,6 @@
 @tailwind utilities;
 
-.dr-scope,
-.dr-scope *,
-.dr-scope ::before,
-.dr-scope ::after {
+:where(.dr-scope, .dr-scope *, .dr-scope ::before, .dr-scope ::after) {
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;

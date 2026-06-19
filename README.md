@@ -86,6 +86,12 @@ Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enum
 
 Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum or shared constant instead.
 
+#### Precompiled styles (important)
+
+Utilities are **precompiled** into `dr.css` at build time (`npm run build:css --prefix styles`). Only literal class strings scanned from `src/` and `nbs/` (plus a small safelist for documented `klass=` overrides) are included. **Arbitrary runtime `klass=` values are not compiled** unless you add them to `styles.py`, `nbs/`, or `styles/tailwind.config.js` safelist and rebuild.
+
+To add new styling: extend `styles.py` or components (preferred), rebuild CSS, and commit the updated `dr.css`.
+
 #### Package layout (`marimo_utils.ui`)
 
 | Path | Role |

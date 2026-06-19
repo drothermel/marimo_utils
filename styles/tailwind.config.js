@@ -12,7 +12,8 @@ export default {
       },
     },
   },
-  // Classes must appear as literal strings under content paths (src/, nbs/).
-  // Dynamic klass= overrides are not compiled unless added there or safelisted.
+  // Literal classes under content paths (src/, nbs/) are compiled automatically.
+  // Safelist common runtime klass= overrides documented for notebook users.
+  safelist: ["ring-2", "ring-ring", "ring-offset-2", "text-lg"],
   plugins: [],
 };

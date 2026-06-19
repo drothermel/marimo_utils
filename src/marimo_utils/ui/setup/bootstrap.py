@@ -31,5 +31,10 @@ def bootstrap_tailwind() -> ActiveHtml:
     ``.dr-scope`` reset (Preflight off). The script touches the shared
     ``document``, so the block lands on the main document even though the
     script itself executes inside the anywidget shadow DOM.
+
+    Styles are precompiled at build time: only literal Tailwind classes under
+    ``src/`` and ``nbs/`` (plus the safelist in ``styles/tailwind.config.js``)
+    ship in ``dr.css``. Dynamic ``klass=`` strings are not compiled unless
+    added to those paths or the safelist.
     """
     return ActiveHtml(html=_BOOTSTRAP_HTML)
