@@ -28,7 +28,7 @@ When a `MyConfig` instance is the last expression in a marimo cell, it renders w
 
 ### `marimo_utils.ui` — Tailwind + shadcn primitives for marimo
 
-Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed with shadcn/ui defaults. The package ships small composable atoms (`Badge`, `CardTitle`, `CardDescription`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), a flexible `Card` container, and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject shadcn's CSS variables on `:root` plus the utility rules that depend on them, then load the Tailwind CDN.
+Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed with shadcn/ui defaults. The package ships card components (`Card`, `CardTitle`, `CardDescription`), small composable atoms (`Badge`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject shadcn's CSS variables on `:root` plus the utility rules that depend on them, then load the Tailwind CDN.
 
 ```python
 import marimo as mo
@@ -87,7 +87,7 @@ Contributors and agents: avoid raw layout Tailwind in components; add or reuse a
 - Adds `IconSize`, `CardWidth`, `Padding`, `Background`, `BORDER`, and `BADGE_FOCUS` to `styles.py`; `BadgeVariant` now aliases `Background` (including `outline` with accent hover).
 - Cards and badges share `BORDER` chrome (`border-border`, `rounded-md`, `shadow-sm`); card default width is `CardWidth.DEFAULT` (`w-100`).
 - Renames `theme.py` → `shadcn_theme.py`; extends injected theme CSS with outline-badge hover utilities.
-- `CardDescription` uses `Typography.BODY` via `cn()` instead of a duplicated class string.
+- `CardTitle` and `CardDescription` live alongside `Card` in `card.py`; `CardDescription` uses `Typography.BODY` via `cn()` instead of a duplicated class string.
 
 **Migration from 0.7.x.**
 

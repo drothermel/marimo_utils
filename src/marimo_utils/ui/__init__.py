@@ -1,5 +1,5 @@
 from marimo_utils.ui.bootstrap import bootstrap_tailwind
-from marimo_utils.ui.card import Card
+from marimo_utils.ui.card import Card, CardDescription, CardTitle
 from marimo_utils.ui.chart_colors import (
     CHART_COLORWAY,
     CHART_HEX,
@@ -44,8 +44,6 @@ from marimo_utils.ui.charts import (
 from marimo_utils.ui.components import (
     STAMP_PRESETS,
     Badge,
-    CardDescription,
-    CardTitle,
     DataItem,
     LabeledList,
     LucideIcon,
