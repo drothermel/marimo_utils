@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented here.
 
-## 0.8.0 — Style tokens, stamps, and surface chrome
+## 0.8.1 — Style tokens, stamps, and surface chrome
 
 - **Breaking:** removes `DateStamp` / `ProjectStamp` classes in favor of registry-backed builders — `date_stamp()`, `project_stamp()`, and `Stamp`. Empty values render `"---"` by default (was `"--- --"` on dates).
 - **Breaking:** removes `BADGE_BASE`; badge chrome is composed from `BORDER`, `BADGE_FOCUS`, and `Padding.BADGE` in `badge.py`.
