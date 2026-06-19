@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict
 from marimo_utils.ui.components import CardDescription, CardTitle
 from marimo_utils.ui.drhtml import cn, div, html_block
 from marimo_utils.ui.rendering import auto_render
-from marimo_utils.ui.styles import DivLayouts, Typography
+from marimo_utils.ui.styles import CardWidth, DivLayouts, Typography
 
 if TYPE_CHECKING:
     import marimo as mo
@@ -34,7 +34,7 @@ class Card(BaseModel):
     title: str | None = None
     description: str | None = None
     content: object | None = None
-    width: str = "w-72"
+    width: CardWidth | str = CardWidth.DEFAULT
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:

@@ -27,6 +27,7 @@ with app.setup:
         HeatmapChart,
         HistogramCard,
         HistogramChart,
+        IconSize,
         LabeledList,
         LineChart,
         LineSeries,
@@ -278,7 +279,7 @@ def _():
             mo.hstack(
                 [
                     LucideIcon(name="calendar").render(),
-                    LucideIcon(name="calendar", size="h-6 w-6").render(),
+                    LucideIcon(name="calendar", size=IconSize.MEDIUM).render(),
                     mo.Html(
                         f'<span class="text-destructive inline-flex">'
                         f"{LucideIcon(name='calendar').render().text}</span>"
@@ -378,8 +379,8 @@ def _():
             `DivLayouts.COL` header section; `content` renders in a
             sibling `DivLayouts.COL` with `pt-0` when a header is present
             (full `COL` padding when there is no header). Default width
-            `w-72` (~18rem); override with `width="w-96"` or any Tailwind
-            width utility.
+            `CardWidth.DEFAULT` (`w-100`); override with ``CardWidth.NARROW``,
+            ``CardWidth.WIDE``, or any Tailwind width utility.
             """),
             mo.md("---"),
             Card(

@@ -6,7 +6,7 @@ from lucide import lucide_icon  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
 from marimo_utils.ui.drhtml import cn, html_block, span
-from marimo_utils.ui.styles import SpanLayouts
+from marimo_utils.ui.styles import IconSize, SpanLayouts
 
 if TYPE_CHECKING:
     import marimo as mo
@@ -16,8 +16,8 @@ if TYPE_CHECKING:
 class LucideIcon(BaseModel):
     """Lucide icon rendered as an SVG inside an `inline-flex` span.
 
-    `size` carries Tailwind height/width utilities (default `h-4 w-4`); the
-    SVG fills the span at `100%` so resizing is driven by the utility class,
+    `size` carries Tailwind height/width utilities (default ``IconSize.SMALL``);
+    the SVG fills the span at `100%` so resizing is driven by the utility class,
     not pixel attributes. `stroke="currentColor"` makes the icon color
     inherit from any `text-*` utility on an ancestor — a Badge tone, a
     muted meta row, etc. — without an explicit color prop here.
@@ -29,7 +29,7 @@ class LucideIcon(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     name: str
-    size: str = "h-4 w-4"
+    size: IconSize | str = IconSize.SMALL
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:

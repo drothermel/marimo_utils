@@ -11,7 +11,9 @@ from marimo_utils.ui.components.lucide_icon import LucideIcon
 from marimo_utils.ui.drhtml import cn
 from marimo_utils.ui.styles import (
     BadgeVariant,
+    CardWidth,
     DivLayouts,
+    IconSize,
     SpanLayouts,
 )
 
@@ -29,6 +31,24 @@ def test_div_layout_values() -> None:
 def test_span_layout_values() -> None:
     assert SpanLayouts.KEY_VAL_LABEL == "inline-block min-w-28"
     assert SpanLayouts.ICON_FRAME == "inline-flex flex-shrink-0"
+
+
+def test_icon_size_values() -> None:
+    assert IconSize.SMALL == "h-4 w-4"
+    assert IconSize.MEDIUM == "h-6 w-6"
+    assert IconSize.LARGE == "h-8 w-8"
+
+
+def test_card_width_values() -> None:
+    assert CardWidth.NARROW == "w-80"
+    assert CardWidth.DEFAULT == "w-100"
+    assert CardWidth.WIDE == "w-160"
+
+
+def test_card_default_width() -> None:
+    rendered = Card(content="Body").render()
+    assert isinstance(rendered, mo.Html)
+    assert CardWidth.DEFAULT in rendered.text
 
 
 def test_cn_col_pt0_merge() -> None:

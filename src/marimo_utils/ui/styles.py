@@ -4,12 +4,11 @@ Convention: no raw layout Tailwind in components — compose ``styles.*`` enums
 via ``cn()`` from ``drhtml`` (tailwind-merge). Override per instance with the
 ``klass`` prop last.
 
-Exports: ``DivLayouts``, ``SpanLayouts``, ``Typography``, ``BadgeVariant``,
-``BADGE_BASE``.
+Exports: ``DivLayouts``, ``SpanLayouts``, ``Typography``, ``IconSize``,
+``CardWidth``, ``BadgeVariant``, ``BADGE_BASE``.
 
 Planned additions to this module:
 - ``Surface`` — border, background, shadow, radius
-- ``Sizing`` — optional named widths and icon sizes
 """
 
 from __future__ import annotations
@@ -36,6 +35,18 @@ class Typography(StrEnum):
     BODY = "text-sm font-medium text-foreground"
     BODY_SEMIBOLD = "text-sm font-semibold text-foreground"
     LABEL_CASE = "uppercase tracking-wide"
+
+
+class IconSize(StrEnum):
+    SMALL = "h-4 w-4"
+    MEDIUM = "h-6 w-6"
+    LARGE = "h-8 w-8"
+
+
+class CardWidth(StrEnum):
+    NARROW = "w-80"
+    DEFAULT = "w-100"
+    WIDE = "w-160"
 
 
 BADGE_BASE = (

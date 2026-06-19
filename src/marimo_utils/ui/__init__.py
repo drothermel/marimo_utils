@@ -59,7 +59,9 @@ from marimo_utils.ui.drhtml import cn
 from marimo_utils.ui.styles import (
     BADGE_BASE,
     BadgeVariant,
+    CardWidth,
     DivLayouts,
+    IconSize,
     SpanLayouts,
 )
 
@@ -81,6 +83,7 @@ __all__ = [
     "Card",
     "CardDescription",
     "CardTitle",
+    "CardWidth",
     "ChartColor",
     "DataItem",
     "DivLayouts",
@@ -90,6 +93,7 @@ __all__ = [
     "HistNorm",
     "HistogramCard",
     "HistogramChart",
+    "IconSize",
     "LabeledList",
     "LineChart",
     "LineDash",
