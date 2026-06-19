@@ -3,8 +3,8 @@ from __future__ import annotations
 import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
 from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.colors import CHART_COLORWAY, CHART_HEX, ChartColor
 
 
 class ScatterSeries(BaseModel):
@@ -37,11 +37,7 @@ class ScatterChart(PlotlyChart):
         return CHART_COLORWAY[index % len(CHART_COLORWAY)]
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No scatter series available."
-            "</div>"
-        )
+        return self._empty_state_html("No scatter series available.")
 
     def _has_data(self) -> bool:
         return any(len(s.x) > 0 and len(s.x) == len(s.y) for s in self.series)
@@ -73,6 +69,3 @@ class ScatterChart(PlotlyChart):
         fig.update_layout(**self._layout(x_range=self.x_range))
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["ScatterChart", "ScatterSeries"]

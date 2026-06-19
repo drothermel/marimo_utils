@@ -3,8 +3,8 @@ from __future__ import annotations
 import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
-from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
 from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.colors import CHART_COLORWAY, CHART_HEX, ChartColor
 
 
 class PieSlice(BaseModel):
@@ -46,11 +46,7 @@ class PieChart(PlotlyChart):
         return bool(self.visible_slices)
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No slice data available."
-            "</div>"
-        )
+        return self._empty_state_html("No slice data available.")
 
     def _color_for_slice(self, slice_: PieSlice, index: int) -> str:
         if slice_.color is not None:
@@ -89,6 +85,3 @@ class PieChart(PlotlyChart):
         fig.update_layout(**self._layout())
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["PieChart", "PieSlice"]

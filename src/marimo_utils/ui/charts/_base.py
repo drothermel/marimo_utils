@@ -5,7 +5,9 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.chart_colors import CHART_COLORWAY
+from marimo_utils.ui.charts.colors import CHART_COLORWAY
+from marimo_utils.ui.core.drhtml import cn
+from marimo_utils.ui.styles import Typography
 
 # Hex mirrors of the shadcn CSS variables, used where plotly needs
 # literal color strings (plotly can't consume `hsl(var(--x))`).
@@ -187,10 +189,12 @@ class PlotlyChart(BaseModel):
         if self.height is not None:
             fig.update_layout(height=self.height)
 
+    def _empty_state_html(self, message: str) -> str:
+        klass = cn(Typography.BODY_MUTED, "italic")
+        return f'<div class="{klass}">{message}</div>'
+
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">No data available.</div>'
-        )
+        return self._empty_state_html("No data available.")
 
     def _repr_html_(self) -> str:
         if not self._has_data():
@@ -210,16 +214,3 @@ class PlotlyChart(BaseModel):
         if not self._has_data():
             return mo.Html(self.empty_state_html())
         return mo.ui.plotly(self._build_figure())
-
-
-__all__ = [
-    "DEFAULT_FONT_SIZE",
-    "DEFAULT_TICK_LABEL_STANDOFF",
-    "SHADCN_BORDER_HEX",
-    "SHADCN_FONT_FAMILY",
-    "SHADCN_FOREGROUND_HEX",
-    "SHADCN_MUTED_FG_HEX",
-    "SHADCN_PLOTLY_LAYOUT",
-    "PlotlyChart",
-    "shadcn_plotly_layout",
-]

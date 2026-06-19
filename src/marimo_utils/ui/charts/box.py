@@ -1,23 +1,25 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Any, Literal
+from collections.abc import Sequence  # noqa: TC003
+from typing import TYPE_CHECKING, Any, Literal
 
 import marimo as mo
 import pandas as pd
 import plotly.graph_objects as go
-from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from marimo_utils.ui.card import Card
-from marimo_utils.ui.chart_colors import (
+from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.colors import (
     CHART_COLORWAY,
     CHART_HEX,
     ChartColor,
     filled_trace_colors,
 )
-from marimo_utils.ui.charts._base import PlotlyChart
 from marimo_utils.ui.charts.quantiles import Quantile, QuantileFences
+from marimo_utils.ui.components.card import Card
+
+if TYPE_CHECKING:
+    from dr_widget.inline import ActiveHtml
 
 BoxPoints = Literal["all", "outliers", "suspectedoutliers", False]
 BoxMean = Literal[True, False, "sd"]
@@ -153,11 +155,7 @@ class BoxChart(PlotlyChart):
         return CHART_COLORWAY[index % len(CHART_COLORWAY)]
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No box groups available."
-            "</div>"
-        )
+        return self._empty_state_html("No box groups available.")
 
     def _has_data(self) -> bool:
         return len(self.groups) > 0
@@ -293,12 +291,3 @@ class BoxPlotCard(BaseModel):
             content=content,
             width=self.width,
         ).render()
-
-
-__all__ = [
-    "BoxChart",
-    "BoxGroup",
-    "BoxMean",
-    "BoxPlotCard",
-    "BoxPoints",
-]

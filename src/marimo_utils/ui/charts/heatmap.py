@@ -3,12 +3,12 @@ from __future__ import annotations
 import plotly.graph_objects as go
 from pydantic import Field, model_validator
 
-from marimo_utils.ui.chart_colors import ChartColor, chart_colorscale
 from marimo_utils.ui.charts._base import (
     SHADCN_FONT_FAMILY,
     SHADCN_FOREGROUND_HEX,
     PlotlyChart,
 )
+from marimo_utils.ui.charts.colors import ChartColor, chart_colorscale
 
 
 class HeatmapChart(PlotlyChart):
@@ -18,7 +18,7 @@ class HeatmapChart(PlotlyChart):
     (plotly's default `yaxis.autorange='reversed'` is applied when
     `y_labels` is supplied); columns align with `x_labels`. The
     colorscale is a two-stop gradient from low-alpha to saturated chart
-    color — see `chart_colorscale` in `chart_colors`.
+    color — see `chart_colorscale` in `charts.colors`.
     """
 
     z: list[list[float]]
@@ -51,11 +51,7 @@ class HeatmapChart(PlotlyChart):
         return self
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No heatmap data available."
-            "</div>"
-        )
+        return self._empty_state_html("No heatmap data available.")
 
     def _has_data(self) -> bool:
         return bool(self.z) and bool(self.z[0])
@@ -98,6 +94,3 @@ class HeatmapChart(PlotlyChart):
         fig.update_yaxes(showgrid=False, zeroline=False, autorange="reversed")
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["HeatmapChart"]

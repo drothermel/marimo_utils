@@ -5,8 +5,8 @@ from typing import Literal
 import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
 from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.colors import CHART_COLORWAY, CHART_HEX, ChartColor
 
 
 class BarItem(BaseModel):
@@ -37,11 +37,7 @@ class BarChart(PlotlyChart):
         return CHART_COLORWAY[index % len(CHART_COLORWAY)]
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No bar data available."
-            "</div>"
-        )
+        return self._empty_state_html("No bar data available.")
 
     def _has_data(self) -> bool:
         return bool(self.items)
@@ -64,6 +60,3 @@ class BarChart(PlotlyChart):
         fig.update_layout(**self._layout())
         self._apply_dimensions(fig)
         return fig
-
-
-__all__ = ["BarChart", "BarItem"]

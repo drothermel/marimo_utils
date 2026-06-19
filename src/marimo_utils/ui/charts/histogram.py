@@ -1,18 +1,20 @@
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
-from typing import Literal
+from collections.abc import Sequence  # noqa: TC003
+from typing import TYPE_CHECKING, Literal
 
 import marimo as mo
 import pandas as pd
 import plotly.graph_objects as go
-from dr_widget.inline import ActiveHtml
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.card import Card
-from marimo_utils.ui.chart_colors import CHART_HEX, ChartColor
 from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.colors import CHART_HEX, ChartColor
+from marimo_utils.ui.components.card import Card
+
+if TYPE_CHECKING:
+    from dr_widget.inline import ActiveHtml
 
 HistNorm = Literal["", "percent", "probability", "density", "probability density"]
 Binning = Literal["auto", "integer", "continuous"]
@@ -55,11 +57,7 @@ class HistogramChart(PlotlyChart):
     max_integer_bars: int = 10
 
     def empty_state_html(self) -> str:
-        return (
-            '<div class="text-sm italic text-muted-foreground">'
-            "No values to histogram."
-            "</div>"
-        )
+        return self._empty_state_html("No values to histogram.")
 
     def _has_data(self) -> bool:
         return len(self.values) > 0
@@ -222,6 +220,3 @@ class HistogramCard(BaseModel):
             content=content,
             width=self.width,
         ).render()
-
-
-__all__ = ["Binning", "HistNorm", "HistogramCard", "HistogramChart"]

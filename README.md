@@ -10,9 +10,9 @@ pip install marimo-utils
 
 ## Usage
 
-### `@add_marimo_display()` decorator
+### `marimo_utils.pydantic` — Pydantic model display in marimo
 
-Adds a `_display_` method to Pydantic models for rich rendering in marimo notebooks.
+Adds marimo's `_display_` protocol to Pydantic models so the last expression in a cell renders class name, source path, and field values.
 
 ```python
 from pydantic import BaseModel
@@ -26,14 +26,28 @@ class MyConfig(BaseModel):
 
 When a `MyConfig` instance is the last expression in a marimo cell, it renders with the class name, source file path, and all field values.
 
+#### Package layout (`marimo_utils`)
+
+| Path | Role |
+|---|---|
+| `pydantic/` | Pydantic ↔ marimo integration — `add_marimo_display()`, `render_model()` |
+| `ui/` | Styled widget + chart toolkit (see below) |
+
+Import from `marimo_utils` or `marimo_utils.pydantic` in notebooks; internal paths may change between releases.
+
 ### `marimo_utils.ui` — Tailwind + shadcn primitives for marimo
 
-Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed with shadcn/ui defaults. The package ships small composable atoms (`Badge`, `CardTitle`, `CardDescription`, `DataItem`, `DateStamp`, `LabeledList`, `LucideIcon`, `ProjectStamp`), a flexible `Card` container, and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject shadcn's CSS variables on `:root` plus the utility rules that depend on them, then load the Tailwind CDN.
+Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed with shadcn/ui defaults. The package ships card components (`Card`, `CardTitle`, `CardDescription`), small composable atoms (`Badge`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject shadcn's CSS variables on `:root` plus the utility rules that depend on them, then load the Tailwind CDN.
 
 ```python
 import marimo as mo
 from marimo_utils.ui import (
-    BarChart, BarItem, Card, ChartColor, bootstrap_tailwind,
+    BarChart,
+    BarItem,
+    Card,
+    CardWidth,
+    ChartColor,
+    bootstrap_tailwind,
 )
 
 bootstrap_tailwind()
@@ -50,53 +64,40 @@ Card(
         ],
         height=220,
     ),
-    width="w-80",
+    width=CardWidth.NARROW,
 ).render()
 ```
 
-Components use shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`). Charts cycle through the `--chart-1` → `--chart-5` palette by default; pin specific items with `color=ChartColor.X`. Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a `Card`-friendly transparent background. `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
+Components use shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`). Meta rows use registry-backed stamp builders — `date_stamp()` and `project_stamp()` return a `Stamp` with configurable empty text, spacing, and icons. Charts cycle through the `--chart-1` → `--chart-5` palette by default; pin specific items with `color=ChartColor.X`. Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a `Card`-friendly transparent background. `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
 
 See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every atom, chart, and card variant side-by-side.
 
-## Changes
+#### Styling conventions (`styles.py`)
 
-### 0.6.0 — Tailwind + shadcn UI package
+Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enums and constants. Components compose them with `cn()` from `drhtml` (tailwind-merge); pass per-instance overrides through each component's `klass` prop last.
 
-- **Breaking:** removes `marimo_utils.style` (the inline-CSS design system) and renames the Tailwind implementation from `marimo_utils.tw` to the canonical `marimo_utils.ui`.
-- Adds `ScatterChart` / `ScatterSeries` and `LineChart` / `LineSeries` (with solid/dotted/dashed styling via `LineDash`) — multi-series numeric-axis charts that accept `x_range` and `y_range`.
-- Every chart section in `nbs/ui_components.py` now renders both a standalone chart and a Card-wrapped variant via `mo.hstack`, exercising the shadow-DOM embedding path uniformly.
-- Renames the demo notebook from `nbs/style_components_tw.py` to `nbs/ui_components.py`.
+| Group | Symbols | Role |
+|---|---|---|
+| Layout | `DivLayouts`, `SpanLayouts` | Card sections, inline rows, key/value rows, icon frame |
+| Typography | `Typography` | Text size, weight, and color |
+| Sizing | `IconSize`, `CardWidth`, `Padding` | Icon dimensions, card widths, badge padding |
+| Surface | `BORDER`, `BADGE_FOCUS`, `Background` | Shared border/radius/shadow, focus ring, fills and hovers |
+| Badges | `BadgeVariant` | Shadcn badge variants (aliases into `Background`) |
 
-**Migration from 0.5.x.** The rename is not purely syntactic — `marimo_utils.ui` uses shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`) instead of the old tone palette, and charts use `ChartColor.ONE..FIVE` instead of `PaletteToneName`. Common translations:
+Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum or shared constant instead.
 
-| 0.5.x (`marimo_utils.style`) | 0.6.0 (`marimo_utils.ui`) |
+#### Package layout (`marimo_utils.ui`)
+
+| Path | Role |
 |---|---|
-| `from marimo_utils.style import ...` | `from marimo_utils.ui import ...` |
-| `Style.default()` / passing `style=...` | removed — call `bootstrap_tailwind()` once per notebook |
-| `Title(drop_text=..., text=...)` | `CardTitle(text=...)` + `CardDescription(text=...)` |
-| `PaletteToneName.SUCCESS` / `.WARNING` / `.DANGER` | `ChartColor.ONE..FIVE` (neutral categorical palette) |
-| `Style.tone_colorscale(tone)` | `chart_colorscale(ChartColor.X)` |
-| `Card(style=..., width="22rem", height="22rem", title=..., content=...)` | `Card(title=..., description=..., content=..., width="w-80").render()` (Tailwind width utilities) |
-| Chart `height=None` for responsive fill inside a sized `Card` | Charts have fixed default heights; pass explicit `height=220` for in-card use |
+| `setup/` | Notebook bootstrap — `bootstrap_tailwind()` and shadcn CSS injection |
+| `core/` | HTML DSL — `drhtml` tag builders, `cn()`, `rendering` helpers |
+| `styles.py` | Shared Tailwind token enums and constants |
+| `components/` | UI widgets (`Card`, `Badge`, `Stamp`, …) |
+| `charts/` | Plotly chart family and `colors` palette helpers |
 
-See [`nbs/ui_components.py`](./nbs/ui_components.py) for current usage of every atom and chart.
+Import from `marimo_utils.ui` in notebooks; internal paths may change between releases.
 
-### 0.5.0
+## Changelog
 
-- Adds four Card-ready chart primitives alongside `PieChart`: `BarChart` / `BarItem`, `HistogramChart`, `ViolinChart` / `ViolinGroup`, `HeatmapChart`. All share per-tone palette colors via `PaletteToneName` and plug into `Card` the same way `PieChart` does.
-- Refactors the charts module into a subpackage with a shared `PlotlyChart` base that owns `_repr_html_`, `__str__`, `reactive()`, empty-state rendering, and dimension application. Subclasses implement only `_has_data` and `_build_figure`.
-- Adds a two-stop `[bg → border]` sequential colorscale helper for heatmap / choropleth use.
-- Turns on plotly responsive mode by default (`PlotlyChart.responsive = True`, config passed to `pio.to_html`). Charts now default to `width=None` (fill container) and resize with their wrapper.
-- Adds `Card.height` so cards become a `display: flex; flex-direction: column` container and responsive charts fill the remaining vertical space.
-
-### 0.4.0
-
-- Routes `<script>`-bearing HTML fragments (notably Plotly) through `dr_widget.inline.ActiveHtml` so Plotly charts render inside a `Card` even though marimo's React tree strips inline scripts.
-- Drops the local `_active_html.py` copy; `ActiveHtml` now lives in the `dr-widget` package.
-- Adds `dr-widget` as a dependency.
-
-### 0.3.0
-
-- Hard-cuts the design package to a notebook-native render contract for marimo notebooks.
-- Keeps `mohtml` as the HTML authoring layer for styled atoms while making `Card` slots compatible with native notebook outputs.
-- Adds reusable pie-chart primitives (`PieChart`, `PieSlice`) for chart-in-card composition.
+See [CHANGELOG.md](./CHANGELOG.md) for release notes and migration guides.

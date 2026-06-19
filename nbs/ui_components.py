@@ -21,19 +21,21 @@ with app.setup:
         Card,
         CardDescription,
         CardTitle,
+        CardWidth,
         ChartColor,
         DataItem,
-        DateStamp,
+        date_stamp,
         HeatmapChart,
         HistogramCard,
         HistogramChart,
+        IconSize,
         LabeledList,
         LineChart,
         LineSeries,
         LucideIcon,
         PieChart,
         PieSlice,
-        ProjectStamp,
+        project_stamp,
         ScatterChart,
         ScatterSeries,
         ViolinChart,
@@ -132,19 +134,23 @@ def _():
     mo.vstack(
         [
             mo.md(r"""
-            Four shadcn badge variants. If all four render as distinct
-            pills with different fills, the full stack is live: CDN
-            loaded, config extension applied, CSS variables resolved.
+            Four shadcn badge variants rendered as `div` elements with
+            `DivLayouts.INLINE_ROW`, shared `BORDER` chrome, and
+            `BadgeVariant` fills from `Background`. If all four render as
+            distinct pills, the full stack is live: CDN loaded, theme CSS
+            injected, variables resolved.
             """),
             mo.md("---"),
             mo.hstack(
                 [
+                    Badge(label="outline", variant=BadgeVariant.OUTLINE).render(),
                     Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
-                    Badge(label="secondary", variant=BadgeVariant.SECONDARY).render(),
+                    Badge(
+                        label="secondary", variant=BadgeVariant.SECONDARY
+                    ).render(),
                     Badge(
                         label="destructive", variant=BadgeVariant.DESTRUCTIVE
                     ).render(),
-                    Badge(label="outline", variant=BadgeVariant.OUTLINE).render(),
                 ],
                 justify="start",
                 gap=0.5,
@@ -157,7 +163,14 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    ## Escape hatch: `klass=` override
+    ## Escape hatch: `klass=` override and `styles.py`
+
+    Tailwind classes live in `marimo_utils.ui.styles` — layout
+    (`DivLayouts`, `SpanLayouts`), typography, sizing (`IconSize`,
+    `CardWidth`, `Padding`), and surface tokens (`BORDER`, `Background`,
+    `BadgeVariant`). Components compose them via `cn()` (tailwind-merge).
+    Pass extra utilities through `klass=` — they merge last and win within
+    each Tailwind group.
     """)
     return
 
@@ -199,8 +212,8 @@ def _():
             `text-2xl font-semibold leading-none tracking-tight`) above
             `CardDescription` (`<p>` with `text-sm text-muted-foreground`).
             Rendered here standalone with a small gap; when used inside
-            `Card` they sit in a shared `flex flex-col space-y-1.5 p-6`
-            wrapper that matches shadcn's `CardHeader`.
+            `Card` they sit in a `DivLayouts.COL` section (`flex flex-col
+            p-6 gap-1.5`) inside the card's `DivLayouts.COL_SHELL` stack.
             """),
             mo.md("---"),
             mo.vstack(
@@ -265,18 +278,14 @@ def _():
             Shadcn-style icon primitive: SVG sized by Tailwind utilities on
             the wrapper (default `h-4 w-4`), `stroke="currentColor"` so the
             color inherits from any `text-*` utility on an ancestor. Below:
-            the same `calendar` icon at default, larger, and inside a
-            `text-destructive` parent so it tints without a color prop.
+            the same `calendar` icon at default, large.
             """),
             mo.md("---"),
             mo.hstack(
                 [
                     LucideIcon(name="calendar").render(),
-                    LucideIcon(name="calendar", size="h-6 w-6").render(),
-                    mo.Html(
-                        f'<span class="text-destructive inline-flex">'
-                        f"{LucideIcon(name='calendar').render().text}</span>"
-                    ),
+                    LucideIcon(name="calendar", size=IconSize.MEDIUM).render(),
+                    LucideIcon(name="calendar", size=IconSize.LARGE).render(),
                 ],
                 justify="start",
                 align="center",
@@ -290,7 +299,7 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    ## DateStamp & ProjectStamp
+    ## Stamp builders
     """)
     return
 
@@ -303,12 +312,14 @@ def _():
             Inline icon + text meta rows using the shadcn `flex items-center
             gap-2 text-sm text-muted-foreground` idiom. Icon color inherits
             from the container's muted text color via `currentColor`.
+            `date_stamp(None)` renders the default empty placeholder (`---`).
             """),
             mo.md("---"),
             mo.hstack(
                 [
-                    DateStamp(value=datetime(2026, 4, 22)).render(),
-                    ProjectStamp(project_name="demo-project").render(),
+                    date_stamp(datetime(2026, 4, 22)).render(),
+                    date_stamp(None).render(),
+                    project_stamp("demo-project").render(),
                 ],
                 justify="start",
                 align="center",
@@ -365,11 +376,13 @@ def _():
         [
             mo.md(r"""
             Card chrome with shadcn-style flat `title=` and `description=`
-            string params. Internally they compose into a `CardHeader`-
-            shaped wrapper (`flex flex-col space-y-1.5 p-6`) containing
-            `CardTitle` + `CardDescription`. `content` renders in a
-            sibling `p-6 pt-0` block. Default width `w-72` (~18rem);
-            override with `width="w-96"` or any Tailwind width utility.
+            string params. Internally the outer wrapper uses
+            `DivLayouts.COL_SHELL`; title and description compose into a
+            `DivLayouts.COL` header section; `content` renders in a
+            sibling `DivLayouts.COL` with `pt-0` when a header is present
+            (full `COL` padding when there is no header). Default width
+            `CardWidth.DEFAULT` (`w-100`); override with ``CardWidth.NARROW``,
+            ``CardWidth.WIDE``, or any Tailwind width utility.
             """),
             mo.md("---"),
             Card(
@@ -439,7 +452,7 @@ def _():
                             ],
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -492,7 +505,7 @@ def _():
                             ],
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -586,7 +599,7 @@ def _(CONFUSION_LABELS, CONFUSION_Z):
                             color=ChartColor.THREE,
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -766,7 +779,7 @@ def _(SCATTER_A_X, SCATTER_A_Y, SCATTER_B_X, SCATTER_B_Y):
                             x_label="x",
                             y_label="y",
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",
@@ -837,7 +850,7 @@ def _(LINE_STEPS, LINE_TRAIN_LOSS, LINE_VAL_LOSS):
                             y_label="Loss",
                             height=220,
                         ),
-                        width="w-80",
+                        width=CardWidth.NARROW,
                     ).render(),
                 ],
                 justify="space-around",

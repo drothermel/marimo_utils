@@ -2,23 +2,18 @@ from __future__ import annotations
 
 import inspect
 import sys
-from collections.abc import Callable
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import marimo as mo
-from marimo._plugins.ui._core.ui_element import UIElement
 from pydantic import BaseModel
 
-TModel = TypeVar("TModel", bound=BaseModel)
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
-__all__ = [
-    "add_marimo_display",
-    "defining_path",
-    "relative_to_safe",
-    "render_model",
-    "resolve_repo_root",
-]
+    from marimo._plugins.ui._core.ui_element import UIElement
+
+TModel = TypeVar("TModel", bound=BaseModel)
 
 
 def defining_path(obj: Any) -> Path | None:
@@ -48,7 +43,7 @@ def resolve_repo_root(model: BaseModel) -> Path:
             repo_root = getattr(paths, "repo_root")
             if repo_root:
                 return Path(str(repo_root))
-    return Path(__file__).resolve().parent.parent.parent
+    return Path(__file__).resolve().parent.parent.parent.parent
 
 
 def relative_to_safe(path: Path, base: Path) -> Path:
