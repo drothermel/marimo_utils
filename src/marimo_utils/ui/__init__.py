@@ -55,6 +55,13 @@ from marimo_utils.ui.components import (
     register_stamp,
 )
 from marimo_utils.ui.core.drhtml import cn
+from marimo_utils.ui.host import (
+    HtmlComponent,
+    MarkupComponent,
+    plain_html_page,
+    setup_host,
+    show,
+)
 from marimo_utils.ui.setup.bootstrap import bootstrap_tailwind
 from marimo_utils.ui.styles import (
     BADGE_FOCUS,
@@ -98,12 +105,14 @@ __all__ = [
     "HistNorm",
     "HistogramCard",
     "HistogramChart",
+    "HtmlComponent",
     "IconSize",
     "LabeledList",
     "LineChart",
     "LineDash",
     "LineSeries",
     "LucideIcon",
+    "MarkupComponent",
     "Padding",
     "PieChart",
     "PieSlice",
@@ -127,7 +136,10 @@ __all__ = [
     "date_stamp",
     "filled_trace_colors",
     "hex_to_rgba",
+    "plain_html_page",
     "project_stamp",
     "register_stamp",
+    "setup_host",
+    "show",
     "skew_label",
 ]

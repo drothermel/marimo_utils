@@ -4,6 +4,7 @@ import json
 
 from dr_widget.inline import ActiveHtml
 
+from marimo_utils.ui.host.tw_ready import INSTALL_SENTINEL_AND_MARK_READY_JS
 from marimo_utils.ui.setup.stylesheet import DR_CSS
 
 # `json.dumps` produces a proper JS string literal — backslashes in the CSS
@@ -17,6 +18,7 @@ _BOOTSTRAP_JS = f"""
   style.id = 'dr-styles';
   style.appendChild(document.createTextNode({json.dumps(DR_CSS)}));
   document.head.appendChild(style);
+  {INSTALL_SENTINEL_AND_MARK_READY_JS.strip()}
 }})();
 """
 
