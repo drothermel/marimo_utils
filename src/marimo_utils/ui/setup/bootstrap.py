@@ -4,7 +4,7 @@ import json
 
 from dr_widget.inline import ActiveHtml
 
-from marimo_utils.ui.shadcn_theme import SHADCN_THEME_CSS
+from marimo_utils.ui.setup.shadcn_theme import SHADCN_THEME_CSS
 
 # `json.dumps` produces a proper JS string literal — backslashes in the CSS
 # (Tailwind-escaped class names like `.hover\:bg-primary\/80`) survive JS

@@ -77,6 +77,18 @@ Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enum
 
 Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum or shared constant instead.
 
+#### Package layout (`marimo_utils.ui`)
+
+| Path | Role |
+|---|---|
+| `setup/` | Notebook bootstrap — `bootstrap_tailwind()` and shadcn CSS injection |
+| `core/` | HTML DSL — `drhtml` tag builders, `cn()`, `rendering` helpers |
+| `styles.py` | Shared Tailwind token enums and constants |
+| `components/` | UI widgets (`Card`, `Badge`, `Stamp`, …) |
+| `charts/` | Plotly chart family and `colors` palette helpers |
+
+Import from `marimo_utils.ui` in notebooks; internal paths may change between releases.
+
 ## Changes
 
 ### 0.8.0 — Style tokens, stamps, and surface chrome
@@ -86,8 +98,8 @@ Contributors and agents: avoid raw layout Tailwind in components; add or reuse a
 - Adds `Stamp`, `StampKind`, `STAMP_PRESETS`, and `@register_stamp` for import-time stamp presets.
 - Adds `IconSize`, `CardWidth`, `Padding`, `Background`, `BORDER`, and `BADGE_FOCUS` to `styles.py`; `BadgeVariant` now aliases `Background` (including `outline` with accent hover).
 - Cards and badges share `BORDER` chrome (`border-border`, `rounded-md`, `shadow-sm`); card default width is `CardWidth.DEFAULT` (`w-100`).
-- Renames `theme.py` → `shadcn_theme.py`; extends injected theme CSS with outline-badge hover utilities.
-- `CardTitle` and `CardDescription` live alongside `Card` in `card.py`; `CardDescription` uses `Typography.BODY` via `cn()` instead of a duplicated class string.
+- Renames `theme.py` → `setup/shadcn_theme.py`; extends injected theme CSS with outline-badge hover utilities.
+- `Card`, `CardTitle`, and `CardDescription` live in `components/card.py`; chart palette helpers live in `charts/colors.py`.
 
 **Migration from 0.7.x.**
 

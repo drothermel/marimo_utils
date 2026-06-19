@@ -5,8 +5,8 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.chart_colors import CHART_COLORWAY
-from marimo_utils.ui.drhtml import cn
+from marimo_utils.ui.charts.colors import CHART_COLORWAY
+from marimo_utils.ui.core.drhtml import cn
 from marimo_utils.ui.styles import Typography
 
 # Hex mirrors of the shadcn CSS variables, used where plotly needs

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from lucide import lucide_icon  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import cn, html_block, span
+from marimo_utils.ui.core.drhtml import cn, html_block, span
 from marimo_utils.ui.styles import IconSize, SpanLayouts
 
 if TYPE_CHECKING:

@@ -8,15 +8,15 @@ import pandas as pd
 import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from marimo_utils.ui.card import Card
-from marimo_utils.ui.chart_colors import (
+from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.colors import (
     CHART_COLORWAY,
     CHART_HEX,
     ChartColor,
     filled_trace_colors,
 )
-from marimo_utils.ui.charts._base import PlotlyChart
 from marimo_utils.ui.charts.quantiles import Quantile, QuantileFences
+from marimo_utils.ui.components.card import Card
 
 if TYPE_CHECKING:
     from dr_widget.inline import ActiveHtml

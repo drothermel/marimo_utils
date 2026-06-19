@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import marimo as mo
 
-from marimo_utils.ui.card import Card
+from marimo_utils.ui.components.card import Card
 from marimo_utils.ui.components.badge import Badge
 from marimo_utils.ui.components.data_item import DataItem
 from marimo_utils.ui.components.lucide_icon import LucideIcon
-from marimo_utils.ui.drhtml import cn
+from marimo_utils.ui.core.drhtml import cn
 from marimo_utils.ui.styles import (
     Background,
     BadgeVariant,

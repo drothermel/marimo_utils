@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.drhtml import cn, div, h3, html_block, p
-from marimo_utils.ui.rendering import auto_render, render_inline
+from marimo_utils.ui.core.drhtml import cn, div, h3, html_block, p
+from marimo_utils.ui.core.rendering import auto_render, render_inline
 from marimo_utils.ui.styles import BORDER, Background, CardWidth, DivLayouts, Typography
 
 if TYPE_CHECKING:

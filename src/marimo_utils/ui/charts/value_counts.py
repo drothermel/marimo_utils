@@ -7,9 +7,9 @@ import marimo as mo
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.card import Card
-from marimo_utils.ui.chart_colors import ChartColor
 from marimo_utils.ui.charts.bar import BarChart, BarItem
+from marimo_utils.ui.charts.colors import ChartColor
+from marimo_utils.ui.components.card import Card
 
 if TYPE_CHECKING:
     from dr_widget.inline import ActiveHtml

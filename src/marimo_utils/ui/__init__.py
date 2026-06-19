@@ -1,13 +1,3 @@
-from marimo_utils.ui.bootstrap import bootstrap_tailwind
-from marimo_utils.ui.card import Card, CardDescription, CardTitle
-from marimo_utils.ui.chart_colors import (
-    CHART_COLORWAY,
-    CHART_HEX,
-    ChartColor,
-    chart_colorscale,
-    filled_trace_colors,
-    hex_to_rgba,
-)
 from marimo_utils.ui.charts import (
     BarChart,
     BarItem,
@@ -41,9 +31,20 @@ from marimo_utils.ui.charts import (
     compute_gini,
     skew_label,
 )
+from marimo_utils.ui.charts.colors import (
+    CHART_COLORWAY,
+    CHART_HEX,
+    ChartColor,
+    chart_colorscale,
+    filled_trace_colors,
+    hex_to_rgba,
+)
 from marimo_utils.ui.components import (
     STAMP_PRESETS,
     Badge,
+    Card,
+    CardDescription,
+    CardTitle,
     DataItem,
     LabeledList,
     LucideIcon,
@@ -53,7 +54,8 @@ from marimo_utils.ui.components import (
     project_stamp,
     register_stamp,
 )
-from marimo_utils.ui.drhtml import cn
+from marimo_utils.ui.core.drhtml import cn
+from marimo_utils.ui.setup.bootstrap import bootstrap_tailwind
 from marimo_utils.ui.styles import (
     BADGE_FOCUS,
     BORDER,

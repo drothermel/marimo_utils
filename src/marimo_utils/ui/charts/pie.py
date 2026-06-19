@@ -3,8 +3,8 @@ from __future__ import annotations
 import plotly.graph_objects as go
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
-from marimo_utils.ui.chart_colors import CHART_COLORWAY, CHART_HEX, ChartColor
 from marimo_utils.ui.charts._base import PlotlyChart
+from marimo_utils.ui.charts.colors import CHART_COLORWAY, CHART_HEX, ChartColor
 
 
 class PieSlice(BaseModel):

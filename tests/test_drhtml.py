@@ -6,8 +6,8 @@ import marimo as mo
 
 from marimo_utils.ui.components.badge import Badge
 from marimo_utils.ui.components.labeled_list import LabeledList
-from marimo_utils.ui.drhtml import br, cn, div, p, span
-from marimo_utils.ui.rendering import render_inline
+from marimo_utils.ui.core.drhtml import br, cn, div, p, span
+from marimo_utils.ui.core.rendering import render_inline
 from marimo_utils.ui.styles import DivLayouts
 
 

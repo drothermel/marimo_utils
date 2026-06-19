@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-from marimo_utils.ui.drhtml import br, strong
+from marimo_utils.ui.core.drhtml import br, strong
 
 _BOLD_PATTERN = re.compile(r"\*\*(.+?)\*\*")
 
