@@ -120,9 +120,8 @@ class PlotlyChart(BaseModel):
     (dimensions, empty state, `_repr_html_`, reactive widget, layout
     generation) lives here so every chart keeps the same Card-embedding
     contract. Charts flow through `ActiveHtml` because plotly embeds
-    `<script>` tags; the Tailwind bootstrap injects the shadcn stylesheet
-    inside each shadow root so Card chrome hosting a chart still resolves
-    its utilities.
+    `<script>` tags; the precompiled stylesheet is injected inside each
+    shadow root so Card chrome hosting a chart still resolves its utilities.
 
     Typography knobs (`font_size`, `tick_font_size`, `tick_label_standoff`)
     are configurable on every chart via the constructor. They feed into

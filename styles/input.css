@@ -1,0 +1,11 @@
+@tailwind utilities;
+
+:where(.dr-scope, .dr-scope *, .dr-scope ::before, .dr-scope ::after) {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+}
+
+.dr-scope :where(h1, h2, h3, h4, h5, h6, p) {
+  margin: 0;
+}

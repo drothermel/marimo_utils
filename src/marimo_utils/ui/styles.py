@@ -64,7 +64,7 @@ class Background(StrEnum):
 
 
 class BadgeVariant(StrEnum):
-    DEFAULT = Background.PRIMARY
-    SECONDARY = Background.SECONDARY
-    DESTRUCTIVE = Background.DESTRUCTIVE
-    OUTLINE = Background.OUTLINE
+    DEFAULT = "bg-primary text-primary-foreground"
+    SECONDARY = "bg-secondary text-secondary-foreground"
+    DESTRUCTIVE = "bg-destructive text-destructive-foreground"
+    OUTLINE = "text-foreground"

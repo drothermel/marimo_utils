@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.23.2"
+__generated_with = "0.23.10"
 app = marimo.App(width="columns")
 
 with app.setup:
@@ -107,11 +107,10 @@ def _():
 def _():
     mo.md(r"""
     Design system for rendering Pydantic-backed UI primitives inside
-    marimo notebooks. `bootstrap_tailwind()` injects shadcn's CSS
-    variables on `:root` (zinc light mode) plus the handful of utility
-    rules that depend on them (`bg-primary`, `text-*-foreground`,
-    `border-border`, `ring-ring`, hover variants), then loads the
-    Tailwind CDN for the built-in utilities.
+    marimo notebooks. `bootstrap_tailwind()` injects the precompiled
+    `dr.css` stylesheet once per page — Tailwind utilities (Preflight
+    off), shadcn theme tokens, and a scoped `.dr-scope` reset — without
+    loading the Play CDN.
 
     Component APIs use shadcn's stock variant names (`default`,
     `secondary`, `destructive`, `outline`) with no custom tone layer.
@@ -136,9 +135,10 @@ def _():
             mo.md(r"""
             Four shadcn badge variants rendered as `div` elements with
             `DivLayouts.INLINE_ROW`, shared `BORDER` chrome, and
-            `BadgeVariant` fills from `Background`. If all four render as
-            distinct pills, the full stack is live: CDN loaded, theme CSS
-            injected, variables resolved.
+            `BadgeVariant` surface fills (no hover — badges are static labels).
+            If all four render as
+            distinct pills, the full stack is live: stylesheet loaded,
+            theme tokens resolved, scoped reset applied.
             """),
             mo.md("---"),
             mo.hstack(
@@ -170,7 +170,9 @@ def _():
     `CardWidth`, `Padding`), and surface tokens (`BORDER`, `Background`,
     `BadgeVariant`). Components compose them via `cn()` (tailwind-merge).
     Pass extra utilities through `klass=` — they merge last and win within
-    each Tailwind group.
+    each Tailwind group. Only classes that were precompiled into `dr.css`
+    (literals under `src/` / `nbs/`, or the safelist) actually render;
+    arbitrary runtime strings are ignored.
     """)
     return
 
@@ -181,8 +183,8 @@ def _():
         [
             mo.md(r"""
             `Badge(klass="ring-2 ring-ring ring-offset-2")` appends extra
-            utilities. The ring color comes from `--ring` via the Tailwind
-            config extension, so the emphasis stays on-theme.
+            utilities.             The ring color comes from `--ring` via the shadcn theme CSS,
+            so the emphasis stays on-theme.
             """),
             mo.md("---"),
             Badge(

@@ -16,5 +16,7 @@ dist/
 .remember/
 .DS_Store
 
+styles/node_modules/
+
 data/
 figures/

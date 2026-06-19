@@ -19,7 +19,7 @@ import marimo as mo
 from dr_widget.inline import ActiveHtml
 from tailwind_merge import TailwindMerge
 
-from marimo_utils.ui.setup.shadcn_theme import SHADCN_STYLE_BLOCK
+from marimo_utils.ui.setup.stylesheet import DR_STYLE_BLOCK
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -229,16 +229,18 @@ def html_block(fragment: HtmlRenderable) -> mo.Html | ActiveHtml:
     """Render HTML fragment; routes through ActiveHtml when contains scripts.
 
     `mo.Html` silently drops inline `<script>` tags via its react html-parser,
-    so anything with scripts (Tailwind Play CDN, plotly) must go through
-    `ActiveHtml`, which re-executes script nodes after mount.
+    so anything with scripts (plotly) must go through `ActiveHtml`, which
+    re-executes script nodes after mount.
 
+    Every fragment is wrapped in ``.dr-scope`` so the scoped reset applies.
     When routing through `ActiveHtml` the payload is prepended with
-    `SHADCN_STYLE_BLOCK`. `ActiveHtml` mounts its content inside a shadow
-    DOM, and styles in `document.head` don't cascade into shadow roots —
-    so a Card-with-plotly-chart would lose its Tailwind chrome without
-    the local style injection.
+    `DR_STYLE_BLOCK`. `ActiveHtml` mounts its content inside a shadow DOM,
+    and styles in `document.head` don't cascade into shadow roots — so a
+    Card-with-plotly-chart would lose its Tailwind chrome without the local
+    style injection.
     """
     html = str(fragment)
+    scoped = f'<div class="dr-scope">{html}</div>'
     if "<script" in html.lower():
-        return ActiveHtml(html=SHADCN_STYLE_BLOCK + html)
-    return mo.Html(html)
+        return ActiveHtml(html=DR_STYLE_BLOCK + scoped)
+    return mo.Html(scoped)

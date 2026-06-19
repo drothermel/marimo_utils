@@ -37,7 +37,7 @@ Import from `marimo_utils` or `marimo_utils.pydantic` in notebooks; internal pat
 
 ### `marimo_utils.ui` — Tailwind + shadcn primitives for marimo
 
-Pydantic-backed UI primitives that render through Tailwind (Play CDN) themed with shadcn/ui defaults. The package ships card components (`Card`, `CardTitle`, `CardDescription`), small composable atoms (`Badge`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject shadcn's CSS variables on `:root` plus the utility rules that depend on them, then load the Tailwind CDN.
+Pydantic-backed UI primitives that render through a precompiled Tailwind stylesheet (Preflight off, scoped via `.dr-scope`) themed with shadcn/ui defaults. The package ships card components (`Card`, `CardTitle`, `CardDescription`), small composable atoms (`Badge`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject the bundled stylesheet (utilities, shadcn tokens, and scoped reset).
 
 ```python
 import marimo as mo
@@ -82,15 +82,21 @@ Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enum
 | Typography | `Typography` | Text size, weight, and color |
 | Sizing | `IconSize`, `CardWidth`, `Padding` | Icon dimensions, card widths, badge padding |
 | Surface | `BORDER`, `BADGE_FOCUS`, `Background` | Shared border/radius/shadow, focus ring, fills and hovers |
-| Badges | `BadgeVariant` | Shadcn badge variants (aliases into `Background`) |
+| Badges | `BadgeVariant` | Shadcn badge variants (static; no hover) |
 
 Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum or shared constant instead.
+
+#### Precompiled styles (important)
+
+Utilities are **precompiled** into `dr.css` at build time (`npm run build:css --prefix styles`). Only literal class strings scanned from `src/` and `nbs/` (plus a small safelist for documented `klass=` overrides) are included. **Arbitrary runtime `klass=` values are not compiled** unless you add them to `styles.py`, `nbs/`, or `styles/tailwind.config.js` safelist and rebuild.
+
+To add new styling: extend `styles.py` or components (preferred), rebuild CSS, and commit the updated `dr.css`.
 
 #### Package layout (`marimo_utils.ui`)
 
 | Path | Role |
 |---|---|
-| `setup/` | Notebook bootstrap — `bootstrap_tailwind()` and shadcn CSS injection |
+| `setup/` | Notebook bootstrap — `bootstrap_tailwind()` and precompiled `dr.css` injection |
 | `core/` | HTML DSL — `drhtml` tag builders, `cn()`, `rendering` helpers |
 | `styles.py` | Shared Tailwind token enums and constants |
 | `components/` | UI widgets (`Card`, `Badge`, `Stamp`, …) |

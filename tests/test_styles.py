@@ -52,6 +52,7 @@ def test_card_default_width() -> None:
     rendered = Card(content="Body").render()
     assert isinstance(rendered, mo.Html)
     assert CardWidth.DEFAULT in rendered.text
+    assert "dr-scope" in rendered.text
 
 
 def test_cn_col_pt0_merge() -> None:
@@ -85,8 +86,14 @@ def test_card_content_only_uses_col_without_pt0() -> None:
 
 def test_badge_variant_values() -> None:
     assert "bg-primary" in BadgeVariant.DEFAULT
+    assert "hover:" not in BadgeVariant.DEFAULT
     assert "bg-secondary" in BadgeVariant.SECONDARY
+    assert "hover:" not in BadgeVariant.SECONDARY
     assert "bg-destructive" in BadgeVariant.DESTRUCTIVE
+    assert "hover:" not in BadgeVariant.DESTRUCTIVE
+    assert "text-foreground" in BadgeVariant.OUTLINE
+    assert "hover:" not in BadgeVariant.OUTLINE
+    assert "hover:bg-primary/80" in Background.PRIMARY
     assert "text-foreground" in Background.OUTLINE
     assert "hover:bg-accent" in Background.OUTLINE
     assert "border-border" in BORDER
@@ -98,6 +105,7 @@ def test_badge_renders_div_with_inline_row() -> None:
     rendered = Badge(label="Active").render()
     assert isinstance(rendered, mo.Html)
     html = rendered.text
+    assert "dr-scope" in html
     assert "<div" in html
     assert "inline-flex items-center gap-2 flex-wrap" in html
     assert "border-border" in html
