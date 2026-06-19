@@ -60,6 +60,27 @@ def test_dr_scope_reset_allows_border_utility() -> None:
     assert border_color == "rgb(228, 228, 231)"
 
 
+def test_badge_has_no_hover_background_change() -> None:
+    from playwright.sync_api import sync_playwright
+
+    from marimo_utils.ui.styles import BadgeVariant
+
+    badge_html = Badge(label="Active", variant=BadgeVariant.DEFAULT).render().text
+    page_html = f"<!DOCTYPE html><html><head>{DR_STYLE_BLOCK}</head><body>{badge_html}</body></html>"
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page()
+        page.set_content(page_html)
+        locator = page.locator(".dr-scope div").first
+        before = locator.evaluate("el => getComputedStyle(el).backgroundColor")
+        locator.hover()
+        during = locator.evaluate("el => getComputedStyle(el).backgroundColor")
+        browser.close()
+
+    assert before == during
+
+
 def test_activehtml_route_includes_styles_for_plotly_card() -> None:
     from dr_widget.inline import ActiveHtml
 

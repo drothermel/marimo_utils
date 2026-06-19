@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.23.2"
+__generated_with = "0.23.10"
 app = marimo.App(width="columns")
 
 with app.setup:
@@ -135,7 +135,8 @@ def _():
             mo.md(r"""
             Four shadcn badge variants rendered as `div` elements with
             `DivLayouts.INLINE_ROW`, shared `BORDER` chrome, and
-            `BadgeVariant` fills from `Background`. If all four render as
+            `BadgeVariant` surface fills (no hover — badges are static labels).
+            If all four render as
             distinct pills, the full stack is live: stylesheet loaded,
             theme tokens resolved, scoped reset applied.
             """),

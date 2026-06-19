@@ -86,8 +86,14 @@ def test_card_content_only_uses_col_without_pt0() -> None:
 
 def test_badge_variant_values() -> None:
     assert "bg-primary" in BadgeVariant.DEFAULT
+    assert "hover:" not in BadgeVariant.DEFAULT
     assert "bg-secondary" in BadgeVariant.SECONDARY
+    assert "hover:" not in BadgeVariant.SECONDARY
     assert "bg-destructive" in BadgeVariant.DESTRUCTIVE
+    assert "hover:" not in BadgeVariant.DESTRUCTIVE
+    assert "text-foreground" in BadgeVariant.OUTLINE
+    assert "hover:" not in BadgeVariant.OUTLINE
+    assert "hover:bg-primary/80" in Background.PRIMARY
     assert "text-foreground" in Background.OUTLINE
     assert "hover:bg-accent" in Background.OUTLINE
     assert "border-border" in BORDER
