@@ -8,7 +8,10 @@ from marimo_utils.ui.setup.bootstrap import bootstrap_tailwind
 from marimo_utils.ui.setup.stylesheet import DR_CSS, DR_STYLE_BLOCK, stylesheet_path
 
 
-def test_dr_css_contains_scope_reset_and_custom_widths() -> None:
+def test_dr_css_scopes_design_tokens_to_dr_scope() -> None:
+    assert ":root {" not in DR_CSS
+    assert ":root{" not in DR_CSS
+    assert ".dr-scope {\n  --background:" in DR_CSS
     assert ":where(.dr-scope" in DR_CSS
     assert "box-sizing:border-box" in DR_CSS
     assert ".w-100{width:25rem}" in DR_CSS
@@ -48,9 +51,13 @@ def test_dr_scope_reset_allows_border_utility() -> None:
         border_width = page.locator(".dr-scope .border").first.evaluate(
             "el => getComputedStyle(el).borderTopWidth"
         )
+        border_color = page.locator(".dr-scope .border-border").first.evaluate(
+            "el => getComputedStyle(el).borderTopColor"
+        )
         browser.close()
 
     assert border_width == "1px"
+    assert border_color == "rgb(228, 228, 231)"
 
 
 def test_activehtml_route_includes_styles_for_plotly_card() -> None:
