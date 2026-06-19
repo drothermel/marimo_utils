@@ -27,11 +27,10 @@ class DateStamp(BaseModel):
         return html_block(
             div(
                 LucideIcon(name=self.icon_name).render(),
-                span(self._text()),
-                klass=cn(
-                    DivLayouts.INLINE_ROW,
-                    "text-sm text-muted-foreground",
-                    self.klass,
+                span(
+                    self._text(),
+                    klass="text-sm font-medium text-muted-foreground",  # BODY_MUTED
                 ),
+                klass=cn(DivLayouts.INLINE_ROW, "gap-1", self.klass),
             )
         )

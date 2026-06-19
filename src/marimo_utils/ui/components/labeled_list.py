@@ -30,7 +30,9 @@ class LabeledList(BaseModel):
             div(
                 span(
                     f"{self.label}:",
-                    klass="text-sm font-medium text-muted-foreground",
+                    klass=(
+                        "text-xs font-medium text-muted-foreground uppercase tracking-wide"
+                    ),  # BODY_MUTED,LABEL_CASE
                 ),
                 *rendered_items,
                 klass=cn(DivLayouts.INLINE_ROW, self.klass),

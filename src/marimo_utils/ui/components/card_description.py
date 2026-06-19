@@ -15,6 +15,6 @@ class CardDescription(BaseModel):
     klass: str | None = None
 
     def render(self) -> mo.Html | ActiveHtml:
-        base = "text-sm text-muted-foreground"
+        base = "text-sm font-medium text-foreground"  # BODY
         classes = f"{base} {self.klass}" if self.klass else base
         return html_block(p(*render_inline(self.text), klass=classes))

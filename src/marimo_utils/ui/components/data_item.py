@@ -22,13 +22,12 @@ class DataItem(BaseModel):
                     self.label,
                     klass=cn(
                         SpanLayouts.KEY_VAL_LABEL,
-                        "text-xs font-medium uppercase tracking-wide "
-                        "text-muted-foreground",
-                    ),
+                        "text-xs font-medium text-muted-foreground uppercase tracking-wide",
+                    ),  # XS_MUTED, LABEL_CASE
                 ),
                 span(
                     self.value,
-                    klass="text-sm font-semibold text-foreground",
+                    klass="text-sm font-semibold text-foreground",  # BODY_SEMIBOLD
                 ),
                 klass=cn(DivLayouts.KEY_VAL_ROW, self.klass),
             )
