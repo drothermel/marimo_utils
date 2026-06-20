@@ -258,7 +258,4 @@ def test_tone_surface_renders_with_expected_contrast() -> None:
             browser.close()
 
         assert lums["bgLum"] > 0, surface
-        if emphasis is ToneEmphasis.SOFT:
-            assert lums["fgLum"] < lums["bgLum"], surface
-        else:
-            assert lums["fgLum"] > lums["bgLum"], surface
+        assert lums["fgLum"] < lums["bgLum"], surface

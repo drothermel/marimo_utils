@@ -44,9 +44,9 @@ def _():
     mo.md(r"""
     ## Semantic tone tokens — soft and solid swatches
 
-    Six surfaces from `ToneSurface`: soft variants use a tinted background
-    with dark text (informational, not alert); solid variants use a filled
-    background with light text.
+    Six surfaces from `ToneSurface`: soft variants use a light tinted
+    background with dark text (informational, not alert); solid variants
+    use a stronger tint with the same dark foreground for badge readability.
     """)
     return
 
