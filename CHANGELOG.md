@@ -4,6 +4,7 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+- Splits the monolithic `nbs/ui_components.py` demo into `nbs/components/{primitives,cards,charts,color_themes}.py` and extracts seed-42 synthetic fixtures into `nbs/fixtures/synthetic.py`.
 - Adds foundation proof (probe #1): static `Badge.to_html()` → pure markup with `data-component="badge"`, `Card.to_html()` composition, and `nbs/probes/foundation_proof.py` validating web + marimo + re-render under `setup_host()`. Plotly-in-Card still uses legacy `ActiveHtml` (`dr-plotly` deferred).
 - Adds host adapters: `setup_host()`, `show()` (`mo.Html(c.to_html())`), and `plain_html_page()` for web reuse and Playwright verification.
 - Adds component markup contract (`HtmlComponent`, `MarkupComponent`, `data-component` hooks) and a `data-tw-ready` readiness sentinel in bootstrap and plain-HTML pages.
@@ -31,14 +32,14 @@ All notable changes to this project are documented here.
 | `Card(..., width="w-72")` | `Card(..., width=CardWidth.DEFAULT)` or `CardWidth.NARROW` / `.WIDE` |
 | `LucideIcon(size="h-4 w-4")` | `LucideIcon(size=IconSize.SMALL)` (default unchanged) |
 
-See [`nbs/ui_components.py`](./nbs/ui_components.py) for current usage of every atom and chart.
+See the demo notebooks under [`nbs/components/`](./nbs/components/) for current usage of every atom and chart.
 
 ## 0.6.0 — Tailwind + shadcn UI package
 
 - **Breaking:** removes `marimo_utils.style` (the inline-CSS design system) and renames the Tailwind implementation from `marimo_utils.tw` to the canonical `marimo_utils.ui`.
 - Adds `ScatterChart` / `ScatterSeries` and `LineChart` / `LineSeries` (with solid/dotted/dashed styling via `LineDash`) — multi-series numeric-axis charts that accept `x_range` and `y_range`.
-- Every chart section in `nbs/ui_components.py` now renders both a standalone chart and a Card-wrapped variant via `mo.hstack`, exercising the shadow-DOM embedding path uniformly.
-- Renames the demo notebook from `nbs/style_components_tw.py` to `nbs/ui_components.py`.
+- Every chart section in the demo notebooks under `nbs/components/` now renders both a standalone chart and a Card-wrapped variant via `mo.hstack`, exercising the shadow-DOM embedding path uniformly.
+- Renames the demo notebook from `nbs/style_components_tw.py` to `nbs/ui_components.py` (later split into `nbs/components/*` in Phase 1).
 
 ### Migration from 0.5.x
 
@@ -54,7 +55,7 @@ The rename is not purely syntactic — `marimo_utils.ui` uses shadcn's stock var
 | `Card(style=..., width="22rem", height="22rem", title=..., content=...)` | `Card(title=..., description=..., content=..., width=CardWidth.NARROW).render()` |
 | Chart `height=None` for responsive fill inside a sized `Card` | Charts have fixed default heights; pass explicit `height=220` for in-card use |
 
-See [`nbs/ui_components.py`](./nbs/ui_components.py) for current usage of every atom and chart.
+See the demo notebooks under [`nbs/components/`](./nbs/components/) for current usage of every atom and chart.
 
 ## 0.5.0
 
