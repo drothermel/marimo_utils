@@ -100,7 +100,7 @@ def neutral_badge(
 
 
 def bool_badge(
-    value: bool,
+    value: bool,  # noqa: FBT001
     *,
     good_when_true: bool = True,
     true_label: str = "Yes",

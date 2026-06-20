@@ -37,7 +37,7 @@ Import from `marimo_utils` or `marimo_utils.pydantic` in notebooks; internal pat
 
 ### `marimo_utils.ui` — Tailwind + shadcn primitives for marimo
 
-Pydantic-backed UI primitives that render through a precompiled Tailwind stylesheet (Preflight off, scoped via `.dr-scope`) themed with shadcn/ui defaults. The package ships card components (`Card`, `CardTitle`, `CardDescription`), small composable atoms (`Badge`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject the bundled stylesheet (utilities, shadcn tokens, and scoped reset).
+Pydantic-backed UI primitives that render through a precompiled Tailwind stylesheet (Preflight off, scoped via `.dr-scope`) themed with shadcn/ui defaults. The package ships card components (`Card`, `CardTitle`, `CardDescription`), small composable atoms (`Badge`, `good_badge`, `bad_badge`, `neutral_badge`, `bool_badge`, `DataItem`, `Stamp`, `date_stamp`, `project_stamp`, `LabeledList`, `LucideIcon`), and a plotly-backed chart family (`BarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `PieChart`, `ScatterChart`, `ViolinChart`) sharing a common `PlotlyChart` base. Call `bootstrap_tailwind()` once in a notebook to inject the bundled stylesheet (utilities, shadcn tokens, and scoped reset).
 
 ```python
 import marimo as mo
@@ -68,7 +68,7 @@ Card(
 ).render()
 ```
 
-Components use shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`). Meta rows use registry-backed stamp builders — `date_stamp()` and `project_stamp()` return a `Stamp` with configurable empty text, spacing, and icons. Charts cycle through the `--chart-1` → `--chart-5` palette by default; pin specific items with `color=ChartColor.X`. Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a `Card`-friendly transparent background. `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
+Components use shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`) on `Badge`, or semantic tone builders — `good_badge()`, `bad_badge()`, and `neutral_badge()` apply `ToneSurface` tokens; `bool_badge()` maps booleans to good/bad polarity (with optional per-side tone overrides for patterns like neutral `"skipped"`). Meta rows use registry-backed stamp builders — `date_stamp()` and `project_stamp()` return a `Stamp` with configurable empty text, spacing, and icons. Charts cycle through the `--chart-1` → `--chart-5` palette by default; pin specific items with `color=ChartColor.X`. Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a `Card`-friendly transparent background. `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
 
 See the demo notebooks under [`nbs/components/`](./nbs/components/) — `primitives.py`, `cards.py`, `charts.py`, and `color_themes.py` — for live examples of every atom, chart, and card variant.
 
@@ -106,7 +106,7 @@ Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enum
 | Typography | `Typography` | Text size, weight, and color |
 | Sizing | `IconSize`, `CardWidth`, `Padding` | Icon dimensions, card widths, badge padding |
 | Surface | `BORDER`, `BADGE_FOCUS`, `Background` | Shared border/radius/shadow, focus ring, fills and hovers |
-| Badges | `BadgeVariant` | Shadcn badge variants (static; no hover) |
+| Badges | `BadgeVariant`, `good_badge()`, `bad_badge()`, `neutral_badge()`, `bool_badge()` | Shadcn variants or semantic tone pills (static; no hover) |
 | Semantic tones | `SemanticTone`, `ToneEmphasis`, `ToneSurface`, `ToneBorder`, `tone_surface()`, `tone_border()` | Good/bad/neutral × soft/solid tokens for badges, borders, meters |
 
 Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum or shared constant instead.
