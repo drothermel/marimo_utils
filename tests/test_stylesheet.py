@@ -14,10 +14,21 @@ def test_dr_css_scopes_design_tokens_to_dr_scope() -> None:
     assert ".dr-scope {\n  --background:" in DR_CSS
     assert ":where(.dr-scope" in DR_CSS
     assert "box-sizing:border-box" in DR_CSS
-    assert ".w-100{width:25rem}" in DR_CSS
-    assert ".w-160{width:40rem}" in DR_CSS
-    assert ".border-border" in DR_CSS
-    assert ".border{border-width:1px}" in DR_CSS
+    assert ".dr-scope .w-100{width:25rem}" in DR_CSS
+    assert ".dr-scope .w-160{width:40rem}" in DR_CSS
+    assert ".dr-scope .border-border" in DR_CSS
+    assert ".dr-scope .border{border-width:1px}" in DR_CSS
+
+
+def test_dr_css_does_not_emit_global_utility_selectors() -> None:
+    """Utilities must not match marimo chrome that shares class names."""
+    import re
+
+    assert re.search(r"(?<!\.dr-scope )\.flex\{", DR_CSS) is None
+    assert re.search(r"(?<!\.dr-scope )\.bg-popover\{", DR_CSS) is None
+    assert re.search(r"(?<!\.dr-scope )\.bg-secondary\{", DR_CSS) is None
+    assert ".dr-scope .flex{" in DR_CSS
+    assert ".dr-scope .bg-popover" in DR_CSS
 
 
 def test_stylesheet_path_points_at_dr_css() -> None:
@@ -123,6 +134,32 @@ def test_badge_to_html_renders_with_precompiled_styles() -> None:
 
     assert border_width == "1px"
     assert before == during
+
+
+def test_utilities_do_not_apply_outside_dr_scope() -> None:
+    """Simulate marimo chrome sharing Tailwind-like class names."""
+    from playwright.sync_api import sync_playwright
+
+    page_html = f"""<!DOCTYPE html><html><head>{DR_STYLE_BLOCK}
+<style>:root {{ --popover: light-dark(#fff, #252927); }}</style>
+</head><body>
+<div class="flex bg-popover border" id="marimo-chrome">menu</div>
+</body></html>"""
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page()
+        page.set_content(page_html)
+        border_width = page.locator("#marimo-chrome").evaluate(
+            "el => getComputedStyle(el).borderTopWidth"
+        )
+        background = page.locator("#marimo-chrome").evaluate(
+            "el => getComputedStyle(el).backgroundColor"
+        )
+        browser.close()
+
+    assert border_width == "0px"
+    assert background in {"rgba(0, 0, 0, 0)", "transparent"}
 
 
 def test_plotly_card_renders_under_setup_host_styles() -> None:

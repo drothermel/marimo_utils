@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["../src/marimo_utils/**/*.py", "../nbs/**/*.py"],
+  important: ".dr-scope",
   corePlugins: {
     preflight: false,
   },
