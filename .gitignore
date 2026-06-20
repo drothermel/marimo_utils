@@ -14,9 +14,12 @@ dist/
 # Editor / local
 .vscode/
 .remember/
+.worktrees/
 .DS_Store
 
 styles/node_modules/
 
 data/
 figures/
+
+.worktrees/

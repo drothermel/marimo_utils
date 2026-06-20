@@ -74,9 +74,7 @@ class Card(BaseModel):
         sections: list[str] = []
         header_children: list[str] = []
         if self.title is not None:
-            header_children.append(
-                str(h3(self.title, klass=cn(Typography.TITLE)))
-            )
+            header_children.append(str(h3(self.title, klass=cn(Typography.TITLE))))
         if self.description is not None:
             header_children.append(
                 str(
@@ -101,9 +99,7 @@ class Card(BaseModel):
                 )
             )
 
-        return str(
-            div(*sections, klass=container_cls, data_component="card")
-        )
+        return str(div(*sections, klass=container_cls, data_component="card"))
 
     def render(self) -> mo.Html | ActiveHtml:
         container_cls = cn(
