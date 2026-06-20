@@ -95,3 +95,70 @@ def test_activehtml_route_includes_styles_for_plotly_card() -> None:
     assert 'style id="dr-styles"' in html
     assert "dr-scope" in html
     assert Badge(label="X").render().text.count("dr-scope") == 1
+
+
+def test_badge_to_html_renders_with_runtime_and_styles() -> None:
+    from playwright.sync_api import sync_playwright
+
+    from marimo_utils.ui.host import plain_html_page
+    from marimo_utils.ui.styles import BadgeVariant
+
+    page_html = plain_html_page(
+        Badge(label="Active", variant=BadgeVariant.DEFAULT),
+        title="badge probe",
+        include_runtime=True,
+    )
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page()
+        page.set_content(page_html)
+        page.wait_for_selector('[data-tw-ready="true"]', state="attached")
+        locator = page.locator('[data-component="dr-badge"] span').first
+        border_width = locator.evaluate("el => getComputedStyle(el).borderTopWidth")
+        before = locator.evaluate("el => getComputedStyle(el).backgroundColor")
+        locator.hover()
+        during = locator.evaluate("el => getComputedStyle(el).backgroundColor")
+        browser.close()
+
+    assert border_width == "1px"
+    assert before == during
+
+
+def test_plotly_card_renders_under_setup_host_styles() -> None:
+    from playwright.sync_api import sync_playwright
+
+    from marimo_utils.ui.charts.bar import BarChart, BarItem
+    from marimo_utils.ui.setup.bootstrap import bootstrap_tailwind
+    from marimo_utils.ui.setup.stylesheet import DR_STYLE_BLOCK
+
+    plotly_card = Card(
+        title="Chart",
+        content=BarChart(
+            items=[BarItem(label="A", value=1), BarItem(label="B", value=2)],
+            height=120,
+        ),
+    ).render()
+    page_html = (
+        f"<!DOCTYPE html><html><head>{DR_STYLE_BLOCK}</head><body>"
+        f"{bootstrap_tailwind()}{plotly_card}</body></html>"
+    )
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page()
+        page.set_content(page_html)
+        page.wait_for_selector(".js-plotly-plot")
+        plot = page.locator(".js-plotly-plot").first
+        box = plot.bounding_box()
+        plotly_scripts = page.locator('script[src*="plotly"]').count()
+        border_width = page.locator(".dr-scope .border").first.evaluate(
+            "el => getComputedStyle(el).borderTopWidth"
+        )
+        browser.close()
+
+    assert box is not None
+    assert box["width"] > 0
+    assert box["height"] > 0
+    assert plotly_scripts == 1
+    assert border_width == "1px"

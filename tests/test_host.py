@@ -32,6 +32,20 @@ def test_data_props_attr_is_compact_json() -> None:
     )
 
 
+def test_dr_element_tag_builds_custom_element_markup() -> None:
+    from marimo_utils.ui.core.component import dr_element_tag
+
+    html = dr_element_tag(
+        tag="dr-badge",
+        component="dr-badge",
+        props={"label": "Ada", "className": "border"},
+    )
+    assert html.startswith("<dr-badge ")
+    assert 'data-component="dr-badge"' in html
+    assert "data-props='{\"label\":\"Ada\",\"className\":\"border\"}'" in html
+    assert html.endswith("></dr-badge>")
+
+
 def test_markup_component_injects_data_component_on_opening_tag() -> None:
     component = MarkupComponent(
         html='<dr-hello name="Ada"></dr-hello>',
