@@ -18,6 +18,9 @@ def test_dr_css_scopes_design_tokens_to_dr_scope() -> None:
     assert ".dr-scope .w-160{width:40rem}" in DR_CSS
     assert ".dr-scope .border-border" in DR_CSS
     assert ".dr-scope .border{border-width:1px}" in DR_CSS
+    assert "--tone-good-soft:" in DR_CSS
+    assert ".dr-scope .bg-tone-good-soft" in DR_CSS
+    assert ".dr-scope .border-tone-neutral-solid" in DR_CSS
 
 
 def test_dr_css_does_not_emit_global_utility_selectors() -> None:
@@ -200,3 +203,62 @@ def test_plotly_card_renders_under_setup_host_styles() -> None:
     assert box["height"] > 0
     assert plotly_scripts == 1
     assert border_width == "1px"
+
+
+_LUMINANCE_JS = """
+(el) => {
+  const cs = getComputedStyle(el);
+  function luminance(color) {
+    const parts = color.match(/[\\d.]+/g);
+    if (!parts || parts.length < 3) return 0;
+    const channels = parts.slice(0, 3).map((value) => {
+      const channel = parseFloat(value) / 255;
+      return channel <= 0.03928
+        ? channel / 12.92
+        : Math.pow((channel + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  }
+  return {
+    bgLum: luminance(cs.backgroundColor),
+    fgLum: luminance(cs.color),
+  };
+}
+"""
+
+
+def test_tone_surface_renders_with_expected_contrast() -> None:
+    from playwright.sync_api import sync_playwright
+
+    from marimo_utils.ui.core.drhtml import div, html_block
+    from marimo_utils.ui.styles import ToneEmphasis, ToneSurface
+
+    cases = [
+        (ToneSurface.GOOD_SOFT, ToneEmphasis.SOFT),
+        (ToneSurface.GOOD_SOLID, ToneEmphasis.SOLID),
+        (ToneSurface.BAD_SOFT, ToneEmphasis.SOFT),
+        (ToneSurface.BAD_SOLID, ToneEmphasis.SOLID),
+        (ToneSurface.NEUTRAL_SOFT, ToneEmphasis.SOFT),
+        (ToneSurface.NEUTRAL_SOLID, ToneEmphasis.SOLID),
+    ]
+
+    for surface, emphasis in cases:
+        swatch = html_block(div("tone", klass=surface)).text
+        page_html = (
+            f"<!DOCTYPE html><html><head>{DR_STYLE_BLOCK}</head>"
+            f"<body>{swatch}</body></html>"
+        )
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch()
+            page = browser.new_page()
+            page.set_content(page_html)
+            locator = page.locator(".dr-scope div").first
+            lums = locator.evaluate(_LUMINANCE_JS)
+            browser.close()
+
+        assert lums["bgLum"] > 0, surface
+        if emphasis is ToneEmphasis.SOFT:
+            assert lums["fgLum"] < lums["bgLum"], surface
+        else:
+            assert lums["fgLum"] > lums["bgLum"], surface
