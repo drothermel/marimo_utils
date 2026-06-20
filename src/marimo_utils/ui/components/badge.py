@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
 
-from marimo_utils.ui.core.component import dr_element_tag
 from marimo_utils.ui.core.drhtml import cn, div, html_block
 from marimo_utils.ui.styles import (
     BADGE_FOCUS,
@@ -39,10 +38,12 @@ class Badge(BaseModel):
         )
 
     def to_html(self) -> str:
-        return dr_element_tag(
-            tag="dr-badge",
-            component="dr-badge",
-            props={"label": self.label, "className": self._class_name()},
+        return str(
+            div(
+                self.label,
+                klass=self._class_name(),
+                data_component="badge",
+            )
         )
 
     def render(self) -> mo.Html | ActiveHtml:

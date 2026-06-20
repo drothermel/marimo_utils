@@ -7,7 +7,7 @@ from marimo_utils.ui.components.card import Card
 from marimo_utils.ui.styles import BadgeVariant
 
 
-def test_card_to_html_includes_title_and_dr_badge_child() -> None:
+def test_card_to_html_includes_title_and_badge_child() -> None:
     html = Card(
         title="Metrics",
         description="Run summary",
@@ -16,8 +16,8 @@ def test_card_to_html_includes_title_and_dr_badge_child() -> None:
     assert "<h3" in html
     assert "Metrics" in html
     assert "Run summary" in html
-    assert "<dr-badge" in html
-    assert '"label":"ok"' in html
+    assert 'data-component="badge"' in html
+    assert ">ok</div>" in html
 
 
 def test_card_to_html_does_not_include_dr_scope_wrapper() -> None:

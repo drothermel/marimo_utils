@@ -1,10 +1,9 @@
 # Foundation proof probe (#12): run with
 #   marimo run nbs/probes/foundation_proof.py --headless --no-token -p 2719
 # Playwright checks (manual):
-#   - customElements.get("dr-badge") is defined after setup_host()
 #   - [data-tw-ready="true"] appears once styles load
-#   - slider re-render updates dr-badge data-props in place
-#   - [data-component="dr-badge"] computed styles match legacy badge borders
+#   - slider re-render updates badge label text in place
+#   - [data-component="badge"] computed styles match legacy badge borders
 #   - Plotly .js-plotly-plot has non-zero bounding box
 #   - plotly CDN script tag appears once on the page
 # Plain HTML verification:
@@ -80,14 +79,14 @@ def _(label_index):
         badge,
         card,
         title="Foundation proof probe",
-        include_runtime=True,
+        include_runtime=False,
     )
     probe_path = Path(tempfile.gettempdir()) / "dr_foundation_probe.html"
     probe_path.write_text(page_html, encoding="utf-8")
 
     mo.vstack(
         [
-            mo.md("## Badge (dr-badge custom element)"),
+            mo.md("## Badge (static `to_html()` markup)"),
             mo.md(f"Selected label: **{label}**"),
             show(badge),
             mo.md("## Card + Badge (`to_html()` composition)"),

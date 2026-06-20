@@ -139,7 +139,7 @@ Migration is **additive/incremental**: the new runtime coexists with existing
 - **Phase 0 — Foundation:** dr_widget runtime host (loader + React build);
   custom-element base pattern + data contract; styling swap (precompiled Tailwind
   + `.dr-scope`); host adapters + verification seams (`ui/host/`); prove via Badge + Plotly
-  (Badge/Card `to_html()` + Plotly-in-Card via legacy ActiveHtml; `dr-plotly` deferred).
+  (Badge/Card static `to_html()` + Plotly-in-Card via legacy ActiveHtml; interactive CEs deferred).
 - **Phase 1 — Notebook reorg:** `nbs/components/{primitives,charts,cards,color_themes}.py`
   + shared fixtures.
 - **Phase 2 — Semantic tokens:** good/bad/neutral × soft/solid color tokens;

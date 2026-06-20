@@ -28,7 +28,7 @@ classifiers = [
 ]
 dependencies = [
     "anywidget>=0.9",
-    "dr-widget==0.2.3",
+    "dr-widget==0.2.2",
     "marimo[recommended]>=0.19.4",
     "pandas>=2.0",
     "plotly>=6.7.0",

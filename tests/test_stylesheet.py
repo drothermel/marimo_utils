@@ -97,7 +97,7 @@ def test_activehtml_route_includes_styles_for_plotly_card() -> None:
     assert Badge(label="X").render().text.count("dr-scope") == 1
 
 
-def test_badge_to_html_renders_with_runtime_and_styles() -> None:
+def test_badge_to_html_renders_with_precompiled_styles() -> None:
     from playwright.sync_api import sync_playwright
 
     from marimo_utils.ui.host import plain_html_page
@@ -106,7 +106,7 @@ def test_badge_to_html_renders_with_runtime_and_styles() -> None:
     page_html = plain_html_page(
         Badge(label="Active", variant=BadgeVariant.DEFAULT),
         title="badge probe",
-        include_runtime=True,
+        include_runtime=False,
     )
 
     with sync_playwright() as playwright:
@@ -114,7 +114,7 @@ def test_badge_to_html_renders_with_runtime_and_styles() -> None:
         page = browser.new_page()
         page.set_content(page_html)
         page.wait_for_selector('[data-tw-ready="true"]', state="attached")
-        locator = page.locator('[data-component="dr-badge"] span').first
+        locator = page.locator('[data-component="badge"]').first
         border_width = locator.evaluate("el => getComputedStyle(el).borderTopWidth")
         before = locator.evaluate("el => getComputedStyle(el).backgroundColor")
         locator.hover()

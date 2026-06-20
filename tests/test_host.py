@@ -36,14 +36,14 @@ def test_dr_element_tag_builds_custom_element_markup() -> None:
     from marimo_utils.ui.core.component import dr_element_tag
 
     html = dr_element_tag(
-        tag="dr-badge",
-        component="dr-badge",
-        props={"label": "Ada", "className": "border"},
+        tag="dr-hello",
+        component="dr-hello",
+        props={"name": "Ada"},
     )
-    assert html.startswith("<dr-badge ")
-    assert 'data-component="dr-badge"' in html
-    assert "data-props='{\"label\":\"Ada\",\"className\":\"border\"}'" in html
-    assert html.endswith("></dr-badge>")
+    assert html.startswith("<dr-hello ")
+    assert 'data-component="dr-hello"' in html
+    assert "data-props='{\"name\":\"Ada\"}'" in html
+    assert html.endswith("></dr-hello>")
 
 
 def test_markup_component_injects_data_component_on_opening_tag() -> None:
