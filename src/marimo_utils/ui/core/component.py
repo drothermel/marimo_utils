@@ -43,6 +43,20 @@ def data_props_attr(props: dict[str, object]) -> str:
     return json.dumps(props, separators=(",", ":"))
 
 
+def dr_element_tag(
+    *,
+    tag: str,
+    component: str,
+    props: dict[str, object],
+    **extra_attrs: str,
+) -> str:
+    """Build a custom-element tag with verification hooks and ``data-props``."""
+    attrs = verification_attrs(component=component, **extra_attrs)
+    attrs[DATA_PROPS] = data_props_attr(props)
+    attr_str = format_data_attrs(attrs)
+    return f"<{tag} {attr_str}></{tag}>"
+
+
 class MarkupComponent(BaseModel):
     """Frozen wrapper for raw custom-element markup during probes and migration."""
 

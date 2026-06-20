@@ -32,6 +32,32 @@ def test_data_props_attr_is_compact_json() -> None:
     )
 
 
+def test_dr_element_tag_builds_custom_element_markup() -> None:
+    from marimo_utils.ui.core.component import dr_element_tag
+
+    html = dr_element_tag(
+        tag="dr-hello",
+        component="dr-hello",
+        props={"name": "Ada"},
+    )
+    assert html.startswith("<dr-hello ")
+    assert 'data-component="dr-hello"' in html
+    assert 'data-props="{&quot;name&quot;:&quot;Ada&quot;}"' in html
+    assert html.endswith("></dr-hello>")
+
+
+def test_dr_element_tag_escapes_apostrophes_in_data_props() -> None:
+    from marimo_utils.ui.core.component import dr_element_tag
+
+    html = dr_element_tag(
+        tag="dr-hello",
+        component="dr-hello",
+        props={"label": "O'Brien"},
+    )
+    assert 'data-props="{&quot;label&quot;:&quot;O&#x27;Brien&quot;}"' in html
+    assert html.endswith("></dr-hello>")
+
+
 def test_markup_component_injects_data_component_on_opening_tag() -> None:
     component = MarkupComponent(
         html='<dr-hello name="Ada"></dr-hello>',
