@@ -4,6 +4,7 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+- Adds semantic badge builders — `good_badge()`, `bad_badge()`, `neutral_badge()`, and `bool_badge()` — that consume Phase 2 tone tokens via `tone_surface()`.
 - Splits the monolithic `nbs/ui_components.py` demo into `nbs/components/{primitives,cards,charts,color_themes}.py` and extracts seed-42 synthetic fixtures into `nbs/fixtures/synthetic.py`.
 - Adds semantic tone tokens (`good` / `bad` / `neutral` × `soft` / `solid`) as scoped CSS variables and precompiled utilities in `dr.css`, with `SemanticTone`, `ToneEmphasis`, `ToneSurface`, `ToneBorder`, and lookup helpers in `styles.py`.
 - Adds foundation proof (probe #1): static `Badge.to_html()` → pure markup with `data-component="badge"`, `Card.to_html()` composition, and `nbs/probes/foundation_proof.py` validating web + marimo + re-render under `setup_host()`. Plotly-in-Card still uses legacy `ActiveHtml` (`dr-plotly` deferred).

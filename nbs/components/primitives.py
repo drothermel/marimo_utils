@@ -22,8 +22,14 @@ with app.setup:
         IconSize,
         LabeledList,
         LucideIcon,
+        SemanticTone,
+        ToneEmphasis,
+        bad_badge,
+        bool_badge,
         bootstrap_tailwind,
         date_stamp,
+        good_badge,
+        neutral_badge,
         project_stamp,
     )
 
@@ -56,9 +62,9 @@ def _():
     loading the Play CDN.
 
     Component APIs use shadcn's stock variant names (`default`,
-    `secondary`, `destructive`, `outline`) for badges. Semantic tone
-    tokens (`good` / `bad` / `neutral` × `soft` / `solid`) live in
-    [`color_themes.py`](./color_themes.py).
+    `secondary`, `destructive`, `outline`) for badges, or semantic tone
+    builders (`good_badge`, `bad_badge`, `neutral_badge`, `bool_badge`).
+    Raw tone swatches live in [`color_themes.py`](./color_themes.py).
     """)
     return
 
@@ -99,6 +105,60 @@ def _():
                 gap=0.5,
             ),
         ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## Semantic badges — tone builders and `bool_badge`
+
+    `good_badge()`, `bad_badge()`, and `neutral_badge()` apply
+    `ToneSurface` tokens (default emphasis: soft). `bool_badge()` maps a
+    boolean to good/bad polarity; pass `false_tone=SemanticTone.NEUTRAL`
+    for the common `"skipped"` pill on `False`.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.vstack(
+        [
+            mo.hstack(
+                [
+                    good_badge("pass").render(),
+                    bad_badge("fail").render(),
+                    neutral_badge("skipped").render(),
+                ],
+                justify="start",
+                gap=0.5,
+            ),
+            mo.hstack(
+                [
+                    good_badge("pass", emphasis=ToneEmphasis.SOLID).render(),
+                    bad_badge("fail", emphasis=ToneEmphasis.SOLID).render(),
+                    neutral_badge("skipped", emphasis=ToneEmphasis.SOLID).render(),
+                ],
+                justify="start",
+                gap=0.5,
+            ),
+            mo.hstack(
+                [
+                    bool_badge(True, true_label="done", false_label="skipped").render(),
+                    bool_badge(
+                        False,
+                        true_label="done",
+                        false_label="skipped",
+                        false_tone=SemanticTone.NEUTRAL,
+                    ).render(),
+                ],
+                justify="start",
+                gap=0.5,
+            ),
+        ],
+        gap=0.5,
     )
     return
 

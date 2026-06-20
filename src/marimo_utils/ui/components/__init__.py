@@ -1,4 +1,10 @@
-from marimo_utils.ui.components.badge import Badge
+from marimo_utils.ui.components.badge import (
+    Badge,
+    bad_badge,
+    bool_badge,
+    good_badge,
+    neutral_badge,
+)
 from marimo_utils.ui.components.card import Card, CardDescription, CardTitle
 from marimo_utils.ui.components.data_item import DataItem
 from marimo_utils.ui.components.labeled_list import LabeledList
@@ -23,7 +29,11 @@ __all__ = [
     "LucideIcon",
     "Stamp",
     "StampKind",
+    "bad_badge",
+    "bool_badge",
     "date_stamp",
+    "good_badge",
+    "neutral_badge",
     "project_stamp",
     "register_stamp",
 ]

@@ -47,6 +47,7 @@ def _():
     Six surfaces from `ToneSurface`: soft variants use a light tinted
     background with dark text (informational, not alert); solid variants
     use a stronger tint with the same dark foreground for badge readability.
+    See [`primitives.py`](./primitives.py) for `good_badge` / `bool_badge` usage.
     """)
     return
 
