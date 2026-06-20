@@ -72,6 +72,28 @@ Components use shadcn's stock variant names (`default`, `secondary`, `destructiv
 
 See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every atom, chart, and card variant side-by-side.
 
+#### Host adapters (custom-element path)
+
+For the light-DOM custom-element system, call `setup_host()` once per notebook to load the dr_widget runtime and precompiled styles (including a `data-tw-ready` readiness sentinel for stylesheet load — not custom-element upgrade). Render markup with `show(component)` — `mo.Html` wrapped in `.dr-scope` for parity with `plain_html_page()` and legacy `html_block()` — or build a standalone verification page with `plain_html_page(...)`.
+
+```python
+from marimo_utils.ui import MarkupComponent, plain_html_page, setup_host, show
+
+setup_host()
+
+hello = MarkupComponent(
+    html='<dr-hello name="Ada"></dr-hello>',
+    component="dr-hello",
+)
+show(hello)
+
+page_html = plain_html_page(hello, title="probe")
+```
+
+Every component should expose `to_html()` and emit a `data-component` hook for verification dumps. Legacy `.render()` components remain available until migrated.
+
+See [`nbs/probes/host_adapters.py`](./nbs/probes/host_adapters.py) for a minimal dual-host probe.
+
 #### Styling conventions (`styles.py`)
 
 Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enums and constants. Components compose them with `cn()` from `drhtml` (tailwind-merge); pass per-instance overrides through each component's `klass` prop last.
@@ -96,8 +118,9 @@ To add new styling: extend `styles.py` or components (preferred), rebuild CSS, a
 
 | Path | Role |
 |---|---|
-| `setup/` | Notebook bootstrap — `bootstrap_tailwind()` and precompiled `dr.css` injection |
-| `core/` | HTML DSL — `drhtml` tag builders, `cn()`, `rendering` helpers |
+| `setup/` | Notebook bootstrap — `bootstrap_tailwind()`, `setup_host()`, and precompiled `dr.css` injection |
+| `host/` | Host adapters — `show()`, `plain_html_page()`, verification seam constants |
+| `core/` | HTML DSL — `drhtml` tag builders, `cn()`, `component` markup contract, `rendering` helpers |
 | `styles.py` | Shared Tailwind token enums and constants |
 | `components/` | UI widgets (`Card`, `Badge`, `Stamp`, …) |
 | `charts/` | Plotly chart family and `colors` palette helpers |
