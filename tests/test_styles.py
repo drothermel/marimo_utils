@@ -17,7 +17,13 @@ from marimo_utils.ui.styles import (
     DivLayouts,
     IconSize,
     Padding,
+    SemanticTone,
     SpanLayouts,
+    ToneBorder,
+    ToneEmphasis,
+    ToneSurface,
+    tone_border,
+    tone_surface,
 )
 
 
@@ -128,3 +134,24 @@ def test_lucide_icon_frame_and_size() -> None:
     html = rendered.text
     assert "inline-flex flex-shrink-0" in html
     assert "h-4 w-4" in html
+
+
+def test_tone_surface_values() -> None:
+    assert ToneSurface.GOOD_SOFT == (
+        "bg-tone-good-soft text-tone-good-soft-foreground"
+    )
+    assert ToneSurface.BAD_SOLID == (
+        "bg-tone-bad-solid text-tone-bad-solid-foreground"
+    )
+    assert ToneBorder.NEUTRAL_SOFT == "border-tone-neutral-soft"
+    for token in ToneSurface:
+        assert "hover:" not in token
+
+
+def test_tone_lookup_helpers() -> None:
+    assert tone_surface(SemanticTone.GOOD, ToneEmphasis.SOFT) is ToneSurface.GOOD_SOFT
+    assert tone_surface(SemanticTone.BAD, ToneEmphasis.SOLID) is ToneSurface.BAD_SOLID
+    assert (
+        tone_border(SemanticTone.NEUTRAL, ToneEmphasis.SOFT)
+        is ToneBorder.NEUTRAL_SOFT
+    )

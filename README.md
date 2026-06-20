@@ -107,6 +107,7 @@ Tailwind class strings are centralized in `marimo_utils.ui.styles` as named enum
 | Sizing | `IconSize`, `CardWidth`, `Padding` | Icon dimensions, card widths, badge padding |
 | Surface | `BORDER`, `BADGE_FOCUS`, `Background` | Shared border/radius/shadow, focus ring, fills and hovers |
 | Badges | `BadgeVariant` | Shadcn badge variants (static; no hover) |
+| Semantic tones | `SemanticTone`, `ToneEmphasis`, `ToneSurface`, `ToneBorder`, `tone_surface()`, `tone_border()` | Good/bad/neutral × soft/solid tokens for badges, borders, meters |
 
 Contributors and agents: avoid raw layout Tailwind in components; add or reuse a named enum or shared constant instead.
 

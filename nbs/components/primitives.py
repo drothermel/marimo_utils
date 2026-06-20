@@ -56,7 +56,9 @@ def _():
     loading the Play CDN.
 
     Component APIs use shadcn's stock variant names (`default`,
-    `secondary`, `destructive`, `outline`) with no custom tone layer.
+    `secondary`, `destructive`, `outline`) for badges. Semantic tone
+    tokens (`good` / `bad` / `neutral` × `soft` / `solid`) live in
+    [`color_themes.py`](./color_themes.py).
     """)
     return
 

@@ -24,6 +24,18 @@
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
+  --tone-good-soft: 142 76% 94%;
+  --tone-good-soft-foreground: 142 72% 25%;
+  --tone-good-solid: 142 55% 72%;
+  --tone-good-solid-foreground: 142 72% 22%;
+  --tone-bad-soft: 0 86% 97%;
+  --tone-bad-soft-foreground: 0 72% 35%;
+  --tone-bad-solid: 0 65% 78%;
+  --tone-bad-solid-foreground: 0 72% 30%;
+  --tone-neutral-soft: 220 14% 96%;
+  --tone-neutral-soft-foreground: 220 9% 25%;
+  --tone-neutral-solid: 220 10% 74%;
+  --tone-neutral-solid-foreground: 220 9% 22%;
 }
 
 .dr-scope .bg-background { background-color: hsl(var(--background)); }
@@ -66,3 +78,24 @@
 .dr-scope .text-chart-3 { color: hsl(var(--chart-3)); }
 .dr-scope .text-chart-4 { color: hsl(var(--chart-4)); }
 .dr-scope .text-chart-5 { color: hsl(var(--chart-5)); }
+
+.dr-scope .bg-tone-good-soft { background-color: hsl(var(--tone-good-soft)); }
+.dr-scope .bg-tone-good-solid { background-color: hsl(var(--tone-good-solid)); }
+.dr-scope .bg-tone-bad-soft { background-color: hsl(var(--tone-bad-soft)); }
+.dr-scope .bg-tone-bad-solid { background-color: hsl(var(--tone-bad-solid)); }
+.dr-scope .bg-tone-neutral-soft { background-color: hsl(var(--tone-neutral-soft)); }
+.dr-scope .bg-tone-neutral-solid { background-color: hsl(var(--tone-neutral-solid)); }
+
+.dr-scope .text-tone-good-soft-foreground { color: hsl(var(--tone-good-soft-foreground)); }
+.dr-scope .text-tone-good-solid-foreground { color: hsl(var(--tone-good-solid-foreground)); }
+.dr-scope .text-tone-bad-soft-foreground { color: hsl(var(--tone-bad-soft-foreground)); }
+.dr-scope .text-tone-bad-solid-foreground { color: hsl(var(--tone-bad-solid-foreground)); }
+.dr-scope .text-tone-neutral-soft-foreground { color: hsl(var(--tone-neutral-soft-foreground)); }
+.dr-scope .text-tone-neutral-solid-foreground { color: hsl(var(--tone-neutral-solid-foreground)); }
+
+.dr-scope .border-tone-good-soft { border-color: hsl(var(--tone-good-soft)); }
+.dr-scope .border-tone-good-solid { border-color: hsl(var(--tone-good-solid)); }
+.dr-scope .border-tone-bad-soft { border-color: hsl(var(--tone-bad-soft)); }
+.dr-scope .border-tone-bad-solid { border-color: hsl(var(--tone-bad-solid)); }
+.dr-scope .border-tone-neutral-soft { border-color: hsl(var(--tone-neutral-soft)); }
+.dr-scope .border-tone-neutral-solid { border-color: hsl(var(--tone-neutral-solid)); }

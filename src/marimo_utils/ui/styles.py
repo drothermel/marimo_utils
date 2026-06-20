@@ -68,3 +68,40 @@ class BadgeVariant(StrEnum):
     SECONDARY = "bg-secondary text-secondary-foreground"
     DESTRUCTIVE = "bg-destructive text-destructive-foreground"
     OUTLINE = "text-foreground"
+
+
+class SemanticTone(StrEnum):
+    GOOD = "good"
+    BAD = "bad"
+    NEUTRAL = "neutral"
+
+
+class ToneEmphasis(StrEnum):
+    SOFT = "soft"
+    SOLID = "solid"
+
+
+class ToneSurface(StrEnum):
+    GOOD_SOFT = "bg-tone-good-soft text-tone-good-soft-foreground"
+    GOOD_SOLID = "bg-tone-good-solid text-tone-good-solid-foreground"
+    BAD_SOFT = "bg-tone-bad-soft text-tone-bad-soft-foreground"
+    BAD_SOLID = "bg-tone-bad-solid text-tone-bad-solid-foreground"
+    NEUTRAL_SOFT = "bg-tone-neutral-soft text-tone-neutral-soft-foreground"
+    NEUTRAL_SOLID = "bg-tone-neutral-solid text-tone-neutral-solid-foreground"
+
+
+class ToneBorder(StrEnum):
+    GOOD_SOFT = "border-tone-good-soft"
+    GOOD_SOLID = "border-tone-good-solid"
+    BAD_SOFT = "border-tone-bad-soft"
+    BAD_SOLID = "border-tone-bad-solid"
+    NEUTRAL_SOFT = "border-tone-neutral-soft"
+    NEUTRAL_SOLID = "border-tone-neutral-solid"
+
+
+def tone_surface(tone: SemanticTone, emphasis: ToneEmphasis) -> ToneSurface:
+    return ToneSurface[f"{tone.name}_{emphasis.name}"]
+
+
+def tone_border(tone: SemanticTone, emphasis: ToneEmphasis) -> ToneBorder:
+    return ToneBorder[f"{tone.name}_{emphasis.name}"]
