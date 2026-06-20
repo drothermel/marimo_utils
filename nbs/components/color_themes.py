@@ -1,4 +1,4 @@
-# Chart color palette demo (#13): run with
+# Color theme demos (#13, #14): run with
 #   marimo run nbs/components/color_themes.py --headless --no-token -p 2723
 
 import marimo
@@ -12,7 +12,9 @@ with app.setup:
 
     import marimo as mo
 
-    from marimo_utils.ui import BarChart, BarItem, ChartColor, bootstrap_tailwind
+    from marimo_utils.ui import BarChart, BarItem, ChartColor, ToneSurface, bootstrap_tailwind
+    from marimo_utils.ui.core.drhtml import div, html_block
+    from marimo_utils.ui.styles import Padding, Typography
 
     _NBS_ROOT = Path(__file__).resolve().parent.parent
     if str(_NBS_ROOT) not in sys.path:
@@ -28,7 +30,79 @@ def _():
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    # `marimo_utils.ui` — Chart color palette
+    # `marimo_utils.ui` — Color themes
+
+    Chart palette slots (`ChartColor.ONE` → `ChartColor.FIVE`) and semantic
+    UI tone tokens (`good` / `bad` / `neutral` × `soft` / `solid`) from
+    `styles.py`.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## Semantic tone tokens — soft and solid swatches
+
+    Six surfaces from `ToneSurface`: soft variants use a tinted background
+    with dark text (informational, not alert); solid variants use a filled
+    background with light text.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    _swatch_klass = f"{Padding.BADGE} {Typography.BODY_SEMIBOLD} rounded-md"
+    mo.hstack(
+        [
+            html_block(
+                div(
+                    "good soft",
+                    klass=f"{ToneSurface.GOOD_SOFT} {_swatch_klass}",
+                )
+            ),
+            html_block(
+                div(
+                    "good solid",
+                    klass=f"{ToneSurface.GOOD_SOLID} {_swatch_klass}",
+                )
+            ),
+            html_block(
+                div(
+                    "bad soft",
+                    klass=f"{ToneSurface.BAD_SOFT} {_swatch_klass}",
+                )
+            ),
+            html_block(
+                div(
+                    "bad solid",
+                    klass=f"{ToneSurface.BAD_SOLID} {_swatch_klass}",
+                )
+            ),
+            html_block(
+                div(
+                    "neutral soft",
+                    klass=f"{ToneSurface.NEUTRAL_SOFT} {_swatch_klass}",
+                )
+            ),
+            html_block(
+                div(
+                    "neutral solid",
+                    klass=f"{ToneSurface.NEUTRAL_SOLID} {_swatch_klass}",
+                )
+            ),
+        ],
+        justify="start",
+        gap=1,
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+    ## Chart color palette
 
     Charts cycle through shadcn's stock `--chart-1` → `--chart-5` CSS
     variables by default. Pin a specific slot with `color=ChartColor.X`
