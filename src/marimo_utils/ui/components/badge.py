@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
 
+from marimo_utils.ui.core.component import dr_element_tag
 from marimo_utils.ui.core.drhtml import cn, div, html_block
 from marimo_utils.ui.styles import (
     BADGE_FOCUS,
@@ -26,18 +27,28 @@ class Badge(BaseModel):
     variant: BadgeVariant = BadgeVariant.DEFAULT
     klass: str | None = None
 
+    def _class_name(self) -> str:
+        return cn(
+            DivLayouts.INLINE_ROW,
+            BORDER,
+            BADGE_FOCUS,
+            Padding.BADGE,
+            Typography.BODY_SEMIBOLD,
+            self.variant,
+            self.klass,
+        )
+
+    def to_html(self) -> str:
+        return dr_element_tag(
+            tag="dr-badge",
+            component="dr-badge",
+            props={"label": self.label, "className": self._class_name()},
+        )
+
     def render(self) -> mo.Html | ActiveHtml:
         return html_block(
             div(
                 self.label,
-                klass=cn(
-                    DivLayouts.INLINE_ROW,
-                    BORDER,
-                    BADGE_FOCUS,
-                    Padding.BADGE,
-                    Typography.BODY_SEMIBOLD,
-                    self.variant,
-                    self.klass,
-                ),
+                klass=self._class_name(),
             )
         )

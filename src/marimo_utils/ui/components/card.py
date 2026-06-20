@@ -52,6 +52,55 @@ class Card(BaseModel):
     width: CardWidth | str = CardWidth.DEFAULT
     klass: str | None = None
 
+    @staticmethod
+    def _content_to_html(content: object) -> str:
+        to_html_fn = getattr(content, "to_html", None)
+        if callable(to_html_fn):
+            return str(to_html_fn())
+        return str(auto_render(content))
+
+    def to_html(self) -> str:
+        container_cls = cn(
+            DivLayouts.COL_SHELL,
+            BORDER,
+            Background.CARD,
+            Typography.BODY,
+            self.width,
+            self.klass,
+        )
+
+        sections: list[str] = []
+        header_children: list[str] = []
+        if self.title is not None:
+            header_children.append(
+                str(h3(self.title, klass=cn(Typography.TITLE)))
+            )
+        if self.description is not None:
+            header_children.append(
+                str(
+                    p(
+                        *render_inline(self.description),
+                        klass=cn(Typography.BODY),
+                    )
+                )
+            )
+        if header_children:
+            sections.append(str(div(*header_children, klass=DivLayouts.COL)))
+        if self.content is not None:
+            content_cls = (
+                cn(DivLayouts.COL, "pt-0") if header_children else DivLayouts.COL
+            )
+            sections.append(
+                str(
+                    div(
+                        self._content_to_html(self.content),
+                        klass=content_cls,
+                    )
+                )
+            )
+
+        return str(div(*sections, klass=container_cls))
+
     def render(self) -> mo.Html | ActiveHtml:
         container_cls = cn(
             DivLayouts.COL_SHELL,
