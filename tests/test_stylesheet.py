@@ -125,6 +125,7 @@ def test_badge_to_html_renders_with_precompiled_styles() -> None:
         page = browser.new_page()
         page.set_content(page_html)
         page.wait_for_selector('[data-tw-ready="true"]', state="attached")
+        page.wait_for_selector('[data-component="badge"]', state="attached")
         locator = page.locator('[data-component="badge"]').first
         border_width = locator.evaluate("el => getComputedStyle(el).borderTopWidth")
         before = locator.evaluate("el => getComputedStyle(el).backgroundColor")

@@ -52,9 +52,9 @@ def dr_element_tag(
 ) -> str:
     """Build a custom-element tag with verification hooks and ``data-props``."""
     attrs = verification_attrs(component=component, **extra_attrs)
+    attrs[DATA_PROPS] = data_props_attr(props)
     attr_str = format_data_attrs(attrs)
-    props_json = data_props_attr(props)
-    return f"<{tag} {attr_str} {DATA_PROPS}='{props_json}'></{tag}>"
+    return f"<{tag} {attr_str}></{tag}>"
 
 
 class MarkupComponent(BaseModel):

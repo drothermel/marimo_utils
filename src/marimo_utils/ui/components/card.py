@@ -60,6 +60,8 @@ class Card(BaseModel):
         return str(auto_render(content))
 
     def to_html(self) -> str:
+        # Duplicates layout logic from render() during additive migration; consolidate
+        # when render() is retired.
         container_cls = cn(
             DivLayouts.COL_SHELL,
             BORDER,
@@ -99,7 +101,9 @@ class Card(BaseModel):
                 )
             )
 
-        return str(div(*sections, klass=container_cls))
+        return str(
+            div(*sections, klass=container_cls, data_component="card")
+        )
 
     def render(self) -> mo.Html | ActiveHtml:
         container_cls = cn(

@@ -16,6 +16,7 @@ def test_card_to_html_includes_title_and_badge_child() -> None:
     assert "<h3" in html
     assert "Metrics" in html
     assert "Run summary" in html
+    assert 'data-component="card"' in html
     assert 'data-component="badge"' in html
     assert ">ok</div>" in html
 
