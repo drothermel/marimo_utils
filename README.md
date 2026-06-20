@@ -70,7 +70,7 @@ Card(
 
 Components use shadcn's stock variant names (`default`, `secondary`, `destructive`, `outline`). Meta rows use registry-backed stamp builders — `date_stamp()` and `project_stamp()` return a `Stamp` with configurable empty text, spacing, and icons. Charts cycle through the `--chart-1` → `--chart-5` palette by default; pin specific items with `color=ChartColor.X`. Every `PlotlyChart` subclass renders through the same contract: plotly HTML with `responsive: true` + `include_plotlyjs="cdn"`, a `.reactive()` opt-in for marimo-reactive widgets, and a `Card`-friendly transparent background. `<script>`-bearing HTML (plotly) is routed through `dr_widget.inline.ActiveHtml` so charts execute inside marimo's React tree.
 
-See [`nbs/ui_components.py`](./nbs/ui_components.py) for a live demo of every atom, chart, and card variant side-by-side.
+See the demo notebooks under [`nbs/components/`](./nbs/components/) — `primitives.py`, `cards.py`, `charts.py`, and `color_themes.py` — for live examples of every atom, chart, and card variant.
 
 #### Host adapters (custom-element path)
 

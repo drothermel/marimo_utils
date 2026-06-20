@@ -1,84 +1,22 @@
+# Chart component demos (#13): run with
+#   marimo run nbs/components/charts.py --headless --no-token -p 2722
+
 import marimo
 
 __generated_with = "0.23.10"
-app = marimo.App(width="columns")
+app = marimo.App(width="full")
 
 with app.setup:
-    import random
-    from datetime import datetime
+    import sys
     from pathlib import Path
+
+    _NBS_ROOT = Path(__file__).resolve().parent.parent
+    if str(_NBS_ROOT) not in sys.path:
+        sys.path.insert(0, str(_NBS_ROOT))
 
     import marimo as mo
 
-    from marimo_utils.ui import (
-        Badge,
-        BadgeVariant,
-        BarChart,
-        BarItem,
-        BoxChart,
-        BoxGroup,
-        BoxPlotCard,
-        Card,
-        CardDescription,
-        CardTitle,
-        CardWidth,
-        ChartColor,
-        DataItem,
-        date_stamp,
-        HeatmapChart,
-        HistogramCard,
-        HistogramChart,
-        IconSize,
-        LabeledList,
-        LineChart,
-        LineSeries,
-        LucideIcon,
-        PieChart,
-        PieSlice,
-        project_stamp,
-        ScatterChart,
-        ScatterSeries,
-        ViolinChart,
-        ViolinGroup,
-        ViolinPlotCard,
-        bootstrap_tailwind,
-    )
-
-    NOTEBOOK_PATH = Path(__file__).resolve()
-    REPO_ROOT = NOTEBOOK_PATH.parent.parent
-    SRC_ROOT = REPO_ROOT / "src"
-    PACKAGE_ROOT = SRC_ROOT / "marimo_utils"
-
-
-@app.cell
-def _():
-    bootstrap_tailwind()
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    _rng = random.Random(42)
-    LOSS_VALUES = [_rng.gauss(0.4, 0.12) for _ in range(180)]
-    GROUP_TRAIN = [_rng.gauss(0.35, 0.10) for _ in range(120)]
-    GROUP_VAL = [_rng.gauss(0.45, 0.14) for _ in range(120)]
-    GROUP_TEST = [_rng.gauss(0.52, 0.11) for _ in range(120)]
-    CONFUSION_Z = [[42, 3, 1], [4, 38, 2], [2, 5, 33]]
-    CONFUSION_LABELS = ["cat", "dog", "bird"]
-
-    # Two scatter clusters with overlapping spread.
-    SCATTER_A_X = [_rng.gauss(2.0, 0.6) for _ in range(60)]
-    SCATTER_A_Y = [_rng.gauss(2.5, 0.6) for _ in range(60)]
-    SCATTER_B_X = [_rng.gauss(3.5, 0.6) for _ in range(60)]
-    SCATTER_B_Y = [_rng.gauss(1.5, 0.6) for _ in range(60)]
-
-    # Learning curves — monotone decay plus small noise, 30 steps.
-    LINE_STEPS = [float(i) for i in range(30)]
-    LINE_TRAIN_LOSS = [0.9 * (0.92**i) + _rng.gauss(0.0, 0.015) for i in range(30)]
-    LINE_VAL_LOSS = [
-        0.95 * (0.94**i) + 0.05 + _rng.gauss(0.0, 0.025) for i in range(30)
-    ]
-    return (
+    from fixtures.synthetic import (
         CONFUSION_LABELS,
         CONFUSION_Z,
         GROUP_TEST,
@@ -93,319 +31,45 @@ def _():
         SCATTER_B_X,
         SCATTER_B_Y,
     )
-
-
-@app.cell(column=1, hide_code=True)
-def _():
-    mo.md(r"""
-    # `marimo_utils.ui` — Tailwind + shadcn design primitives
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    Design system for rendering Pydantic-backed UI primitives inside
-    marimo notebooks. `bootstrap_tailwind()` injects the precompiled
-    `dr.css` stylesheet once per page — Tailwind utilities (Preflight
-    off), shadcn theme tokens, and a scoped `.dr-scope` reset — without
-    loading the Play CDN.
-
-    Component APIs use shadcn's stock variant names (`default`,
-    `secondary`, `destructive`, `outline`) with no custom tone layer.
-    Every section below pairs a standalone component with a Card-wrapped
-    variant to exercise the shadow-DOM embedding path.
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    ## Badge — one per variant
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Four shadcn badge variants rendered as `div` elements with
-            `DivLayouts.INLINE_ROW`, shared `BORDER` chrome, and
-            `BadgeVariant` surface fills (no hover — badges are static labels).
-            If all four render as
-            distinct pills, the full stack is live: stylesheet loaded,
-            theme tokens resolved, scoped reset applied.
-            """),
-            mo.md("---"),
-            mo.hstack(
-                [
-                    Badge(label="outline", variant=BadgeVariant.OUTLINE).render(),
-                    Badge(label="default", variant=BadgeVariant.DEFAULT).render(),
-                    Badge(
-                        label="secondary", variant=BadgeVariant.SECONDARY
-                    ).render(),
-                    Badge(
-                        label="destructive", variant=BadgeVariant.DESTRUCTIVE
-                    ).render(),
-                ],
-                justify="start",
-                gap=0.5,
-            ),
-        ]
+    from marimo_utils.ui import (
+        BarChart,
+        BarItem,
+        BoxChart,
+        BoxGroup,
+        BoxPlotCard,
+        Card,
+        CardWidth,
+        ChartColor,
+        HeatmapChart,
+        HistogramCard,
+        HistogramChart,
+        LineChart,
+        LineSeries,
+        PieChart,
+        PieSlice,
+        ScatterChart,
+        ScatterSeries,
+        ViolinChart,
+        ViolinGroup,
+        ViolinPlotCard,
+        bootstrap_tailwind,
     )
+
+
+@app.cell
+def _():
+    bootstrap_tailwind()
     return
 
 
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    ## Escape hatch: `klass=` override and `styles.py`
+    # `marimo_utils.ui` — Charts
 
-    Tailwind classes live in `marimo_utils.ui.styles` — layout
-    (`DivLayouts`, `SpanLayouts`), typography, sizing (`IconSize`,
-    `CardWidth`, `Padding`), and surface tokens (`BORDER`, `Background`,
-    `BadgeVariant`). Components compose them via `cn()` (tailwind-merge).
-    Pass extra utilities through `klass=` — they merge last and win within
-    each Tailwind group. Only classes that were precompiled into `dr.css`
-    (literals under `src/` / `nbs/`, or the safelist) actually render;
-    arbitrary runtime strings are ignored.
+    Every section pairs a standalone chart with a Card-wrapped variant via
+    `mo.hstack`, exercising the shadow-DOM embedding path uniformly.
     """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            `Badge(klass="ring-2 ring-ring ring-offset-2")` appends extra
-            utilities.             The ring color comes from `--ring` via the shadcn theme CSS,
-            so the emphasis stays on-theme.
-            """),
-            mo.md("---"),
-            Badge(
-                label="emphasized",
-                variant=BadgeVariant.DEFAULT,
-                klass="ring-2 ring-ring ring-offset-2",
-            ).render(),
-        ]
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    ## CardTitle & CardDescription
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Shadcn's canonical header pair — `CardTitle` (`<h3>` with
-            `text-2xl font-semibold leading-none tracking-tight`) above
-            `CardDescription` (`<p>` with `text-sm text-muted-foreground`).
-            Rendered here standalone with a small gap; when used inside
-            `Card` they sit in a `DivLayouts.COL` section (`flex flex-col
-            p-6 gap-1.5`) inside the card's `DivLayouts.COL_SHELL` stack.
-            """),
-            mo.md("---"),
-            mo.vstack(
-                [
-                    CardTitle(text="Class Distribution").render(),
-                    CardDescription(
-                        text="Class counts across the training split"
-                    ).render(),
-                ],
-                gap=0.25,
-            ),
-        ]
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    ## DataItem
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Label + value pair. Label uses `text-muted-foreground` in an
-            uppercase kicker style; value uses `text-foreground` semibold.
-            `min-w-28` on the label keeps multiple items aligned.
-            """),
-            mo.md("---"),
-            mo.vstack(
-                [
-                    DataItem(label="Class A", value="5").render(),
-                    DataItem(label="Class B", value="10").render(),
-                    DataItem(label="Class C", value="5").render(),
-                    DataItem(label="Class D", value="1").render(),
-                ],
-                gap=0.25,
-            ),
-        ]
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    ## LucideIcon
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Shadcn-style icon primitive: SVG sized by Tailwind utilities on
-            the wrapper (default `h-4 w-4`), `stroke="currentColor"` so the
-            color inherits from any `text-*` utility on an ancestor. Below:
-            the same `calendar` icon at default, large.
-            """),
-            mo.md("---"),
-            mo.hstack(
-                [
-                    LucideIcon(name="calendar").render(),
-                    LucideIcon(name="calendar", size=IconSize.MEDIUM).render(),
-                    LucideIcon(name="calendar", size=IconSize.LARGE).render(),
-                ],
-                justify="start",
-                align="center",
-                gap=1.0,
-            ),
-        ]
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    ## Stamp builders
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Inline icon + text meta rows using the shadcn `flex items-center
-            gap-2 text-sm text-muted-foreground` idiom. Icon color inherits
-            from the container's muted text color via `currentColor`.
-            `date_stamp(None)` renders the default empty placeholder (`---`).
-            """),
-            mo.md("---"),
-            mo.hstack(
-                [
-                    date_stamp(datetime(2026, 4, 22)).render(),
-                    date_stamp(None).render(),
-                    project_stamp("demo-project").render(),
-                ],
-                justify="start",
-                align="center",
-                gap=1.0,
-            ),
-        ]
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.md(r"""
-    ## LabeledList
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Section label prefix + flex-wrapping list of rendered items.
-            Label uses shadcn's muted `text-sm font-medium` style rather
-            than the form-coupled `Label` primitive. Items auto-render
-            (any `.render()`-bearing component) or pass through.
-            """),
-            mo.md("---"),
-            LabeledList(
-                label="Axes",
-                items=[
-                    Badge(label="model", variant=BadgeVariant.SECONDARY),
-                    Badge(label="dataset", variant=BadgeVariant.SECONDARY),
-                    Badge(label="split", variant=BadgeVariant.SECONDARY),
-                ],
-            ).render(),
-        ]
-    )
-    return
-
-
-@app.cell(column=2, hide_code=True)
-def _():
-    mo.md(r"""
-    ## Card
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    mo.vstack(
-        [
-            mo.md(r"""
-            Card chrome with shadcn-style flat `title=` and `description=`
-            string params. Internally the outer wrapper uses
-            `DivLayouts.COL_SHELL`; title and description compose into a
-            `DivLayouts.COL` header section; `content` renders in a
-            sibling `DivLayouts.COL` with `pt-0` when a header is present
-            (full `COL` padding when there is no header). Default width
-            `CardWidth.DEFAULT` (`w-100`); override with ``CardWidth.NARROW``,
-            ``CardWidth.WIDE``, or any Tailwind width utility.
-            """),
-            mo.md("---"),
-            Card(
-                title="Class Distribution",
-                description="Class counts across the training split",
-                content=mo.vstack(
-                    [
-                        Badge(
-                            label="dataset",
-                            variant=BadgeVariant.SECONDARY,
-                        ).render(),
-                        DataItem(label="Class A", value="5").render(),
-                        DataItem(label="Class B", value="10").render(),
-                        DataItem(label="Class C", value="5").render(),
-                        DataItem(label="Class D", value="1").render(),
-                    ],
-                    gap=0.25,
-                ),
-            ).render(),
-        ]
-    )
     return
 
 
@@ -526,7 +190,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(LOSS_VALUES):
+def _():
     mo.vstack(
         [
             mo.md(r"""
@@ -570,7 +234,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(CONFUSION_LABELS, CONFUSION_Z):
+def _():
     mo.vstack(
         [
             mo.md(r"""
@@ -620,7 +284,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
+def _():
     mo.vstack(
         [
             mo.md(r"""
@@ -677,7 +341,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(GROUP_TEST, GROUP_TRAIN, GROUP_VAL):
+def _():
     mo.vstack(
         [
             mo.md(r"""
@@ -730,7 +394,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(SCATTER_A_X, SCATTER_A_Y, SCATTER_B_X, SCATTER_B_Y):
+def _():
     mo.vstack(
         [
             mo.md(r"""
@@ -800,7 +464,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(LINE_STEPS, LINE_TRAIN_LOSS, LINE_VAL_LOSS):
+def _():
     mo.vstack(
         [
             mo.md(r"""
@@ -859,27 +523,6 @@ def _(LINE_STEPS, LINE_TRAIN_LOSS, LINE_VAL_LOSS):
             ),
         ]
     )
-    return
-
-
-@app.cell(column=3, hide_code=True)
-def _():
-    mo.md(r"""
-    leave space
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _():
-    script_output = None
-    if mo.app_meta().mode == "script":
-        script_output = {
-            "mode": "script",
-            "notebook_path": NOTEBOOK_PATH.relative_to(REPO_ROOT),
-            "package_root": PACKAGE_ROOT.relative_to(REPO_ROOT),
-        }
-    script_output
     return
 
 

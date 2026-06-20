@@ -1,0 +1,31 @@
+from fixtures.synthetic import (
+    CONFUSION_LABELS,
+    CONFUSION_Z,
+    GROUP_TEST,
+    GROUP_TRAIN,
+    GROUP_VAL,
+    LINE_STEPS,
+    LINE_TRAIN_LOSS,
+    LINE_VAL_LOSS,
+    LOSS_VALUES,
+    SCATTER_A_X,
+    SCATTER_A_Y,
+    SCATTER_B_X,
+    SCATTER_B_Y,
+)
+
+__all__ = [
+    "CONFUSION_LABELS",
+    "CONFUSION_Z",
+    "GROUP_TEST",
+    "GROUP_TRAIN",
+    "GROUP_VAL",
+    "LINE_STEPS",
+    "LINE_TRAIN_LOSS",
+    "LINE_VAL_LOSS",
+    "LOSS_VALUES",
+    "SCATTER_A_X",
+    "SCATTER_A_Y",
+    "SCATTER_B_X",
+    "SCATTER_B_Y",
+]
