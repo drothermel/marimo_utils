@@ -26,15 +26,15 @@
   --chart-5: 27 87% 67%;
   --tone-good-soft: 142 76% 94%;
   --tone-good-soft-foreground: 142 72% 25%;
-  --tone-good-solid: 142 55% 82%;
+  --tone-good-solid: 142 55% 72%;
   --tone-good-solid-foreground: 142 72% 22%;
   --tone-bad-soft: 0 86% 97%;
   --tone-bad-soft-foreground: 0 72% 35%;
-  --tone-bad-solid: 0 65% 88%;
+  --tone-bad-solid: 0 65% 78%;
   --tone-bad-solid-foreground: 0 72% 30%;
   --tone-neutral-soft: 220 14% 96%;
   --tone-neutral-soft-foreground: 220 9% 25%;
-  --tone-neutral-solid: 220 10% 84%;
+  --tone-neutral-solid: 220 10% 74%;
   --tone-neutral-solid-foreground: 220 9% 22%;
 }
 
