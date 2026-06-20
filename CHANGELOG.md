@@ -4,6 +4,8 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+- Adds foundation proof (probe #1): `Badge.to_html()` → `<dr-badge>`, `Card.to_html()` composition, and `nbs/probes/foundation_proof.py` validating web + marimo + re-render under `setup_host()`. Plotly-in-Card still uses legacy `ActiveHtml` (`dr-plotly` deferred).
+- Requires `dr-widget==0.2.3` for the `dr-badge` runtime element.
 - Adds host adapters: `setup_host()`, `show()` (`mo.Html(c.to_html())`), and `plain_html_page()` for web reuse and Playwright verification.
 - Adds component markup contract (`HtmlComponent`, `MarkupComponent`, `data-component` hooks) and a `data-tw-ready` readiness sentinel in bootstrap and plain-HTML pages.
 - **Breaking:** replaces the Tailwind Play CDN with a precompiled, scoped `dr.css` shipped in the wheel (Preflight off; `.dr-scope` reset on all component output). `bootstrap_tailwind()` injects the bundled stylesheet once per page instead of loading `cdn.tailwindcss.com`.

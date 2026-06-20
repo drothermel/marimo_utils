@@ -92,7 +92,9 @@ page_html = plain_html_page(hello, title="probe")
 
 Every component should expose `to_html()` and emit a `data-component` hook for verification dumps. Legacy `.render()` components remain available until migrated.
 
-See [`nbs/probes/host_adapters.py`](./nbs/probes/host_adapters.py) for a minimal dual-host probe.
+`Badge` and `Card` are the first migrated components: `Badge.to_html()` emits a `<dr-badge>` custom element; `Card.to_html()` composes `HtmlComponent` children (e.g. nested badges). Plotly charts still use `.render()` / `ActiveHtml` during migration — see the foundation proof probe.
+
+See [`nbs/probes/host_adapters.py`](./nbs/probes/host_adapters.py) for a minimal dual-host probe and [`nbs/probes/foundation_proof.py`](./nbs/probes/foundation_proof.py) for Badge, Card composition, and Plotly-in-Card under `setup_host()`.
 
 #### Styling conventions (`styles.py`)
 
