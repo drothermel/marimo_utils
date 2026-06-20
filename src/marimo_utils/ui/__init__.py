@@ -72,7 +72,13 @@ from marimo_utils.ui.styles import (
     DivLayouts,
     IconSize,
     Padding,
+    SemanticTone,
     SpanLayouts,
+    ToneBorder,
+    ToneEmphasis,
+    ToneSurface,
+    tone_border,
+    tone_surface,
 )
 
 __all__ = [
@@ -120,9 +126,13 @@ __all__ = [
     "QuantileFences",
     "ScatterChart",
     "ScatterSeries",
+    "SemanticTone",
     "SpanLayouts",
     "Stamp",
     "StampKind",
+    "ToneBorder",
+    "ToneEmphasis",
+    "ToneSurface",
     "ViolinChart",
     "ViolinGroup",
     "ViolinPlotCard",
@@ -142,4 +152,6 @@ __all__ = [
     "setup_host",
     "show",
     "skew_label",
+    "tone_border",
+    "tone_surface",
 ]
